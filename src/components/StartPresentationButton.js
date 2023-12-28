@@ -1,8 +1,7 @@
 import React from 'react';
 
-function StartPresentationButton() {
-  // 프레젠테이션 모드로 전환하는 기능 구현 예정
-  return <button>Start Presentation</button>;
+function StartPresentationButton({ onStartPresentation }) {
+  return <button onClick={onStartPresentation}>슬라이드 쇼 시작</button>;
 }
 
 export default StartPresentationButton;
