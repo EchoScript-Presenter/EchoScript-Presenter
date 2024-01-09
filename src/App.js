@@ -8,18 +8,21 @@ import { AppContainer, BodyContainer, FooterContainer } from './AppStyled';
 
 function App() {
   // EditMode
-  const [isEditMode, setIsEditMode] = useState(true);
+  const [isPresentationMode, setIsPresentationMode] = useState(true);
 
   return (
     <AppContainer>
-      <Header isEditMode={isEditMode} />
+      <Header isPresentationMode={isPresentationMode} />
       <BodyContainer>
-        <MainArea isEditMode={isEditMode} />
-        <Sidebar isEditMode={isEditMode} setIsEditMode={setIsEditMode} />
+        <MainArea isPresentationMode={isPresentationMode} />
+        <Sidebar
+          isPresentationMode={isPresentationMode}
+          setIsPresentationMode={setIsPresentationMode}
+        />
       </BodyContainer>
       <FooterContainer>
-        <Footer isEditMode={isEditMode} />
-        <FeedbackCharacter isEditMode={isEditMode} />
+        <Footer isPresentationMode={isPresentationMode} />
+        <FeedbackCharacter isPresentationMode={isPresentationMode} />
       </FooterContainer>
     </AppContainer>
   );

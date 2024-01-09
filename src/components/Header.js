@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TimerSettings from './TimerSettings';
 import TimerProgressBar from './TimerProgressBar';
 
-function Header({ isEditMode }) {
+function Header({ isPresentationMode }) {
   const [timeLimit, setTimeLimit] = useState(10 * 60); //10분이 기본값
   const [remainTime, setRemainTime] = useState(timeLimit);
 
@@ -14,24 +14,24 @@ function Header({ isEditMode }) {
 
   useEffect(() => {
     let interval;
-    if (!isEditMode && remainTime > 0) {
+    if (!isPresentationMode && remainTime > 0) {
       interval = setInterval(() => {
         setRemainTime((prevTime) => prevTime - 1);
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isEditMode, remainTime]);
+  }, [isPresentationMode, remainTime]);
 
   return (
     <div>
       <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
-      {!isEditMode && (
+      {!isPresentationMode && (
         <div>
           {formatTime(remainTime)} / {formatTime(timeLimit)}
         </div>
       )}
-      {isEditMode && (
+      {isPresentationMode && (
         <TimerSettings
           setTimeLimit={(newTime) => {
             setTimeLimit(newTime);

@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function TimerSettings({ setTimeLimit }) {
   const [inputTime, setInputTime] = useState('');
+  const [timer, setTimer] = useState(null);
+
+  useEffect(() => {
+    // 컴포넌트가 언마운트될 때 타이머 클리어
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [timer]);
 
   const handleTimeChange = (event) => {
-    setInputTime(event.target.value);
-  };
+    const newTime = event.target.value;
+    setInputTime(newTime);
 
-  const handleSubmit = () => {
-    // 분을 초로 변환하여 상위 컴포넌트에 전달
-    setTimeLimit(Number(inputTime) * 60);
+    if (timer) clearTimeout(timer);
+
+    const newTimer = setTimeout(() => {
+      setTimeLimit(Number(newTime) * 60);
+    }, 500); // 0.5초 후에 상태 업데이트
+
+    setTimer(newTimer);
   };
 
   return (
@@ -20,7 +32,6 @@ function TimerSettings({ setTimeLimit }) {
         onChange={handleTimeChange}
         placeholder="시간을 설정하세요 (분)"
       />
-      <button onClick={handleSubmit}>타이머 설정</button>
     </div>
   );
 }
