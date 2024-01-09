@@ -3,7 +3,7 @@ import { MainAreaContainer } from './MainAreaStyled';
 import Slide from './Slide';
 import PresenterNotes from './PresenterNotes';
 
-function MainArea() {
+function MainArea({ currentSlide }) {
   const [highlightedContent, setHighlightedContent] = useState(null);
 
   // 하이라이트 상태를 설정하는 함수
