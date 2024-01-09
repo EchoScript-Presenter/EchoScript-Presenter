@@ -1,3 +1,33 @@
+# 기능 설명
+
+1. **Header 컴포넌트**:
+
+   - **TimerProgressBar 컴포넌트**: 프로그레스 바와 타이머 진행 정도를 표시.
+     - 상태: 타이머 진행 시간, 최대 시간
+     - 기능: EditMode에서 최대 시간을 조정할 수 있는 기능
+
+2. **MainArea 컴포넌트**:
+
+   - **Slide 컴포넌트**: 현재 PPT 화면을 표시.
+     - 상태: 현재 슬라이드의 제목, 소제목, 컨텐츠
+     - 기능: EditMode에서 내용을 수정할 수 있는 기능
+   - **PresenterNotes 컴포넌트**: 발표자 노트를 세로형 Carousel로 표시.
+     - 상태: 노트 목록, 현재 선택된 노트
+     - 기능: EditMode에서 노트를 수정하거나 삭제할 수 있는 기능
+
+3. **Sidebar 컴포넌트**:
+
+   - **EditModeToggle 컴포넌트**: 수정 모드와 발표 모드를 토글.
+   - **StartPresentation 버튼**: 발표자 모드를 시작.
+
+4. **Footer 컴포넌트**:
+   - **FooterCarousel 컴포넌트**: PPT 슬라이드를 가로형 Carousel로 표시.
+     - 상태: 슬라이드 목록, 현재 선택된 슬라이드
+     - 기능: EditMode에서만 표시
+   - **FeedbackCharacter 컴포넌트**: 피드백을 제공하는 캐릭터를 표시.
+     - 상태: 현재 피드백 메시지
+     - 기능: EditMode가 아닐 때만 말풍선 표시
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
