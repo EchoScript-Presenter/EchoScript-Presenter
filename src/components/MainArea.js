@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { MainAreaContainer } from './MainAreaStyled';
-import Slide from './Slide';
+import Slide1 from './Slides/Slide1';
 import PresenterNotes from './PresenterNotes';
 
-function MainArea({ currentSlide }) {
+function MainArea({ currentSlideIndex }) {
+  const slides = [<Slide1 />]; // 슬라이드 목록(Slide1, Slide2 ...)
   const [highlightedContent, setHighlightedContent] = useState(null);
 
   // 하이라이트 상태를 설정하는 함수
@@ -13,7 +14,7 @@ function MainArea({ currentSlide }) {
 
   return (
     <MainAreaContainer>
-      <Slide
+      <Slide1
         onHighlight={handleHighlight}
         highlightedContent={highlightedContent}
       />

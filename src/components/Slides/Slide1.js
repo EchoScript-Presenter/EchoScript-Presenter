@@ -5,10 +5,10 @@ const SlideContainer = styled.div`
   /* 스타일링 */
 `;
 
-function Slide({ onHighlight, highlightedContent }) {
+function Slide1({ onHighlight, highlightedContent }) {
   // Slide 컴포넌트의 로직과 렌더링
 
   return <SlideContainer>{/* Slide 내용 */}</SlideContainer>;
 }
 
-export default Slide;
+export default Slide1;

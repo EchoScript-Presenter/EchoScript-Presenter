@@ -8,7 +8,7 @@ import { AppContainer, BodyContainer, FooterContainer } from './AppStyled';
 
 function App() {
   const [isPresentationMode, setIsPresentationMode] = useState(true); // 현재 발표자 모드인지 확인
-  const [currentSlide, setCurrentSlide] = useState(0); // 현재 선택된 슬라이드의 인덱스
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0); // 초기 선택된 슬라이드 인덱스
 
   return (
     <AppContainer>
@@ -16,7 +16,7 @@ function App() {
       <BodyContainer>
         <MainArea
           isPresentationMode={isPresentationMode}
-          currentSlide={currentSlide}
+          currentSlideIndex={currentSlideIndex}
         />
         <Sidebar
           isPresentationMode={isPresentationMode}
@@ -26,7 +26,7 @@ function App() {
       <FooterContainer>
         <Footer
           isPresentationMode={isPresentationMode}
-          setCurrentSlide={setCurrentSlide}
+          setCurrentSlideIndex={setCurrentSlideIndex}
         />
         <FeedbackCharacter isPresentationMode={isPresentationMode} />
       </FooterContainer>
