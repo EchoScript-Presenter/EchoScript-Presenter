@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { MainAreaContainer } from './MainAreaStyled';
-import Slide1 from './Slides/Slide1';
-import PresenterNotes from './PresenterNotes';
+import {
+  SlideContainer,
+  PresenterNoteContainer,
+  MainAreaContainer,
+} from './MainAreaStyled';
+import SlideA from './Slides/SlideA';
+import PresenterNotesCarousel from './PresenterNoteCarousel';
 
-function MainArea({ currentSlideIndex }) {
-  const slides = [<Slide1 />]; // 슬라이드 목록(Slide1, Slide2 ...)
+function MainArea({ currentSlideIndex, notes, triggerWord }) {
+  const slides = [<SlideA />]; // 슬라이드 목록(Slide1, Slide2 ...)
   const [highlightedContent, setHighlightedContent] = useState(null);
 
   // 하이라이트 상태를 설정하는 함수
@@ -14,14 +18,20 @@ function MainArea({ currentSlideIndex }) {
 
   return (
     <MainAreaContainer>
-      <Slide1
-        onHighlight={handleHighlight}
-        highlightedContent={highlightedContent}
-      />
-      <PresenterNotes
-        onHighlight={handleHighlight}
-        highlightedContent={highlightedContent}
-      />
+      <SlideContainer>
+        <SlideA
+          onHighlight={handleHighlight}
+          highlightedContent={highlightedContent}
+        />
+      </SlideContainer>
+      <PresenterNoteContainer>
+        <PresenterNotesCarousel
+          notes={notes}
+          triggerWord={triggerWord}
+          onHighlight={handleHighlight}
+          highlightedContent={highlightedContent}
+        />
+      </PresenterNoteContainer>
     </MainAreaContainer>
   );
 }
