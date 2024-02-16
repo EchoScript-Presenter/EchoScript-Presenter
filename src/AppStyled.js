@@ -17,7 +17,7 @@ export const HeaderContainer = styled.header`
 
 export const BodyContainer = styled.div`
   display: flex;
-  flex-grow: 5; // 비율 4
+  flex-grow: 3; // 비율 4
   background: greenyellow;
 `;
 
