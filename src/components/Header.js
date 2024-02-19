@@ -41,6 +41,8 @@ function Header({ isPresentationMode }) {
         />
       )}
     </TimerContainer>
+
+    
   );
 }
 

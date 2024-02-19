@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+  width: 90%;
+  padding: 8px;
+  margin: 0px 10px 20px 10px; // top 마진을 0으로 조정
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  outline: none;
+  }
+`;
 
 function TimerSettings({ setTimeLimit }) {
   const [inputTime, setInputTime] = useState('');
-  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
-    // 컴포넌트가 언마운트될 때 타이머 클리어
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [timer]);
-
-  const handleTimeChange = (event) => {
-    const newTime = event.target.value;
-    setInputTime(newTime);
-
-    if (timer) clearTimeout(timer);
-
-    const newTimer = setTimeout(() => {
-      setTimeLimit(Number(newTime) * 60);
+    const timer = setTimeout(() => {
+      if (inputTime !== '') {
+        setTimeLimit(Number(inputTime) * 60);
+      }
     }, 500); // 0.5초 후에 상태 업데이트
 
-    setTimer(newTimer);
+    return () => clearTimeout(timer);
+  }, [inputTime, setTimeLimit]);
+
+  const handleTimeChange = (event) => {
+    const { value } = event.target;
+    // 입력된 값이 음수일 경우 절대값으로 변경, 빈 문자열인 경우 그대로 빈 문자열을 유지!
+    const newTime = value === '' ? '' : Math.abs(Number(value)).toString();
+    setInputTime(newTime);
   };
 
   return (
     <div>
-      <input
+      <StyledInput
         type="number"
         value={inputTime}
         onChange={handleTimeChange}
