@@ -8,7 +8,7 @@ export const AppContainer = styled.div`
 
 export const HeaderContainer = styled.header`
   display: flex;
-  flex-grow: 1; // 비율 1
+  height: 10vh;
   max-height: 90px; // 최대 높이 제한 (선택 사항)
   justify-content: center; // 자식 요소들을 중앙 정렬
   align-items: center; // 수직 방향 중앙 정렬
@@ -17,12 +17,12 @@ export const HeaderContainer = styled.header`
 
 export const BodyContainer = styled.div`
   display: flex;
-  flex-grow: 3; // 비율 4
+  height: 65vh;
   background: greenyellow;
 `;
 
 export const FooterContainer = styled.div`
   display: flex;
-  flex-grow: 1.5; // 비율 2
+  height: 25vh;
   background: papayawhip;
 `;
