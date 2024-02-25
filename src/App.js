@@ -24,6 +24,10 @@ function App() {
     <AppContainer>
       <HeaderContainer>
         <Header isPresentationMode={isPresentationMode} />
+        <Sidebar
+          isPresentationMode={isPresentationMode}
+          setIsPresentationMode={setIsPresentationMode}
+        />
       </HeaderContainer>
       <BodyContainer>
         <MainArea
@@ -31,10 +35,6 @@ function App() {
           triggerWord={triggerWord}
           isPresentationMode={isPresentationMode}
           currentSlideIndex={currentSlideIndex}
-        />
-        <Sidebar
-          isPresentationMode={isPresentationMode}
-          setIsPresentationMode={setIsPresentationMode}
         />
       </BodyContainer>
       <FooterContainer>

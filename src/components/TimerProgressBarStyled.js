@@ -5,7 +5,7 @@ export const ProgressBarContainer = styled.div`
   border-radius: 8px;
   margin: 20px;
   height: 15px;
-  width: 90%; // 컨테이너 너비를 100%로 설정
+  width: 85%; // 컨테이너 너비를 100%로 설정
   margin: 30px 10px 10px 10px;
 `;
 

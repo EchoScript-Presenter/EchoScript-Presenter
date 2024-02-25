@@ -19,14 +19,14 @@ export const commonStyles = css`
 export const SlideContainer = styled.div`
   ${commonStyles}
   background-color: #1a1a1a;
-  width: 70%;
+  width: 100%;
   height: 100%;
 `;
 
 export const HexagonAll = styled.div`
   background: url('images/hexagonAll.png') center/contain no-repeat;
-  width: 660px;
-  height: 230px;
+  width: 700px;
+  height: 300px;
 `;
 
 export const Hexagon = styled.div`
@@ -65,7 +65,7 @@ export const TitleCenter = styled.span`
 
 export const Text = styled.span`
   position: absolute;
-  font-size: 18px;
+  font-size: 20px;
   // 하이라이트 동적 요소
   /* background-color: ${(props) =>
     props.highlight ? 'yellow' : 'transparent'};

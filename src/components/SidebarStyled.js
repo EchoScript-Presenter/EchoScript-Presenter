@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const SidebarContainer = styled.div`
   display: flex;
   width: 5%;
+  justify-content: center;
   min-width: 0; // 내부 컨텐츠에 의한 확장 방지
   background: yellow;
 `;

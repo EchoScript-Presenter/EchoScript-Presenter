@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const MainAreaContainer = styled.div`
   display: flex;
-  width: 95%;
+  width: 100%;
   background: paleturquoise;
 `;
 
@@ -15,6 +15,6 @@ export const SlideContainer = styled.div`
 `;
 
 export const PresenterNoteContainer = styled.div`
-  width: 25%;
+  width: 30%;
   background: red;
 `;
