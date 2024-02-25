@@ -4,6 +4,7 @@ import PresenterNote from './PresenterNotes/PresenterNotes';
 
 function PresenterNotesCarousel({ notes, triggerWord }) {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const [numberOfCards, setNumberOfCards] = useState(3); // 슬라이드에 보여줄 아이템의 수
 
   // useEffect(() => {
   //   // 현재 가운데 노트의 마지막 단어 확인

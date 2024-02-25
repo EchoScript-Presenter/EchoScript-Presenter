@@ -22,6 +22,7 @@ function MainArea({ currentSlideIndex, notes, triggerWord }) {
         <SlideA
           onHighlight={handleHighlight}
           highlightedContent={highlightedContent}
+          currentSlideIndex={currentSlideIndex}
         />
       </SlideContainer>
       <PresenterNoteContainer>

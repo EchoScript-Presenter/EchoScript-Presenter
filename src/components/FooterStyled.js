@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const FooterCarouselContainer = styled.div`
-  width: 75%;
+  width: 70%;
   background: whitesmoke;
 `;
 
