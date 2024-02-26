@@ -45,15 +45,15 @@ function FeedbackGraph() {
   return (
     <div style={{ display: 'flex', width: '100%', height: '70%' }}>
       <div style={{ width: '100%' }}>
-        <h2 style={{width:'100%', marginLeft:'10px'}}>Real-time Feedback</h2>
-        <ResponsiveContainer width="100%" height="90%">
+        <h2 style={{width:'100%', marginLeft:'10px', fontSize:'20px'}}>Real-time Feedback</h2>
+        <ResponsiveContainer width="100%" height="80%">
               <BarChart
                 layout="vertical" 
                 width={300}
                 height={100}
                 data={data}
                 margin={{
-                  top: 20,
+                  top: 0,
                   right: 10,
                   left: 10,
                   bottom: 0,
@@ -70,9 +70,10 @@ function FeedbackGraph() {
                     return '';
                   }}
                   style={{ fontWeight: 'bold' }}
+                  tick={{ fontSize: '15px' }}
                 />
 
-                <YAxis type="category" dataKey="name" width={60} style={{ fontWeight: 'bold' }}/> 
+                <YAxis type="category" dataKey="name" width={60} style={{ fontWeight: 'bold' }} tick={{ fontSize: '13px' }}/> 
                 <Tooltip />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Bar 
@@ -87,7 +88,7 @@ function FeedbackGraph() {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ width: '30%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:'80px' }}>
+          <div style={{ width: '30%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop:'70px' }}>
             {volumeData && volumeData.value === 0 && ( // {volumeData && volumeData.value === 0 && <MdSpeakerNotesOff size={50} />}
                 <div style={{ textAlign: 'center' }}>
                   <img src={speakerIcon} alt="Pause" style={{ width: '50px', height: '50px' }} />
