@@ -45,7 +45,7 @@ function FeedbackGraph() {
   return (
     <div style={{ display: 'flex', width: '100%', height: '70%' }}>
       <div style={{ width: '100%' }}>
-        <h2 style={{width:'100%', marginLeft:'10px', fontSize:'20px'}}>Real-time Feedback</h2>
+        <h2 style={{width:'100%', marginLeft:'10px'}}>Real-time Feedback</h2>
         <ResponsiveContainer width="100%" height="80%">
               <BarChart
                 layout="vertical" 
@@ -70,10 +70,16 @@ function FeedbackGraph() {
                     return '';
                   }}
                   style={{ fontWeight: 'bold' }}
-                  tick={{ fontSize: '15px' }}
                 />
 
-                <YAxis type="category" dataKey="name" width={60} style={{ fontWeight: 'bold' }} tick={{ fontSize: '13px' }}/> 
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={60}
+                  style={{ fontWeight: 'bold' }}
+                  tick={{ fontSize: '12px' }} // 여기서 폰트 크기를 조정합니다.
+                />
+
                 <Tooltip />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Bar 

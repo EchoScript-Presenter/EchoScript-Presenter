@@ -8,7 +8,7 @@ export const MainAreaContainer = styled.div`
 
 export const SlideContainer = styled.div`
   display: flex;
-  width: 75%;
+  width: 70%;
   justify-content: center; // 가로축 중앙 정렬
   align-items: center; // 세로축 중앙 정렬
   background: peru;

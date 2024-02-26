@@ -9,9 +9,8 @@ import {
   TextCenter,
 } from './SlideAStyled';
 
-function SlideA({ slideNumber, onHighlight, highlightedContent }) {
-  slideNumber = 8; //임시 슬라이드 번호
-  switch (slideNumber) {
+function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
+  switch (currentSlideIndex) {
     case 1:
       return (
         <SlideContainer>
