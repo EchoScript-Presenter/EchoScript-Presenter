@@ -47,6 +47,13 @@ export const Title = styled.span`
   color: ${(props) => (props.highlight ? 'black' : '#ffffff')}; */
 `;
 
+export const SubTitle = styled.span`
+  position: absolute;
+  font-size: 20px;
+  color: #ffffff; // 기본 텍스트 색상 설정
+  text-align: center;
+`;
+
 export const TitleCenter = styled.span`
   position: absolute;
   font-size: 32px;
@@ -67,15 +74,24 @@ export const Text = styled.span`
   position: absolute;
   font-size: 20px;
   // 하이라이트 동적 요소
-  /* background-color: ${(props) =>
-    props.highlight ? 'yellow' : 'transparent'};
-  color: ${(props) => (props.highlight ? 'black' : '#ffffff')}; */
+  background-color: ${(props) => (props.highlight ? 'yellow' : 'transparent')};
+  color: ${(props) => (props.highlight ? 'black' : '#ffffff')};
+`;
+
+export const CenterContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 export const TextCenter = styled.span`
   position: absolute;
   font-size: 20px;
   color: #ffffff; // 기본 텍스트 색상 설정
-  width: 100%; // 가로 전체 사용
-  text-align: center; // 텍스트 중앙 정렬
+  text-align: center;
+  background-color: ${(props) => (props.highlight ? 'yellow' : 'transparent')};
+  color: ${(props) => (props.highlight ? 'black' : '#ffffff')};
+  /* Hexagon 이미지 위에 위치시키기 위한 top, left, right, bottom 값 조정 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
 `;

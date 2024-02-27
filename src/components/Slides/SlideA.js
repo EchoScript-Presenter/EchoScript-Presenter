@@ -4,12 +4,20 @@ import {
   HexagonAll,
   Hexagon,
   Title,
+  SubTitle,
   TitleCenter,
   Text,
+  CenterContainer,
   TextCenter,
 } from './SlideAStyled';
 
-function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
+function SlideA({
+  currentSlideIndex,
+  onHighlight,
+  highlightedContent,
+  activeTitle,
+}) {
+  console.log(activeTitle);
   switch (currentSlideIndex) {
     case 1:
       return (
@@ -19,11 +27,11 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
             <br />
             for User Experience Design
           </TitleCenter>
-          <TextCenter style={{ bottom: '25%' }}>
+          <SubTitle style={{ bottom: '25%' }}>
             Ewha Woman’s University
             <br />
             Human-Computer Interaction Lab
-          </TextCenter>
+          </SubTitle>
         </SlideContainer>
       );
     case 2:
@@ -31,12 +39,40 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <HexagonAll />
           <Title>Design Thinking Process</Title>
-          <Text style={{ top: '36%', left: '20%' }}>EMPATHIZE</Text>
-          <Text style={{ bottom: '48%', left: '34%' }}>DEFINE</Text>
-          <Text style={{ top: '36%', right: '47%' }}>IDEATE</Text>
-          <Text style={{ bottom: '48%', right: '31%' }}>PROTOTYPE</Text>
-          <Text style={{ bottom: '36%', right: '22%' }}>TEST</Text>
-          <Text style={{ bottom: '10%', right: '45%' }}>
+          <Text
+            highlight={activeTitle === 'Design Process-1'}
+            style={{ top: '36%', left: '19%' }}
+          >
+            EMPATHIZE
+          </Text>
+          <Text
+            highlight={activeTitle === 'Design Process-1'}
+            style={{ bottom: '48%', left: '33%' }}
+          >
+            DEFINE
+          </Text>
+          <Text
+            highlight={activeTitle === 'Design Process-1'}
+            style={{ top: '36%', right: '46%' }}
+          >
+            IDEATE
+          </Text>
+          <Text
+            highlight={activeTitle === 'Design Process-1'}
+            style={{ bottom: '48%', right: '31%' }}
+          >
+            PROTOTYPE
+          </Text>
+          <Text
+            highlight={activeTitle === 'Design Process-1'}
+            style={{ bottom: '36%', right: '22%' }}
+          >
+            TEST
+          </Text>
+          <Text
+            highlight={activeTitle === 'Design Process-2'}
+            style={{ bottom: '10%', right: '45%' }}
+          >
             - Iterating within stages & back to prior stages
           </Text>
         </SlideContainer>
@@ -46,12 +82,22 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <Hexagon image={`images/hexagonBlue.png`} />
           <Title>Design Thinking Process</Title>
-          <TextCenter style={{ bottom: '48%' }}>EMPATHIZE</TextCenter>
-          <Text style={{ top: '28%', left: '7%', fontSize: '22px' }}>
+          <CenterContainer>
+            <TextCenter highlight={activeTitle === 'EMPATHIZE-1'}>
+              EMPATHIZE
+            </TextCenter>
+          </CenterContainer>
+          <Text
+            highlight={activeTitle === 'EMPATHIZE-2'}
+            style={{ top: '28%', left: '7%', fontSize: '22px' }}
+          >
             close and intimate
             <br /> familiarity
           </Text>
-          <Text style={{ bottom: '15%', right: '12%', fontSize: '22px' }}>
+          <Text
+            highlight={activeTitle === 'EMPATHIZE-3'}
+            style={{ bottom: '15%', right: '12%', fontSize: '22px' }}
+          >
             key principles <br />
             - immerse <br />
             - observe <br />
@@ -65,11 +111,21 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <Hexagon image={`images/hexagonGreen.png`} />
           <Title>Design Thinking Process</Title>
-          <TextCenter style={{ bottom: '48%' }}>DEFINE</TextCenter>
-          <Text style={{ top: '28%', left: '7%', fontSize: '22px' }}>
+          <CenterContainer>
+            <TextCenter highlight={activeTitle === 'DEFINE-1'}>
+              DEFINE
+            </TextCenter>
+          </CenterContainer>
+          <Text
+            highlight={activeTitle === 'DEFINE-2'}
+            style={{ top: '28%', left: '7%', fontSize: '22px' }}
+          >
             making realizations
           </Text>
-          <Text style={{ bottom: '15%', right: '12%', fontSize: '22px' }}>
+          <Text
+            highlight={activeTitle === 'DEFINE-3'}
+            style={{ bottom: '15%', right: '12%', fontSize: '22px' }}
+          >
             creating
             <br />a focus
           </Text>
@@ -80,13 +136,23 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <Hexagon image={`images/hexagonOrange.png`} />
           <Title>Design Thinking Process</Title>
-          <TextCenter style={{ bottom: '48%' }}>IDEATE</TextCenter>
-          <Text style={{ top: '28%', left: '7%', fontSize: '22px' }}>
+          <CenterContainer>
+            <TextCenter highlight={activeTitle === 'IDEATE-1'}>
+              IDEATE
+            </TextCenter>
+          </CenterContainer>
+          <Text
+            highlight={activeTitle === 'IDEATE-2'}
+            style={{ top: '28%', left: '7%', fontSize: '22px' }}
+          >
             innovation
             <br />
             potential
           </Text>
-          <Text style={{ bottom: '15%', right: '12%', fontSize: '22px' }}>
+          <Text
+            highlight={activeTitle === 'IDEATE-3'}
+            style={{ bottom: '15%', right: '12%', fontSize: '22px' }}
+          >
             separate
             <br />
             generation &<br />
@@ -99,13 +165,23 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <Hexagon image={`images/hexagonRed.png`} />
           <Title>Design Thinking Process</Title>
-          <TextCenter style={{ bottom: '48%' }}>PROTOTYPE</TextCenter>
-          <Text style={{ top: '28%', left: '7%', fontSize: '22px' }}>
+          <CenterContainer>
+            <TextCenter highlight={activeTitle === 'PROTOTYPE-1'}>
+              PROTOTYPE
+            </TextCenter>
+          </CenterContainer>
+          <Text
+            highlight={activeTitle === 'PROTOTYPE-2'}
+            style={{ top: '28%', left: '7%', fontSize: '22px' }}
+          >
             - to think
             <br />- to learn
             <br />- to test
           </Text>
-          <Text style={{ bottom: '15%', right: '12%', fontSize: '22px' }}>
+          <Text
+            highlight={activeTitle === 'PROTOTYPE-2'}
+            style={{ bottom: '15%', right: '12%', fontSize: '22px' }}
+          >
             failing then fixing
           </Text>
         </SlideContainer>
@@ -115,15 +191,23 @@ function SlideA({ currentSlideIndex, onHighlight, highlightedContent }) {
         <SlideContainer>
           <Hexagon image={`images/hexagonBrick.png`} />
           <Title>Design Thinking Process</Title>
-          <TextCenter style={{ bottom: '48%' }}>TEST</TextCenter>
-          <Text style={{ top: '28%', left: '7%', fontSize: '22px' }}>
+          <CenterContainer>
+            <TextCenter highlight={activeTitle === 'TEST-1'}>TEST</TextCenter>
+          </CenterContainer>
+          <Text
+            highlight={activeTitle === 'TEST-2'}
+            style={{ top: '28%', left: '7%', fontSize: '22px' }}
+          >
             new information
             <br />
             about the
             <br />
             user's need
           </Text>
-          <Text style={{ bottom: '15%', right: '12%', fontSize: '22px' }}>
+          <Text
+            highlight={activeTitle === 'TEST-3'}
+            style={{ bottom: '15%', right: '12%', fontSize: '22px' }}
+          >
             right assumption,
             <br />
             correct solution

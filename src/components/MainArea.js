@@ -7,9 +7,13 @@ import {
 import SlideA from './Slides/SlideA';
 import PresenterNotesCarousel from './PresenterNoteCarousel';
 
-
-function MainArea({ currentSlideIndex, notes, triggerWord, isPresentationMode }) {
-  const slides = [<SlideA />]; // 슬라이드 목록(Slide1, Slide2 ...)
+function MainArea({
+  currentSlideIndex,
+  notes,
+  triggerWord,
+  isPresentationMode,
+}) {
+  const [activeTitle, setActiveTitle] = useState('');
   const [highlightedContent, setHighlightedContent] = useState(null);
 
   // 하이라이트 상태를 설정하는 함수
@@ -24,6 +28,7 @@ function MainArea({ currentSlideIndex, notes, triggerWord, isPresentationMode })
           onHighlight={handleHighlight}
           highlightedContent={highlightedContent}
           currentSlideIndex={currentSlideIndex} //여기서 받아와야하는것? 여기서 slideindex랑
+          activeTitle={activeTitle}
         />
       </SlideContainer>
       <PresenterNoteContainer>
@@ -34,6 +39,7 @@ function MainArea({ currentSlideIndex, notes, triggerWord, isPresentationMode })
           notes={notes}
           triggerWord={triggerWord}
           onHighlight={handleHighlight}
+          setActiveTitle={setActiveTitle}
           highlightedContent={highlightedContent}
         />
       </PresenterNoteContainer>
