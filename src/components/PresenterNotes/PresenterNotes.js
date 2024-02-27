@@ -58,6 +58,7 @@ const Title = styled.div`
   margin-top: -5px;
   font-weight: bold;
   margin-bottom: 15px; 
+  font-size: 20px;
 `;
 
 const Word = styled.span`
@@ -75,7 +76,22 @@ const Word = styled.span`
   }
 `;
 
-function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, totalItems }) {
+const BottomRightText = styled.h3`
+  position: absolute;
+  top: 0; 
+  right: 15px; 
+  font-size: 16px; 
+  font-weight: normal; 
+  color: black; 
+  font-size:13px;
+  padding: 4px 6px; /* 내부 여백 추가 */
+  background-color: #f8f9fa; /* 배경색 지정 */
+  border: 1px solid #ced4da; /* 테두리 추가 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+`;
+
+
+function PresenterNotes({ noteindex, title, content, index, isActive, setActiveItemIndex, totalItems, isPresentationMode }) {
   const notesRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() => new Array(totalItems).fill(16));
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -84,7 +100,7 @@ function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, t
   useEffect(() => {
     let intervalId;
 
-    if (isActive) {
+    if (isActive && isPresentationMode == false) { // isPresentationMode가 true이고 isActive일 때만 실행
       intervalId = setInterval(() => {
         setHighlightedIndex(prevIndex => {
           const newIndex = prevIndex + 1;
@@ -117,7 +133,7 @@ function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, t
     return () => {
       clearInterval(intervalId);
     };
-  }, [isActive, index, setActiveItemIndex, totalItems]);
+  }, [isActive, index, setActiveItemIndex, totalItems, isPresentationMode]);
 
   const increaseFontSize = () => {
     setFontSizes(prevSizes => {
@@ -136,7 +152,6 @@ function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, t
       setActiveItemIndex((index - 1 + totalItems) % totalItems);
     }
   };
-  
 
   const goToNextNote = () => { // 마지막 presenternote라면 애니메이션 중지 & next move 중지
     if (index < totalItems - 1) {
@@ -153,8 +168,8 @@ function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, t
         <div>
           <FontSizeButton onClick={increaseFontSize}>+</FontSizeButton>
           <FontSizeButton onClick={decreaseFontSize}>-</FontSizeButton>
-          <FontSizeButton onClick={goToNextNote} disabled={index === totalItems - 1}>▶︎</FontSizeButton>
           <FontSizeButton onClick={goToPreviousNote}>◀︎</FontSizeButton>
+          <FontSizeButton onClick={goToNextNote} disabled={index === totalItems - 1}>▶︎</FontSizeButton>
         </div>
       </ScriptTitle>
       <NotesWrapper>
@@ -172,6 +187,7 @@ function PresenterNotes({ title, content, index, isActive, setActiveItemIndex, t
             </Word>
           ))}
           </Content>
+          <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>
       </NotesWrapper>
     </>
