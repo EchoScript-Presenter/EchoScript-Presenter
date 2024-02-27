@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TimerSettings from './TimerSettings';
 import TimerProgressBar from './TimerProgressBar';
-import { TimerContainer } from './HeaderStyled';
+import { TimerContainer, Logo } from './HeaderStyled';
 import { StyledText } from './TimerProgressBarStyled';
 
 function Header({ isPresentationMode }) {
@@ -26,22 +26,25 @@ function Header({ isPresentationMode }) {
   }, [isPresentationMode, remainTime]);
 
   return (
-    <TimerContainer>
-      <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
-      {!isPresentationMode && (
-        <StyledText>
-          {formatTime(remainTime)} / {formatTime(timeLimit)}
-        </StyledText>
-      )}
-      {isPresentationMode && (
-        <TimerSettings
-          setTimeLimit={(newTime) => {
-            setTimeLimit(newTime);
-            setRemainTime(newTime); // 시간 설정 시 remainTime도 업데이트
-          }}
-        />
-      )}
-    </TimerContainer>
+    <>
+      <Logo image={`images/logo.png`} />
+      <TimerContainer>
+        <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
+        {!isPresentationMode && (
+          <StyledText>
+            {formatTime(remainTime)} / {formatTime(timeLimit)}
+          </StyledText>
+        )}
+        {isPresentationMode && (
+          <TimerSettings
+            setTimeLimit={(newTime) => {
+              setTimeLimit(newTime);
+              setRemainTime(newTime); // 시간 설정 시 remainTime도 업데이트
+            }}
+          />
+        )}
+      </TimerContainer>
+    </>
   );
 }
 

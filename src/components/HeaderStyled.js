@@ -9,3 +9,9 @@ export const TimerContainer = styled.div`
   margin: 0 auto; // 가운데 정렬
   background: white; // background color 일단 삭제해놓음
 `;
+
+export const Logo = styled.div`
+  background: url(${(props) => props.image}) center/contain no-repeat;
+  width: 150px;
+  height: 100px;
+`;
