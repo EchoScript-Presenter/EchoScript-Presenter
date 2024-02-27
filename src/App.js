@@ -36,6 +36,7 @@ function App() {
           triggerWord={triggerWord}
           isPresentationMode={isPresentationMode}
           currentSlideIndex={currentSlideIndex}
+          setCurrentSlideIndex={setCurrentSlideIndex} // 현재 슬라이드 인덱스 변경 함수 전달???
         />
       </BodyContainer>
       <FooterContainer>
