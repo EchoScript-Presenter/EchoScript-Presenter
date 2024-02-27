@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ItemsCarousel from 'react-items-carousel';
+import {
+  SlideIndicatorContainer,
+  SlideIndicatorInput,
+  TotalSlides,
+} from './FooterStyled';
 
 function FooterCarousel({ setCurrentSlideIndex }) {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
@@ -47,25 +52,47 @@ function FooterCarousel({ setCurrentSlideIndex }) {
     };
   }, [activeItemIndex, numberOfCards, carouselItems.length]);
 
+  const handleSlideNumberChange = (e) => {
+    const slideNumber = parseInt(e.target.value, 10) - 1;
+    if (
+      !isNaN(slideNumber) &&
+      slideNumber >= 0 &&
+      slideNumber < carouselItems.length
+    ) {
+      setActiveItemIndex(slideNumber);
+      setCurrentSlideIndex(carouselItems[slideNumber]?.slideIndex || 0);
+    }
+  };
+
   return (
-    <ItemsCarousel
-      activeItemIndex={activeItemIndex}
-      numberOfCards={numberOfCards}
-    >
-      {carouselItems.map((item, index) => (
-        <img
-          key={index}
-          src={item.src}
-          alt={`Slide ${item.slideIndex}`}
-          onClick={() => {
-            const newActiveIndex = index - Math.floor(numberOfCards / 2); // 중앙 이미지 기준으로 계산
-            setActiveItemIndex(Math.max(0, newActiveIndex)); // 인덱스가 0보다 작아지지 않도록 조정
-            setCurrentSlideIndex(item.slideIndex);
-          }}
-          style={{ width: '100%', height: 'auto', objectFit: 'fill' }} // 스타일 조정
+    <>
+      <ItemsCarousel
+        activeItemIndex={activeItemIndex}
+        numberOfCards={numberOfCards}
+      >
+        {carouselItems.map((item, index) => (
+          <img
+            key={index}
+            src={item.src}
+            alt={`Slide ${item.slideIndex}`}
+            onClick={() => {
+              const newActiveIndex = index - Math.floor(numberOfCards / 2); // 중앙 이미지 기준으로 계산
+              setActiveItemIndex(Math.max(0, newActiveIndex)); // 인덱스가 0보다 작아지지 않도록 조정
+              setCurrentSlideIndex(item.slideIndex);
+            }}
+            style={{ width: '100%', height: 'auto', objectFit: 'fill' }} // 스타일 조정
+          />
+        ))}
+      </ItemsCarousel>
+      <SlideIndicatorContainer>
+        <SlideIndicatorInput
+          type="number"
+          value={activeItemIndex + 1}
+          onChange={handleSlideNumberChange}
         />
-      ))}
-    </ItemsCarousel>
+        <TotalSlides>/{carouselItems.length - 4}</TotalSlides>
+      </SlideIndicatorContainer>
+    </>
   );
 }
 
