@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import {
   SlideIndicatorContainer,
@@ -11,20 +11,23 @@ function FooterCarousel({ setCurrentSlideIndex }) {
   const [numberOfCards, setNumberOfCards] = useState(5); // 슬라이드에 보여줄 아이템 수
 
   // Carousel에 표시할 이미지 데이터
-  const carouselItems = [
-    { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 1 },
-    { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 2 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt1.png`, slideIndex: 3 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt2.png`, slideIndex: 4 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt3.png`, slideIndex: 5 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt4.png`, slideIndex: 6 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt5.png`, slideIndex: 7 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt6.png`, slideIndex: 8 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt7.png`, slideIndex: 9 },
-    { src: `${process.env.PUBLIC_URL}/images/ppt8.png`, slideIndex: 10 },
-    { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 11 },
-    { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 12 },
-  ];
+  const carouselItems = useMemo(
+    () => [
+      { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 1 },
+      { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 2 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt1.png`, slideIndex: 3 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt2.png`, slideIndex: 4 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt3.png`, slideIndex: 5 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt4.png`, slideIndex: 6 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt5.png`, slideIndex: 7 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt6.png`, slideIndex: 8 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt7.png`, slideIndex: 9 },
+      { src: `${process.env.PUBLIC_URL}/images/ppt8.png`, slideIndex: 10 },
+      { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 11 },
+      { src: `${process.env.PUBLIC_URL}/images/empty.png`, slideIndex: 12 },
+    ],
+    []
+  );
 
   useEffect(() => {
     const centralIndex = activeItemIndex + Math.floor(numberOfCards / 2);

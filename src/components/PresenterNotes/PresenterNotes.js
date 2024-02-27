@@ -35,7 +35,7 @@ const NotesWrapper = styled.div`
   gap: 20px;
   width: 100%;
   overflow-y: auto;
-  margin-top: 0px;  
+  margin-top: 0px;
 `;
 
 const PresenterNotesContainer = styled.div`
@@ -46,7 +46,7 @@ const PresenterNotesContainer = styled.div`
   overflow-y: auto;
   background-color: #ffffff; /* 메모장 배경색 */
   border-top: 30px solid #ffcc66; /* 테이프 또는 클립 색상 */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   word-wrap: break-word;
   font-weight: bold;
@@ -57,20 +57,20 @@ const PresenterNotesContainer = styled.div`
 const Title = styled.div`
   margin-top: -5px;
   font-weight: bold;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
   font-size: 20px;
 `;
 
 const Word = styled.span`
   margin-right: 5px;
-  color: ${props => {
+  color: ${(props) => {
     if (props.highlighted) return 'black';
     if (props.previous) return 'gray';
     return 'black';
   }};
-  background-color: ${props => props.highlighted ? '#ff0' : 'transparent'};
+  background-color: ${(props) => (props.highlighted ? '#ff0' : 'transparent')};
   display: inline-block;
-  
+
   &.highlighted {
     background-color: #ff0;
   }
@@ -78,31 +78,42 @@ const Word = styled.span`
 
 const BottomRightText = styled.h3`
   position: absolute;
-  top: 0; 
-  right: 15px; 
-  font-size: 16px; 
-  font-weight: normal; 
-  color: black; 
-  font-size:13px;
+  top: 0;
+  right: 15px;
+  font-size: 16px;
+  font-weight: normal;
+  color: black;
+  font-size: 13px;
   padding: 4px 6px; /* 내부 여백 추가 */
   background-color: #f8f9fa; /* 배경색 지정 */
   border: 1px solid #ced4da; /* 테두리 추가 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 `;
 
-
-function PresenterNotes({ noteindex, title, content, index, isActive, setActiveItemIndex, totalItems, isPresentationMode }) {
+function PresenterNotes({
+  noteindex,
+  title,
+  content,
+  index,
+  isActive,
+  setActiveItemIndex,
+  totalItems,
+  isPresentationMode,
+}) {
   const notesRef = useRef(null);
-  const [fontSizes, setFontSizes] = useState(() => new Array(totalItems).fill(16));
+  const [fontSizes, setFontSizes] = useState(() =>
+    new Array(totalItems).fill(16)
+  );
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const currentFontSize = fontSizes[index];
 
   useEffect(() => {
     let intervalId;
 
-    if (isActive && isPresentationMode == false) { // isPresentationMode가 true이고 isActive일 때만 실행
+    if (isActive && isPresentationMode === false) {
+      // isPresentationMode가 true이고 isActive일 때만 실행
       intervalId = setInterval(() => {
-        setHighlightedIndex(prevIndex => {
+        setHighlightedIndex((prevIndex) => {
           const newIndex = prevIndex + 1;
           const container = notesRef.current;
           const highlightedElement = container.querySelector('.highlighted');
@@ -115,7 +126,10 @@ function PresenterNotes({ noteindex, title, content, index, isActive, setActiveI
             if (elementTop < scrollPosition) {
               container.scrollTo({ top: elementTop, behavior: 'smooth' });
             } else if (elementBottom > scrollPosition + containerHeight) {
-              container.scrollTo({ top: elementBottom - containerHeight, behavior: 'smooth' });
+              container.scrollTo({
+                top: elementBottom - containerHeight,
+                behavior: 'smooth',
+              });
             }
           } else {
             if (index === totalItems - 1) {
@@ -136,24 +150,26 @@ function PresenterNotes({ noteindex, title, content, index, isActive, setActiveI
   }, [isActive, index, setActiveItemIndex, totalItems, isPresentationMode]);
 
   const increaseFontSize = () => {
-    setFontSizes(prevSizes => {
-      return prevSizes.map(size => Math.min(size + 2, 26)); // 모든 슬라이드의 폰트 크기를 2px씩 증가
-    });
-  };
-  
-  const decreaseFontSize = () => {
-    setFontSizes(prevSizes => {
-      return prevSizes.map(size => Math.max(size - 2, 14)); // 모든 슬라이드의 폰트 크기를 2px씩 감소
+    setFontSizes((prevSizes) => {
+      return prevSizes.map((size) => Math.min(size + 2, 26)); // 모든 슬라이드의 폰트 크기를 2px씩 증가
     });
   };
 
-  const goToPreviousNote = () => {// 첫번째 presenternote라면 previous slide move 중지
+  const decreaseFontSize = () => {
+    setFontSizes((prevSizes) => {
+      return prevSizes.map((size) => Math.max(size - 2, 14)); // 모든 슬라이드의 폰트 크기를 2px씩 감소
+    });
+  };
+
+  const goToPreviousNote = () => {
+    // 첫번째 presenternote라면 previous slide move 중지
     if (index > 0) {
       setActiveItemIndex((index - 1 + totalItems) % totalItems);
     }
   };
 
-  const goToNextNote = () => { // 마지막 presenternote라면 애니메이션 중지 & next move 중지
+  const goToNextNote = () => {
+    // 마지막 presenternote라면 애니메이션 중지 & next move 중지
     if (index < totalItems - 1) {
       setActiveItemIndex((index + 1) % totalItems);
     }
@@ -164,28 +180,44 @@ function PresenterNotes({ noteindex, title, content, index, isActive, setActiveI
   return (
     <>
       <ScriptTitle>
-        <h2 style={{ fontSize: '25px', marginLeft: '10px', display: 'inline-block' }}>Your Script</h2>
+        <h2
+          style={{
+            fontSize: '25px',
+            marginLeft: '10px',
+            display: 'inline-block',
+          }}
+        >
+          Your Script
+        </h2>
         <div>
           <FontSizeButton onClick={increaseFontSize}>+</FontSizeButton>
           <FontSizeButton onClick={decreaseFontSize}>-</FontSizeButton>
           <FontSizeButton onClick={goToPreviousNote}>◀︎</FontSizeButton>
-          <FontSizeButton onClick={goToNextNote} disabled={index === totalItems - 1}>▶︎</FontSizeButton>
+          <FontSizeButton
+            onClick={goToNextNote}
+            disabled={index === totalItems - 1}
+          >
+            ▶︎
+          </FontSizeButton>
         </div>
       </ScriptTitle>
       <NotesWrapper>
-        <PresenterNotesContainer ref={notesRef} style={{ fontSize: `${currentFontSize}px` }}>
+        <PresenterNotesContainer
+          ref={notesRef}
+          style={{ fontSize: `${currentFontSize}px` }}
+        >
           <Title>{title}</Title>
           <Content>
-          {content.split(' ').map((word, idx) => (
-            <Word
-              key={idx}
-              className={idx === highlightedIndex ? 'highlighted' : ''}
-              previous={idx < highlightedIndex}
-              highlighted={idx === highlightedIndex}
-            >
-              {word}
-            </Word>
-          ))}
+            {content.split(' ').map((word, idx) => (
+              <Word
+                key={idx}
+                className={idx === highlightedIndex ? 'highlighted' : ''}
+                previous={idx < highlightedIndex}
+                highlighted={idx === highlightedIndex}
+              >
+                {word}
+              </Word>
+            ))}
           </Content>
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>
