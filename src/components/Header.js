@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TimerSettings from './TimerSettings';
 import TimerProgressBar from './TimerProgressBar';
 import { TimerContainer } from './HeaderStyled';
+import { StyledText } from './TimerProgressBarStyled';
 
 function Header({ isPresentationMode }) {
   const [timeLimit, setTimeLimit] = useState(10 * 60); //10분이 기본값
@@ -28,9 +29,9 @@ function Header({ isPresentationMode }) {
     <TimerContainer>
       <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
       {!isPresentationMode && (
-        <div>
+        <StyledText>
           {formatTime(remainTime)} / {formatTime(timeLimit)}
-        </div>
+        </StyledText>
       )}
       {isPresentationMode && (
         <TimerSettings
@@ -41,8 +42,6 @@ function Header({ isPresentationMode }) {
         />
       )}
     </TimerContainer>
-
-    
   );
 }
 

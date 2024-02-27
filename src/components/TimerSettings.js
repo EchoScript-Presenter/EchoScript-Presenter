@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-
-const StyledInput = styled.input`
-  width: 50%;
-  padding: 8px;
-  margin: 0px 10px 20px 10px; // top 마진을 0으로 조정
-  border: 2px solid #4caf50;
-  border-radius: 8px;
-  outline: none;
-  }
-`;
+import { StyledInput } from './TimerProgressBarStyled';
 
 function TimerSettings({ setTimeLimit }) {
   const [inputTime, setInputTime] = useState('');
@@ -24,7 +14,6 @@ function TimerSettings({ setTimeLimit }) {
     return () => clearTimeout(timer);
   }, [inputTime, setTimeLimit]);
 
-  
   const handleTimeChange = (event) => {
     const { value } = event.target;
     // 입력된 값이 음수일 경우 절대값으로 변경, 빈 문자열인 경우 그대로 빈 문자열을 유지!
