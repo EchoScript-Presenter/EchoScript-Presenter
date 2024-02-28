@@ -89,6 +89,7 @@ const BottomRightText = styled.h3`
   border: 1px solid #ced4da; /* 테두리 추가 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 `;
+console.log('xx');
 
 function PresenterNotes({
   noteindex,
