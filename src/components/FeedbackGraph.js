@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { MdSpeakerNotesOff } from "react-icons/md"; // 일단은 안씀
 import { PiProhibitBold } from "react-icons/pi";
 import speakerIcon from './speaker.png';
+import axios from 'axios';
 
 
 const dataSets = [
@@ -25,11 +26,34 @@ const dataSets = [
 
 function FeedbackGraph() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [volume, setVolume] = useState(0);
+  const [pitch, setPitch] = useState(0);
+  const [speed, setSpeed] = useState(0);
+  const [filler, setFiller] = useState(0);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseVolume = await axios.get('http://localhost:8000/data_volume');
+        const responsePitch = await axios.get('http://localhost:8000/data_pitch');
+        const responseSpeed = await axios.get('http://localhost:8000/data_speed');
+        const responseFiller = await axios.get('http://localhost:8000/data_filler');
+
+        setVolume(responseVolume.data.volume);
+        setPitch(responsePitch.data.pitch);
+        setSpeed(responseSpeed.data.speed);
+        setFiller(responseFiller.data.filler);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
     const interval = setInterval(() => {
       setActiveIndex(prevIndex => (prevIndex + 1) % dataSets.length);
     }, 1000); // 1초 간격으로 업데이트
+    // 진영: 여기 setInterval(fetchData, 1000); 로 바꿔준 후에, volume/pitch/speecd/filler 로 사용하면 돼요!
+    // 숫자 값만 보내느라 포맷 지정(:.2f 반올림)을 못했어요! 참고해 주세용
+    // filler word는 카운트 값만 전송되니까 여기서 5회 이상이면 경고 띄워 주는 조건문 다시 생성해주세요!
 
     return () => clearInterval(interval);
   }, [activeIndex]);
