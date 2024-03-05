@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import subprocess
-from feature import filler_words_count, speech_rate_syllables_per_minute, pitch_values, intensity_values
+from feature import *
 
 app = FastAPI()
 
