@@ -213,16 +213,17 @@ function PresenterNotes({
         >
           <Title>{title}</Title>
           <Content>
-            {content.split(' ').map((word, idx) => (
-              <Word
-                key={idx}
-                className={idx === highlightedIndex ? 'highlighted' : ''}
-                previous={idx < highlightedIndex}
-                highlighted={idx === highlightedIndex}
-              >
-                {word}
-              </Word>
-            ))}
+          {content ? content.split(' ').map((word, idx) => (
+          <Word
+            key={idx}
+            className={idx === highlightedIndex ? 'highlighted' : ''}
+            previous={idx < highlightedIndex}
+            highlighted={idx === highlightedIndex}
+          >
+            {word}
+          </Word>
+        )) : null}
+
           </Content>
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>
