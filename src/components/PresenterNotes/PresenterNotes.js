@@ -100,7 +100,7 @@ function PresenterNotes({
   setActiveItemIndex,
   totalItems,
   isPresentationMode,
-  props
+  props,
 }) {
   const notesRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
@@ -108,13 +108,13 @@ function PresenterNotes({
   );
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const currentFontSize = fontSizes[index];
-  
+
   //진영: props.interimResult가 실시간 음성 인식 텍스트 결과 변수입니다! 어디에 둘 지 몰라서 일단 상단에 로그 찍는 코드라도 추가해뒀어욥,,,
   // console.log(props.interimResult);
 
   useEffect(() => {
     let intervalId;
-  
+
     if (isActive && isPresentationMode === false) {
       intervalId = setInterval(() => {
         setHighlightedIndex((prevIndex) => {
@@ -147,12 +147,11 @@ function PresenterNotes({
         });
       }, 1000);
     }
-  
+
     return () => {
       clearInterval(intervalId);
     };
   }, [isActive, index, setActiveItemIndex, totalItems, isPresentationMode]);
-  
 
   const increaseFontSize = () => {
     setFontSizes((prevSizes) => {
@@ -213,17 +212,18 @@ function PresenterNotes({
         >
           <Title>{title}</Title>
           <Content>
-          {content ? content.split(' ').map((word, idx) => (
-          <Word
-            key={idx}
-            className={idx === highlightedIndex ? 'highlighted' : ''}
-            previous={idx < highlightedIndex}
-            highlighted={idx === highlightedIndex}
-          >
-            {word}
-          </Word>
-        )) : null}
-
+            {content
+              ? content.split(' ').map((word, idx) => (
+                  <Word
+                    key={idx}
+                    className={idx === highlightedIndex ? 'highlighted' : ''}
+                    previous={idx < highlightedIndex}
+                    highlighted={idx === highlightedIndex}
+                  >
+                    {word}
+                  </Word>
+                ))
+              : null}
           </Content>
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>
