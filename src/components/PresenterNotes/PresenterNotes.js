@@ -198,12 +198,7 @@ function PresenterNotes({
           <FontSizeButton onClick={increaseFontSize}>+</FontSizeButton>
           <FontSizeButton onClick={decreaseFontSize}>-</FontSizeButton>
           <FontSizeButton onClick={goToPreviousNote}>◀︎</FontSizeButton>
-          <FontSizeButton
-            onClick={goToNextNote}
-            disabled={index === totalItems - 1}
-          >
-            ▶︎
-          </FontSizeButton>
+          <FontSizeButton onClick={goToNextNote} disabled={index === totalItems - 1}>▶︎</FontSizeButton>
         </div>
       </ScriptTitle>
       <NotesWrapper>
