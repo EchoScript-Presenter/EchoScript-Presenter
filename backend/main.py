@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import subprocess
+from feature import filler_words_count, speech_rate_syllables_per_minute, pitch_values, intensity_values
 
 app = FastAPI()
 
@@ -30,3 +31,23 @@ async def stop_recording():
         feature_process.terminate()
         feature_process = None
     return {"message": "Recording stopped successfully!"}
+
+@app.get("/data_volume")
+async def get_volume():
+    volume_data = intensity_values
+    return volume_data
+
+@app.get("/data_pitch")
+async def get_pitch():
+    pitch_data = pitch_values
+    return pitch_data
+
+@app.get("/data_speed")
+async def get_speed():
+    speed_data = speech_rate_syllables_per_minute
+    return speed_data
+
+@app.get("/data_filler")
+async def get_filler():
+    filler_data = filler_words_count
+    return filler_data
