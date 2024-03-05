@@ -109,9 +109,8 @@ function PresenterNotes({
 
   useEffect(() => {
     let intervalId;
-
+  
     if (isActive && isPresentationMode === false) {
-      // isPresentationMode가 true이고 isActive일 때만 실행
       intervalId = setInterval(() => {
         setHighlightedIndex((prevIndex) => {
           const newIndex = prevIndex + 1;
@@ -143,11 +142,12 @@ function PresenterNotes({
         });
       }, 1000);
     }
-
+  
     return () => {
       clearInterval(intervalId);
     };
   }, [isActive, index, setActiveItemIndex, totalItems, isPresentationMode]);
+  
 
   const increaseFontSize = () => {
     setFontSizes((prevSizes) => {
