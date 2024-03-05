@@ -3,6 +3,7 @@ import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import { SpeechProvider } from './components/SpeechContext';
 import {
   AppContainer,
   HeaderContainer,
@@ -23,28 +24,30 @@ function App() {
 
   return (
     <AppContainer>
-      <HeaderContainer>
-        <Header isPresentationMode={isPresentationMode} />
-        <Sidebar
-          isPresentationMode={isPresentationMode}
-          setIsPresentationMode={setIsPresentationMode}
-        />
-      </HeaderContainer>
-      <BodyContainer>
-        <MainArea
-          notes={notes}
-          triggerWord={triggerWord}
-          isPresentationMode={isPresentationMode}
-          currentSlideIndex={currentSlideIndex}
-          setCurrentSlideIndex={setCurrentSlideIndex} // 현재 슬라이드 인덱스 변경 함수 전달???
-        />
-      </BodyContainer>
-      <FooterContainer>
-        <Footer
-          isPresentationMode={isPresentationMode}
-          setCurrentSlideIndex={setCurrentSlideIndex}
-        />
-      </FooterContainer>
+      <SpeechProvider>
+        <HeaderContainer>
+          <Header isPresentationMode={isPresentationMode} />
+          <Sidebar
+            isPresentationMode={isPresentationMode}
+            setIsPresentationMode={setIsPresentationMode}
+          />
+        </HeaderContainer>
+        <BodyContainer>
+          <MainArea
+            notes={notes}
+            triggerWord={triggerWord}
+            isPresentationMode={isPresentationMode}
+            currentSlideIndex={currentSlideIndex}
+            setCurrentSlideIndex={setCurrentSlideIndex} // 현재 슬라이드 인덱스 변경 함수 전달???
+          />
+        </BodyContainer>
+        <FooterContainer>
+          <Footer
+            isPresentationMode={isPresentationMode}
+            setCurrentSlideIndex={setCurrentSlideIndex}
+          />
+        </FooterContainer>
+      </SpeechProvider>
     </AppContainer>
   );
 }
