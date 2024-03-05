@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import Sidebar from '../Sidebar';
 
 const ScriptTitle = styled.h2`
   display: flex;
@@ -99,6 +100,7 @@ function PresenterNotes({
   setActiveItemIndex,
   totalItems,
   isPresentationMode,
+  props
 }) {
   const notesRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
@@ -106,6 +108,9 @@ function PresenterNotes({
   );
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const currentFontSize = fontSizes[index];
+  
+  // 진영: props.interimResult가 실시간 음성 인식 텍스트 결과 변수입니다! 어디에 둘 지 몰라서 일단 상단에 로그 찍는 코드라도 추가해뒀어욥,,,
+  console.log(props.interimResult);
 
   useEffect(() => {
     let intervalId;
