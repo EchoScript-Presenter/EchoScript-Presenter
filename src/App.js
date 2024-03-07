@@ -3,6 +3,7 @@ import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import ScrollLogger from './components/ScrollLogger';
 import { SpeechProvider } from './components/SpeechContext';
 import {
   AppContainer,
@@ -40,6 +41,7 @@ function App() {
             currentSlideIndex={currentSlideIndex}
             setCurrentSlideIndex={setCurrentSlideIndex} // 현재 슬라이드 인덱스 변경 함수 전달???
           />
+          <ScrollLogger />
         </BodyContainer>
         <FooterContainer>
           <Footer
