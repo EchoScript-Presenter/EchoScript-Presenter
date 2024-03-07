@@ -27,7 +27,7 @@ function Header({ isPresentationMode }) {
 
   return (
     <>
-      <Logo image={`images/logo.png`} />
+      <Logo image={`images/logo3.png`} />
       <TimerContainer>
         <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
         {!isPresentationMode && (
