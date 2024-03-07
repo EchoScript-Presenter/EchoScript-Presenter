@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import useSpeechToText from 'react-hook-speech-to-text';
 import axios from 'axios';
 
@@ -8,6 +8,8 @@ export const useSpeech = () => useContext(SpeechContext);
 
 export const SpeechProvider = ({ children }) => {
   const [speechResults, setSpeechResults] = useState([]);
+  const [words, setWords] = useState([]);
+  const [interimWords, setInterimWords] = useState([]);
 
   const { error, startSpeechToText, stopSpeechToText, results, interimResult } =
     useSpeechToText({
@@ -15,12 +17,6 @@ export const SpeechProvider = ({ children }) => {
       useLegacyResults: false,
       speechRecognitionProperties: { lang: 'en-US', interimResults: true },
     });
-
-  // 음성 인식 결과 업데이트 로직
-  const updateSpeechResults = () => {
-    // `results`를 사용, 음성 인식 결과 업데이트
-    setSpeechResults(results.map((result) => result.transcript));
-  };
 
   // startRecording, stopRecording 로직
   const startRecording = () => {
@@ -38,7 +34,7 @@ export const SpeechProvider = ({ children }) => {
             startSpeechToText();
             // 음성 인식 시작 시 결과 초기화
             setSpeechResults([]);
-            console.log('SpeechContext', interimResult);
+            console.log('interimResult', interimResult);
           })
           .catch((error) => {
             console.error('Error starting recording:', error);
@@ -56,8 +52,11 @@ export const SpeechProvider = ({ children }) => {
       .then((response) => {
         console.log(response.data);
         stopSpeechToText();
-        // 음성 인식 중지 시 결과 업데이트
-        updateSpeechResults();
+        // 로컬스토리지에 현재 words 저장
+        localStorage.setItem('savedWords', JSON.stringify(words));
+        // 음성 인식 중지 시 결과 비우기
+        setSpeechResults([]);
+        setWords([]); // 이제 words 상태를 비웁니다.
       })
       .catch((error) => {
         console.error('Error stopping recording:', error);
@@ -65,13 +64,40 @@ export const SpeechProvider = ({ children }) => {
   };
 
   // 음성 인식 결과가 변경될 때마다 결과 업데이트
-  React.useEffect(() => {
-    updateSpeechResults();
+  useEffect(() => {
+    if (results.length > 0) {
+      setSpeechResults(results.map((result) => result.transcript));
+    }
   }, [results]);
+
+  // console.log('speechResults', speechResults);
+
+  // 음성 인식 결과가 업데이트될 때마다 단어별로 분할하여 상태 업데이트
+  useEffect(() => {
+    const newWords = speechResults
+      .flatMap((result) => result.split(' '))
+      .filter((word) => word.trim().length > 0);
+    setWords(newWords);
+  }, [speechResults]);
+
+  useEffect(() => {
+    if (interimResult) {
+      const interimWords = interimResult
+        .split(' ')
+        .filter((word) => word.trim().length > 0);
+      // interimWords를 사용하여 실시간으로 단어를 처리하거나 하이라이트하는 로직 구현
+    }
+  }, [interimResult]);
 
   return (
     <SpeechContext.Provider
-      value={{ interimResult, startRecording, stopRecording }}
+      value={{
+        interimResult,
+        speechResults,
+        words,
+        startRecording,
+        stopRecording,
+      }}
     >
       {children}
     </SpeechContext.Provider>
