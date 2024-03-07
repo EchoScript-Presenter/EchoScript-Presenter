@@ -3,6 +3,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import speakerIcon from './speaker.png';
 import axios from 'axios';
 
+const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 300) => {
+  return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
+};
+
 function FeedbackGraph() {
   const [volume, setVolume] = useState(0);
   const [pitch, setPitch] = useState(0);
@@ -23,12 +27,16 @@ function FeedbackGraph() {
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
         const responseFiller = await axios.get('http://localhost:8000/data_filler');
 
-      console.log('Volume:', responseVolume.data); // 데이터 설정 전 로깅
-      setVolume(responseVolume.data.volume);
-      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
-      setPitch(responsePitch.data.pitch);
-      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
-      setSpeed(responseSpeed.data.speed);
+      const normalizedVolume = normalize(responseVolume.data.volume, 0, 70);
+      const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
+      const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 40);
+
+      console.log('Volume:', normalizedVolume); // 데이터 설정 전 로깅
+      setVolume(normalizedVolume);
+      console.log('Pitch:', normalizedPitch); // 데이터 설정 전 로깅
+      setPitch(normalizedPitch);
+      console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
+      setSpeed(normalizedSpeed);
       console.log('Filler:', responseFiller.data); // 데이터 설정 전 로깅
       setFiller(responseFiller.data.filler);
     } catch (error) {
@@ -125,14 +133,14 @@ function FeedbackGraph() {
       <div style={{ width: '20%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       {volume === 0 && (
         <div style={{ width: '20%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <img src={speakerIcon} alt="Speaker.png" style={{ width: '70px', height: '70px',  marginRight:'70px',  marginTop:'60px' }} />
+        <img src={speakerIcon} alt="Speaker.png" style={{ width: '70px', height: '70px',  marginRight:'70px',  marginTop:'80px' }} />
         <p style={{ marginTop: '10px', color: 'black', fontSize: '16px', marginRight:'80px', fontWeight: 'bold' }}>Speak!</p>
       </div>
       )}
 
       {filler && (
         <div style={{ width: '20%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <img src={speakerIcon} alt="Speaker.png" style={{ width: '70px', height: '70px',  marginRight:'70px',  marginTop:'60px' }} />
+          <img src={speakerIcon} alt="Speaker.png" style={{ width: '70px', height: '70px',  marginRight:'70px',  marginTop:'80px' }} />
           <p style={{ marginTop: '10px', color: 'black', fontSize: '16px', marginRight:'80px', fontWeight: 'bold' }}>Filler!</p>
         </div>
       )}
