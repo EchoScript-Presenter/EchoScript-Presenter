@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
 import speakerIcon from './speaker.png';
 import axios from 'axios';
+import { PitchDetector } from 'pitchy';
 
 const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 300) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
@@ -18,19 +19,16 @@ function FeedbackGraph() {
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
   ];
+  // console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
         const responseFiller = await axios.get('http://localhost:8000/data_filler');
 
-      const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
       const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
 
-      console.log('Pitch:', normalizedPitch); // 데이터 설정 전 로깅
-      setPitch(normalizedPitch);
       console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
       setSpeed(normalizedSpeed);
       console.log('Filler:', responseFiller.data); // 데이터 설정 전 로깅
@@ -48,7 +46,6 @@ function FeedbackGraph() {
 
   useEffect(() => {
     const adjustInterval = setInterval(() => {
-      setPitch(p => p !== 0 ? Math.max(p + Math.floor(Math.random() * 5) - 2, 0) : 0);
       setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
     }, 500);
 
@@ -79,11 +76,12 @@ function FeedbackGraph() {
           setVolume(normalizedVolume);
         };
 
-        const interval = setInterval(getVolume, 100);
-        return () => {
-          clearInterval(interval);
-          audioContext.close(); 
-        };
+      const interval = setInterval(getVolume, 100);
+      return () => {
+        clearInterval(interval);
+        audioContext.close(); 
+      };
+      
       } catch (error) {
         console.error('Error accessing the microphone', error);
       }
@@ -91,6 +89,45 @@ function FeedbackGraph() {
 
     setupMicrophone();
   }, []);
+
+
+  // 피치 계산
+  // 남자 기준, 여자 기준에 맞추는 normalization 필요
+  // 진영 노트북 기준 큰 소리만 인식되는 상태인데 일단 Push 할게요
+  useEffect(() => {
+  const updatePitch = async () => {
+    try {
+      const audioContext = new window.AudioContext();
+      const analyserNode = audioContext.createAnalyser();
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContext.createMediaStreamSource(stream).connect(analyserNode);
+      const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
+      detector.minVolumeDecibels = -15;
+      const input = new Float32Array(detector.inputLength);
+
+      const getPitch = (analyserNode, detector, input, sampleRate) => {
+        analyserNode.getFloatTimeDomainData(input);
+        const [pitch, clarity] = detector.findPitch(input, sampleRate);
+        // let normalizePitch = Math.round(pitch * 10) / 10 개발자분이 사용하던 정규화 식인데 일단 넣음
+        setPitch(pitch);
+      };
+
+      getPitch(analyserNode, detector, input, audioContext.sampleRate);
+
+      const interval = setInterval(() => {
+        getPitch(analyserNode, detector, input, audioContext.sampleRate);
+      }, 100);
+
+      return () => clearInterval(interval);
+    } catch (error) {
+      console.error('Error accessing the microphone', error);
+    }
+  };
+
+  updatePitch();
+}, []);
+  
 
   useEffect(() => {
     let hideTimer;
