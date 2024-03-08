@@ -16,20 +16,21 @@ function PresenterNotesCarousel({
         noteindex: '1/1',
         title: 'Greetings',
         content:
-        "Good [morning/afternoon/evening] everyone! 👀 Today I want to explore the concept of The Design Thinking Process in User Experience Design." ,
+          'Hello, everyone! 👀 Today I want to explore the concept of The Design Thinking Process in User Experience Design.',
       },
       {
         slideIndex: 2,
         noteindex: '1/3',
         title: 'Design Process-1',
         content:
-          'The Design Thinking Process is a flexible and dynamic problem-solving approach that emphasizes creativity and innovation. 👀 It revolves around understanding and addressing user needs through a series of structured steps. While there are several versions of the process I will outline the fundamental stages.'},
+          'The Design Thinking Process is a flexible and dynamic problem-solving approach that emphasizes creativity and innovation. 👀 It revolves around understanding and addressing user needs through a series of structured steps. While there are several versions of the process I will outline the fundamental stages.',
+      },
       {
         slideIndex: 2,
         noteindex: '2/3',
         title: 'Design Process-2',
         content:
-          'At its core the Design Thinking Process begins with empathizing with users to gain insights into their experiences. 👀 This is followed by clearly defining the problem based on the information gathered. The process moves into the ideation phase where diverse ideas are generated to tackle the identified problem. Subsequently, prototypes develop based on the most promising ideas. 👀'
+          'At its core the Design Thinking Process begins with empathizing with users to gain insights into their experiences. 👀 This is followed by clearly defining the problem based on the information gathered. The process moves into the ideation phase where diverse ideas are generated to tackle the identified problem. Subsequently, prototypes develop based on the most promising ideas. 👀',
       },
       {
         slideIndex: 2,
@@ -83,7 +84,6 @@ function PresenterNotesCarousel({
           'The Define stage is about gaining insights and then establishing the focus of the task.',
       },
 
-
       {
         slideIndex: 5,
         noteindex: '1/3',
@@ -96,8 +96,8 @@ function PresenterNotesCarousel({
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          'Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of ideas. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. 👀'      
-        },
+          'Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of ideas. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. 👀',
+      },
       {
         slideIndex: 5,
         noteindex: '3/3',
@@ -124,7 +124,8 @@ function PresenterNotesCarousel({
         slideIndex: 7,
         noteindex: '1/3',
         title: 'TEST-1',
-        content: 'The final stage of the design process is testing. We utilize the experience prototype as a means to gather invaluable feedback from users during this phase. 👀',
+        content:
+          'The final stage of the design process is testing. We utilize the experience prototype as a means to gather invaluable feedback from users during this phase. 👀',
       },
       {
         slideIndex: 7,
@@ -145,7 +146,8 @@ function PresenterNotesCarousel({
         slideIndex: 8,
         noteindex: '1/1',
         title: '8-1',
-        content: 'Here concludes the content I have prepared. Thank you for your attention. 👀',
+        content:
+          'Here concludes the content I have prepared. Thank you for your attention. 👀',
       },
     ],
     []
