@@ -13,9 +13,15 @@ import time
 import json
 from pydub import AudioSegment
 import threading
+import datetime
+import os
 
 
 app = FastAPI()
+
+class Position(BaseModel):
+    x: int
+    y: int
 
 is_recording = False  # 녹음 상태를 관리하는 변수
 recording_thread = None  # 녹음을 처리하는 스레드
@@ -30,7 +36,6 @@ app.add_middleware(
 
 def log_to_json_file(data):
     participant_name = "eunseo"
-    #current_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
     file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/analysis_log_{participant_name}.json"
     with open(file_name, "a") as file:
         json.dump(data, file, indent=4)
@@ -225,3 +230,4 @@ async def get_filler():
     filler_status = filler_words_true
     filler_words_true = False
     return {"filler": filler_status}
+
