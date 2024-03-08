@@ -22,17 +22,13 @@ function FeedbackGraph() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseVolume = await axios.get('http://localhost:8000/data_volume');
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
         const responseFiller = await axios.get('http://localhost:8000/data_filler');
 
-      const normalizedVolume = normalize(responseVolume.data.volume, 0, 70);
       const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
-      const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 40);
+      const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
 
-      console.log('Volume:', normalizedVolume); // 데이터 설정 전 로깅
-      setVolume(normalizedVolume);
       console.log('Pitch:', normalizedPitch); // 데이터 설정 전 로깅
       setPitch(normalizedPitch);
       console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
@@ -50,17 +46,51 @@ function FeedbackGraph() {
     return () => clearInterval(interval); 
   }, []); 
 
-  /// 그냥 실시간성이 되고 싶은 어설픈 트릭 (random value +-) 요기부터
   useEffect(() => {
     const adjustInterval = setInterval(() => {
-      setVolume(v => v !== 0 ? Math.max(v + Math.floor(Math.random() * 5) - 2, 0) : 0);
       setPitch(p => p !== 0 ? Math.max(p + Math.floor(Math.random() * 5) - 2, 0) : 0);
       setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
     }, 500);
 
     return () => clearInterval(adjustInterval);
   }, []);
-  /// 그냥 실시간성이 되고 싶은 어설픈 트릭 (random value +-) 요기까지
+
+  /// [Volume data js에서 받아오기]
+  useEffect(() => {
+    const setupMicrophone = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const audioContext = new AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 512;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        const getVolume = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for(let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+          }
+          let average = sum / bufferLength;
+          let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 0~70 사이로 정규화
+          setVolume(normalizedVolume);
+        };
+
+        const interval = setInterval(getVolume, 100);
+        return () => {
+          clearInterval(interval);
+          audioContext.close(); 
+        };
+      } catch (error) {
+        console.error('Error accessing the microphone', error);
+      }
+    };
+
+    setupMicrophone();
+  }, []);
 
   useEffect(() => {
     let hideTimer;
@@ -81,7 +111,7 @@ function FeedbackGraph() {
   return (
     <div style={{ display: 'flex', width: '100%', height: '70%' }}>
       <div style={{ width: '85%', height: '100%' }}>
-        <h2 style={{ width: '100%', marginLeft: '10px' }}>Real-time Feedback</h2>
+        <h2 style={{ width: '100%', marginLeft: '20px' }}>Real-time Feedback</h2>
         <ResponsiveContainer width="85%" height="80%">
           <BarChart
             layout="vertical"

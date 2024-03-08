@@ -57,7 +57,7 @@ export const PresenterNotesContainer = styled.div`
   word-wrap: break-word;
   font-weight: bold;
   line-height: 1.5;
-  position: relative; /* 포지션을 상대적으로 설정하여 테이프 또는 클립을 위치시킵니다. */
+  position: relative; 
 `;
 
 export const Title = styled.div`
@@ -89,7 +89,6 @@ export const BottomRightText = styled.h3`
   font-size: 16px;
   font-weight: normal;
   color: black;
-  font-size: 13px;
   padding: 4px 6px; /* 내부 여백 추가 */
   background-color: #f8f9fa; /* 배경색 지정 */
   border: 1px solid #ced4da; /* 테두리 추가 */
