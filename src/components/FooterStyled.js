@@ -2,12 +2,20 @@ import styled from 'styled-components';
 
 export const FooterCarouselContainer = styled.div`
   width: 70%;
+<<<<<<< HEAD
   //background: whitesmoke;
+=======
+  // background: whitesmoke;
+>>>>>>> f5801d19ef11b531ecf4d877a00fbac5d44a61b9
 `;
 
 export const FeedbackGraphContainer = styled.div`
   width: 30%;
+<<<<<<< HEAD
   background: #B98AF2;
+=======
+  // background: palevioletred;
+>>>>>>> f5801d19ef11b531ecf4d877a00fbac5d44a61b9
 `;
 
 export const SlideIndicatorContainer = styled.div`
