@@ -1,95 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSpeech } from '../SpeechContext';
 import styled from 'styled-components';
-
-const ScriptTitle = styled.h2`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 7px;
-  font-size: 20px;
-  margin-top: 5px;
-  margin-bottom: 0px;
-`;
-
-const FontSizeButton = styled.button`
-  font-size: 16px;
-  margin-right: 10px;
-  border-radius: 20px;
-  background-color: #be8be1;
-  color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 8px 16px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    background-color: #6a5acd;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const NotesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  overflow-y: auto;
-  margin-top: 0px;
-`;
-
-const PresenterNotesContainer = styled.div`
-  padding: 20px;
-  margin: 10px auto;
-  width: 300px;
-  max-height: 260px;
-  overflow-y: auto;
-  background-color: #ffffff; /* 메모장 배경색 */
-  border-top: 30px solid #ffcc66; /* 테이프 또는 클립 색상 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
-  word-wrap: break-word;
-  font-weight: bold;
-  line-height: 1.5;
-  position: relative; /* 포지션을 상대적으로 설정하여 테이프 또는 클립을 위치시킵니다. */
-`;
-
-const Title = styled.div`
-  margin-top: -5px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  font-size: 20px;
-`;
-
-const Word = styled.span`
-  margin-right: 5px;
-  color: ${(props) => {
-    if (props.highlighted) return 'black';
-    if (props.previous) return 'gray';
-    return 'black';
-  }};
-  background-color: ${(props) => (props.highlighted ? '#ff0' : 'transparent')};
-  display: inline-block;
-
-  &.highlighted {
-    background-color: #ff0;
-  }
-`;
-
-const BottomRightText = styled.h3`
-  position: absolute;
-  top: 0;
-  right: 15px;
-  font-size: 16px;
-  font-weight: normal;
-  color: black;
-  font-size: 13px;
-  padding: 4px 6px; /* 내부 여백 추가 */
-  background-color: #f8f9fa; /* 배경색 지정 */
-  border: 1px solid #ced4da; /* 테두리 추가 */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-`;
+import {
+  ScriptTitle,
+  FontSizeButton,
+  NotesWrapper,
+  PresenterNotesContainer,
+  Title,
+  Word,
+  BottomRightText,
+  Content,
+  HighlightedText,
+} from './PresenterNotesStyled';
 
 function PresenterNotes({
   noteindex,
@@ -101,57 +23,129 @@ function PresenterNotes({
   totalItems,
   isPresentationMode,
 }) {
-  const { interimResult } = useSpeech();
+  const { interimResult, words } = useSpeech();
   const notesRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
+
+  const contentWords = content.split(' ');
+  const displayContent = content.split(/(\s+|[.,!?:;])/).filter(Boolean); //화면에 표시되는 콘텐츠
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [matchedIndices, setMatchedIndices] = useState([]);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const currentFontSize = fontSizes[index];
 
-  //진영: props.interimResult가 실시간 음성 인식 텍스트 결과 변수입니다! 어디에 둘 지 몰라서 일단 상단에 로그 찍는 코드라도 추가해뒀어욥,,,
-  console.log(interimResult);
+  useEffect(() => {
+    // contentWords에서 구두점을 제거하고 소문자로 변환한 새 배열 생성
+    const processedContentWords = contentWords.map((word) =>
+      word.replace(/[.,!?:;"]/g, '').toLowerCase()
+    );
+
+    let newMatchedIndices = [];
+    let lastIndex = -1;
+
+    // words 배열 순회하며 processedContentWords와 매칭되는 인덱스 찾기
+    words.forEach((word) => {
+      const wordIndex = processedContentWords.indexOf(
+        word.toLowerCase(),
+        lastIndex + 1
+      );
+      if (wordIndex !== -1 && !newMatchedIndices.includes(wordIndex)) {
+        newMatchedIndices.push(wordIndex);
+        lastIndex = wordIndex; // 다음 검색 시작점 업데이트
+      }
+    });
+
+    setMatchedIndices(newMatchedIndices);
+  }, [words, interimResult]);
 
   useEffect(() => {
-    let intervalId;
+    const intervalId = setInterval(() => {
+      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+    }, 1000); // 예: 1초마다 인덱스 업데이트
 
-    if (isActive && isPresentationMode === false) {
-      intervalId = setInterval(() => {
-        setHighlightedIndex((prevIndex) => {
-          const newIndex = prevIndex + 1;
-          const container = notesRef.current;
-          const highlightedElement = container.querySelector('.highlighted');
-          if (highlightedElement) {
-            const containerHeight = container.clientHeight;
-            const elementHeight = highlightedElement.clientHeight;
-            const scrollPosition = container.scrollTop;
-            const elementTop = highlightedElement.offsetTop;
-            const elementBottom = elementTop + elementHeight;
-            if (elementTop < scrollPosition) {
-              container.scrollTo({ top: elementTop, behavior: 'smooth' });
-            } else if (elementBottom > scrollPosition + containerHeight) {
-              container.scrollTo({
-                top: elementBottom - containerHeight,
-                behavior: 'smooth',
-              });
-            }
-          } else {
-            if (index === totalItems - 1) {
-              clearInterval(intervalId); // 마지막 슬라이드일 때 애니메이션 정지
-            } else {
-              const nextIndex = (index + 1) % totalItems;
-              setActiveItemIndex(nextIndex);
-            }
-          }
-          return newIndex;
-        });
-      }, 1000);
+    return () => clearInterval(intervalId); // Cleanup
+  }, [words]);
+
+  useEffect(() => {
+    if (isActive && !isPresentationMode) {
+      const updateHighlightingBasedOnSpeech = () => {
+        // 여기서 인식된 단어를 바탕으로 하이라이트 업데이트 로직을 수행합니다.
+        // 인식된 단어와 대본 내 단어 매칭 로직, matchedIndices 상태 업데이트
+        // 이 로직은 words 상태의 변화에 따라 계속 업데이트 될 것입니다.
+      };
+
+      updateHighlightingBasedOnSpeech();
+
+      // 하이라이트된 요소가 있다면 스크롤을 조정하여 사용자에게 보이게 합니다.
+      const highlightedElement =
+        notesRef.current?.querySelector('.highlighted');
+      if (highlightedElement) {
+        const container = notesRef.current;
+        const containerHeight = container.clientHeight;
+        const elementHeight = highlightedElement.clientHeight;
+        const scrollPosition = container.scrollTop;
+        const elementTop = highlightedElement.offsetTop;
+        const elementBottom = elementTop + elementHeight;
+
+        if (elementTop < scrollPosition) {
+          container.scrollTo({ top: elementTop, behavior: 'smooth' });
+        } else if (elementBottom > scrollPosition + containerHeight) {
+          container.scrollTo({
+            top: elementBottom - containerHeight,
+            behavior: 'smooth',
+          });
+        }
+      }
+
+      // 마지막 단어가 하이라이트 되었을 때, 다음 슬라이드로 자동 전환
+      if (
+        matchedIndices.length > 0 &&
+        matchedIndices[matchedIndices.length - 1] === contentWords.length - 1
+      ) {
+        // 마지막 단어에 도달했으면, 다음 슬라이드로 전환
+        if (index < totalItems - 1) {
+          setTimeout(() => {
+            // 다음 슬라이드로 넘어가기 전에 약간의 지연 추가
+            const nextIndex = (index + 1) % totalItems;
+            setActiveItemIndex(nextIndex);
+          }, 1000); // 1초 후 다음 슬라이드 전환
+        }
+      }
     }
+  }, [
+    words,
+    isActive,
+    isPresentationMode,
+    matchedIndices,
+    contentWords.length,
+    index,
+    totalItems,
+  ]);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isActive, index, setActiveItemIndex, totalItems, isPresentationMode]);
+  const prevMatchedIndicesRef = useRef(); // 이전 matchedIndices 값을 저장하기 위한 ref
+  const prevWordsRef = useRef(); // 이전 words 값을 저장하기 위한 ref
+
+  useEffect(() => {
+    if (
+      prevMatchedIndicesRef.current !== matchedIndices.join(',') ||
+      prevWordsRef.current !== words.join(',')
+    ) {
+      console.log('PresenterNotes-interimResult', interimResult);
+      console.log('words', words);
+      console.log('matchedIndices:', matchedIndices);
+      console.log(
+        'Last matched index:',
+        matchedIndices[matchedIndices.length - 1]
+      );
+      console.log('contentWords length:', contentWords.length);
+
+      // 이전 값을 현재 값으로 업데이트
+      prevMatchedIndicesRef.current = matchedIndices.join(',');
+      prevWordsRef.current = words.join(',');
+    }
+  }, [words]);
 
   const increaseFontSize = () => {
     setFontSizes((prevSizes) => {
@@ -179,8 +173,6 @@ function PresenterNotes({
     }
   };
 
-  const Content = styled.div``;
-
   return (
     <>
       <ScriptTitle>
@@ -197,7 +189,12 @@ function PresenterNotes({
           <FontSizeButton onClick={increaseFontSize}>+</FontSizeButton>
           <FontSizeButton onClick={decreaseFontSize}>-</FontSizeButton>
           <FontSizeButton onClick={goToPreviousNote}>◀︎</FontSizeButton>
-          <FontSizeButton onClick={goToNextNote} disabled={index === totalItems - 1}>▶︎</FontSizeButton>
+          <FontSizeButton
+            onClick={goToNextNote}
+            disabled={index === totalItems - 1}
+          >
+            ▶︎
+          </FontSizeButton>
         </div>
       </ScriptTitle>
       <NotesWrapper>
@@ -207,18 +204,15 @@ function PresenterNotes({
         >
           <Title>{title}</Title>
           <Content>
-            {content
-              ? content.split(' ').map((word, idx) => (
-                  <Word
-                    key={idx}
-                    className={idx === highlightedIndex ? 'highlighted' : ''}
-                    previous={idx < highlightedIndex}
-                    highlighted={idx === highlightedIndex}
-                  >
-                    {word}
-                  </Word>
-                ))
-              : null}
+            {contentWords.map((word, idx) => (
+              <Word
+                key={idx}
+                className={matchedIndices.includes(idx) ? 'highlighted' : ''}
+                highlighted={matchedIndices.includes(idx)}
+              >
+                {word}
+              </Word>
+            ))}
           </Content>
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>

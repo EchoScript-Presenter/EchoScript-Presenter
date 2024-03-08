@@ -3,6 +3,7 @@ import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import ScrollLogger from './components/ScrollLogger';
 import { SpeechProvider } from './components/SpeechContext';
 import {
   AppContainer,
@@ -39,6 +40,7 @@ function App() {
             currentSlideIndex={currentSlideIndex}
             setCurrentSlideIndex={setCurrentSlideIndex}
           />
+          <ScrollLogger />
         </BodyContainer>
         <FooterContainer>
           <Footer
