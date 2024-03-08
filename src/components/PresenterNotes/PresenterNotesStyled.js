@@ -42,6 +42,7 @@ export const NotesWrapper = styled.div`
   width: 100%;
   overflow-y: auto;
   margin-top: 0px;
+  border: #eaeaea solid 2px;
 `;
 
 export const PresenterNotesContainer = styled.div`
@@ -51,7 +52,7 @@ export const PresenterNotesContainer = styled.div`
   max-height: 260px;
   overflow-y: auto;
   background-color: #ffffff; /* 메모장 배경색 */
-  border-top: 30px solid #ffcc66; /* 테이프 또는 클립 색상 */
+  border-top: 30px solid #e8d9ff; /* 테이프 또는 클립 색상 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   word-wrap: break-word;
@@ -94,4 +95,5 @@ export const BottomRightText = styled.h3`
   background-color: #f8f9fa; /* 배경색 지정 */
   border: 1px solid #ced4da; /* 테두리 추가 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+  border: #eaeaea solid 2px;
 `;

@@ -7,7 +7,7 @@ export const TimerContainer = styled.div`
   align-items: center; // 세로축 중앙 정렬
   width: 95%; // Header의 80% 차지
   margin: 0 auto; // 가운데 정렬
-  background: white; // background color 일단 삭제해놓음
+  // background: white; // background color 일단 삭제해놓음
 `;
 
 export const Logo = styled.div`
