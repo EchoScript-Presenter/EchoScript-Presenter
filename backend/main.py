@@ -164,6 +164,12 @@ def recognize_and_analyze():
             }
             log_to_json_file(log_data)
 
+
+def save_scroll_data_to_file(scroll_data):
+    with open('scroll_log_.txt', 'a') as file:
+        file.write(str(scroll_data) + '\n')
+
+
 # 전역 변수 초기화
 intensity_values = None
 pitch_values = None
@@ -225,3 +231,9 @@ async def get_filler():
     filler_status = filler_words_true
     filler_words_true = False
     return {"filler": filler_status}
+
+@app.post("/api/scroll-event")
+async def receive_scroll_event(scroll_data: dict):
+    print(f"Received scroll data: {scroll_data}")
+    save_scroll_data_to_file(scroll_data)
+    return {"message": "Scroll event received"}
