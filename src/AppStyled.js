@@ -13,17 +13,17 @@ export const HeaderContainer = styled.header`
   max-height: 90px; // 최대 높이 제한 (선택 사항)
   justify-content: space-between; // 자식 요소들을 중앙 정렬
   align-items: center; // 수직 방향 중앙 정렬
-  background: pink;
+  // background: pink;
 `;
 
 export const BodyContainer = styled.div`
   display: flex;
   height: 65vh;
-  background: greenyellow;
+  // background: greenyellow;
 `;
 
 export const FooterContainer = styled.div`
   display: flex;
   height: 25vh;
-  background: papayawhip;
+  // background: papayawhip;
 `;

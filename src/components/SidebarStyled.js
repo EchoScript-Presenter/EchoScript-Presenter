@@ -5,7 +5,7 @@ export const SidebarContainer = styled.div`
   width: 5%;
   justify-content: center;
   min-width: 0; // 내부 컨텐츠에 의한 확장 방지
-  background: yellow;
+  // background: yellow;
 `;
 
 export const ToggleButton = styled.button`
