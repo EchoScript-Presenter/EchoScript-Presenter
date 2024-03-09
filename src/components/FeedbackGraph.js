@@ -25,6 +25,7 @@ const normalize = (
     ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) +
     minNew
   );
+};
 
 function FeedbackGraph() {
   const [volume, setVolume] = useState(0);
@@ -38,7 +39,7 @@ function FeedbackGraph() {
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
   ];
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,7 +110,7 @@ function FeedbackGraph() {
         analyser.fftSize = 512;
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
-  
+
         const getVolume = () => {
           analyser.getByteFrequencyData(dataArray);
           let sum = 0;
@@ -120,7 +121,7 @@ function FeedbackGraph() {
           let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 정규화
           setVolume(normalizedVolume);
         };
-  
+
         const interval = setInterval(getVolume, 100);
         return () => {
           clearInterval(interval);
@@ -130,38 +131,41 @@ function FeedbackGraph() {
         console.error('Error accessing the microphone', error);
       }
     };
-  
+
     setupMicrophone();
-  }, []); 
+  }, []);
 
-/// [Volume data js에서 받아오기]
-useEffect(() => {
-  const setupMicrophone = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      const audioContext = new AudioContext();
-      const analyser = audioContext.createAnalyser();
-      const microphone = audioContext.createMediaStreamSource(stream);
-      microphone.connect(analyser);
-      analyser.fftSize = 512;
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      const getVolume = () => {
-        analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for(let i = 0; i < bufferLength; i++) {
-          sum += dataArray[i];
-        }
-        let average = sum / bufferLength;
-        let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 0~70 사이로 정규화
-        setVolume(normalizedVolume);
-      };
+  /// [Volume data js에서 받아오기]
+  useEffect(() => {
+    const setupMicrophone = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        });
+        const audioContext = new AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 512;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        const getVolume = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+          }
+          let average = sum / bufferLength;
+          let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 0~70 사이로 정규화
+          setVolume(normalizedVolume);
+        };
 
-      const interval = setInterval(getVolume, 100);
-      return () => {
-        clearInterval(interval);
-        audioContext.close(); 
-      };
+        const interval = setInterval(getVolume, 100);
+        return () => {
+          clearInterval(interval);
+          audioContext.close();
+        };
       } catch (error) {
         console.error('Error accessing the microphone', error);
       }
@@ -172,44 +176,46 @@ useEffect(() => {
   // 피치 계산
   // 남자 기준, 여자 기준에 맞추는 normalization 필요
   // 진영 노트북 기준 큰 소리만 인식되는 상태인데 일단 Push 할게요
-  useEffect(() => {
-    const updatePitch = async () => {
-      try {
-        const audioContext = new window.AudioContext();
-        const analyserNode = audioContext.createAnalyser();
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
-        audioContext.createMediaStreamSource(stream).connect(analyserNode);
-        const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-        detector.minVolumeDecibels = -15;
-        const input = new Float32Array(detector.inputLength);
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioContext.createMediaStreamSource(stream).connect(analyserNode);
-        const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-        //detector.minVolumeDecibels = -15;
-        const input = new Float32Array(detector.inputLength);
-        const getPitch = (analyserNode, detector, input, sampleRate) => {
-          analyserNode.getFloatTimeDomainData(input);
-          const [pitch, clarity] = detector.findPitch(input, sampleRate);
-          // let normalizePitch = Math.round(pitch * 10) / 10 개발자분이 사용하던 정규화 식인데 일단 넣음
-          setPitch(pitch);
-        };
-  
-        getPitch(analyserNode, detector, input, audioContext.sampleRate);
-  
-        const interval = setInterval(() => {
-          getPitch(analyserNode, detector, input, audioContext.sampleRate);
-        }, 100);
-  
-        return () => clearInterval(interval);
-      } catch (error) {
-        console.error('Error accessing the microphone', error);
-      }
-    };
-  
-    updatePitch();
-  }, []);
+  // useEffect(() => {
+  //   const updatePitch = async () => {
+  //     try {
+  //       const audioContext = new window.AudioContext();
+  //       const analyserNode = audioContext.createAnalyser();
+  //       const stream = await navigator.mediaDevices.getUserMedia({
+  //         audio: true,
+  //       });
+  //       audioContext.createMediaStreamSource(stream).connect(analyserNode);
+  //       const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
+  //       detector.minVolumeDecibels = -15;
+  //       const input = new Float32Array(detector.inputLength);
+  //       const stream = await navigator.mediaDevices.getUserMedia({
+  //         audio: true,
+  //       });
+  //       audioContext.createMediaStreamSource(stream).connect(analyserNode);
+  //       const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
+  //       //detector.minVolumeDecibels = -15;
+  //       const input = new Float32Array(detector.inputLength);
+  //       const getPitch = (analyserNode, detector, input, sampleRate) => {
+  //         analyserNode.getFloatTimeDomainData(input);
+  //         const [pitch, clarity] = detector.findPitch(input, sampleRate);
+  //         // let normalizePitch = Math.round(pitch * 10) / 10 개발자분이 사용하던 정규화 식인데 일단 넣음
+  //         setPitch(pitch);
+  //       };
+
+  //       getPitch(analyserNode, detector, input, audioContext.sampleRate);
+
+  //       const interval = setInterval(() => {
+  //         getPitch(analyserNode, detector, input, audioContext.sampleRate);
+  //       }, 100);
+
+  //       return () => clearInterval(interval);
+  //     } catch (error) {
+  //       console.error('Error accessing the microphone', error);
+  //     }
+  //   };
+
+  //   updatePitch();
+  // }, []);
 
   useEffect(() => {
     let hideTimer;
@@ -222,34 +228,34 @@ useEffect(() => {
   }, [filler]);
 
   const getSpeedText = (speed, volume) => {
-    console.log('Speed:', speed, 'Volume:', volume);
+    //console.log('Speed:', speed, 'Volume:', volume);
     //if (volume < 10) return 'SPEAK';
     if (speed === 0 || isNaN(speed)) return '💬';
     if (speed > 200) return 'SLOWER';
     if (speed < 70) return 'FASTER';
     return '👍';
   };
-  
+
   const getVolumeText = (volume) => {
     if (volume < 20) return '💬';
     if (volume > 140) return 'SOFTER';
     if (volume > 0 && volume < 70) return 'LOUDER';
     return '👍';
   };
-  
+
   const getPitchText = (pitch, volume) => {
-    console.log('pitch:', pitch, 'Volume:', volume);
+    //console.log('pitch:', pitch, 'Volume:', volume);
     if (volume < 10) return '💬';
     if (pitch >= 180 && pitch <= 300) return '👍';
     return 'MONOTONE';
   };
-  
+
   const textStyle = (content) => {
     let style = { fontWeight: 'normal', color: 'black' };
-  
+
     if (['GOOD'].includes(content)) {
       style.fontWeight = 'normal';
-      style.color = 'green'
+      style.color = 'green';
     } else if (['...'].includes(content)) {
       style.fontWeight = 'normal';
     } else {
@@ -262,7 +268,6 @@ useEffect(() => {
     }
     return style;
   };
-  
 
   const boxStyle = {
     border: '2px solid #f8f9fa',
@@ -271,16 +276,16 @@ useEffect(() => {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100px', 
+    width: '100px',
     height: '50px',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-    marginTop:'0',
+    marginTop: '0',
   };
 
   const labelStyle = {
     textAlign: 'center',
     marginTop: '5px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   };
 
   const wrapperStyle = {
@@ -300,24 +305,39 @@ useEffect(() => {
 
   return (
     <>
-      <h2 style={{ marginBottom: '10px', marginTop: '0px', textAlign: 'left', marginLeft: '20px' }}>Real-time Feedback</h2>
+      <h2
+        style={{
+          marginBottom: '10px',
+          marginTop: '0px',
+          textAlign: 'left',
+          marginLeft: '20px',
+        }}
+      >
+        Real-time Feedback
+      </h2>
       <div style={wrapperStyle}>
         <div style={feedbackRowStyle}>
           <div>
             <div style={boxStyle}>
-              <span style={textStyle(getSpeedText(speed, volume))}>{getSpeedText(speed, volume)}</span>
+              <span style={textStyle(getSpeedText(speed, volume))}>
+                {getSpeedText(speed, volume)}
+              </span>
             </div>
             <div style={labelStyle}>Speed</div>
           </div>
           <div>
             <div style={boxStyle}>
-              <span style={textStyle(getVolumeText(volume))}>{getVolumeText(volume)}</span>
+              <span style={textStyle(getVolumeText(volume))}>
+                {getVolumeText(volume)}
+              </span>
             </div>
             <div style={labelStyle}>Volume</div>
           </div>
           <div>
             <div style={boxStyle}>
-              <span style={textStyle(getPitchText(pitch, volume))}>{getPitchText(pitch, volume)}</span>
+              <span style={textStyle(getPitchText(pitch, volume))}>
+                {getPitchText(pitch, volume)}
+              </span>
             </div>
             <div style={labelStyle}>Pitch</div>
           </div>
@@ -325,6 +345,6 @@ useEffect(() => {
       </div>
     </>
   );
-};
+}
 
 export default FeedbackGraph;

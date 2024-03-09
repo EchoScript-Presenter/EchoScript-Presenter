@@ -32,7 +32,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'Design Process-2',
         content:
-          'At its core the Design Thinking Process begins with empathizing with users to gain insights into their experiences. 👀 This is followed by clearly defining the problem based on the information gathered. The process moves into the ideation phase where diverse ideas are generated to tackle the identified problem. Subsequently, prototypes develop based on the most promising ideas. 👀',
+          'At its core the Design Thinking Process begins with empathizing with users to gain insights into their experiences. 👀 This is followed by clearly defining the problem based on the information gathered. The process moves into the ideation phase where diverse ideas are generated to tackle the identified problem.👀 Subsequently, prototypes develop based on the most promising ideas. ',
       },
       {
         index: 3,
@@ -49,7 +49,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'EMPATHIZE-1',
         content:
-          'The first stage is the Empathize stage. This stage serves to get close and familiar with our target users. 👀',
+          'The first stage is the Empathize stage. 👀This stage serves to get close and familiar with our target users. ',
       },
       {
         index: 5,
@@ -82,7 +82,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'DEFINE-2',
         content:
-          'In this stage we identify user needs arising from interactions with potential customers. 👀',
+          'In this stage we identify user needs arising from interactions with potential customers. ',
       },
       {
         index: 9,
@@ -90,7 +90,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'DEFINE-3',
         content:
-          'The Define stage is about gaining insights and then establishing the focus of the task.',
+          '👀 The Define stage is about gaining insights and then establishing the focus of the task.',
       },
 
       {
@@ -99,7 +99,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'IDEATE-1',
         content:
-          'The next stage is Ideate. 👀 It involves breaking down the problem into more specific issues and finding several solutions for them. 👀',
+          'The next stage is Ideate. 👀 It involves breaking down the problem into more specific issues and finding several solutions for them. ',
       },
       {
         index: 11,
@@ -107,7 +107,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          'Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of ideas. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. 👀',
+          '👀Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of ideas. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. ',
       },
       {
         index: 12,
@@ -115,7 +115,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'IDEATE-3',
         content:
-          'Ultimately the goal of Ideate is to produce a robust pool of potential solutions 👀 that can be further refined and developed in subsequent stages of the Design Thinking Process.',
+          '👀Ultimately the goal of Ideate is to produce a robust pool of potential solutions 👀 that can be further refined and developed in subsequent stages of the Design Thinking Process.',
       },
       {
         index: 13,
@@ -140,7 +140,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'TEST-1',
         content:
-          'The final stage of the design process is testing. We utilize the experience prototype as a means to gather invaluable feedback from users during this phase. 👀',
+          'The final stage of the design process is testing. We utilize the experience prototype as a means to gather invaluable feedback from users during this phase. ',
       },
       {
         index: 16,
@@ -148,7 +148,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'TEST-2',
         content:
-          'It is essential to seek not only to validate our assumptions but also to uncover any unexpected user needs or behaviors. By observing how users interact with the prototype, we can gain new information about the actual users needs and find areas for improvement. 👀',
+          '👀It is essential to seek not only to validate our assumptions but also to uncover any unexpected user needs or behaviors. By observing how users interact with the prototype, we can gain new information about the actual users needs and find areas for improvement.',
       },
       {
         index: 17,
@@ -156,7 +156,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'TEST-3',
         content:
-          'Prototype testing provides an opportunity to iterate on our designs. This iterative process allows us to continuously improve and refine our solutions 👀 until they meet the needs of our users effectively.',
+          '👀Prototype testing provides an opportunity to iterate on our designs. This iterative process allows us to continuously improve and refine our solutions 👀 until they meet the needs of our users effectively.',
       },
 
       {
@@ -165,7 +165,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/1',
         title: 'END',
         content:
-          'Here concludes the content I have prepared. Thank you for your attention. 👀',
+          'Here concludes the content I have prepared. Thank you for your attention.',
       },
     ],
     []
