@@ -6,11 +6,18 @@ import {
   FeedbackGraphContainer,
 } from './FooterStyled';
 
-function Footer({ setCurrentSlideIndex, isPresentationMode }) {
+function Footer({
+  setCurrentSlideIndex,
+  isPresentationMode,
+  setHighlightedIndices,
+}) {
   return (
     <>
       <FooterCarouselContainer>
-        <FooterCarousel setCurrentSlideIndex={setCurrentSlideIndex} />
+        <FooterCarousel
+          setCurrentSlideIndex={setCurrentSlideIndex}
+          setHighlightedIndices={setHighlightedIndices}
+        />
       </FooterCarouselContainer>
       <FeedbackGraphContainer>
         <FeedbackGraph isPresentationMode={isPresentationMode} />

@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ItemsCarousel from 'react-items-carousel';
 import { useNote } from './NoteContext';
+import { useSpeech } from './SpeechContext';
 import {
   SlideIndicatorContainer,
   SlideIndicatorInput,
   TotalSlides,
 } from './FooterStyled';
+import useStore from './Store';
+import { useNavigation } from './useNavigation';
 
 function FooterCarousel({ setCurrentSlideIndex }) {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [numberOfCards, setNumberOfCards] = useState(5); // 슬라이드에 보여줄 아이템 수
   const { nextNote, prevNote, totalItems, activeNote, activeNoteIndex } =
     useNote();
+  const { resetTranscript } = useSpeech();
+  const { highlightedIndices, setHighlightedIndices } = useStore();
+  const { navigateNotes } = useNavigation();
 
   // Carousel에 표시할 이미지 데이터
   const carouselItems = useMemo(
@@ -33,19 +39,19 @@ function FooterCarousel({ setCurrentSlideIndex }) {
   );
   // 'Prev' 버튼 클릭 핸들러
   const handlePrevNote = () => {
-    if (activeNoteIndex > 0) prevNote();
+    navigateNotes('prev');
   };
 
   // 'Next' 버튼 클릭 핸들러
   const handleNextNote = () => {
-    if (activeNoteIndex < totalItems - 1) nextNote();
+    navigateNotes('next');
   };
 
   useEffect(() => {
     const matchingIndex = carouselItems.findIndex(
       (item) => item.slideIndex === activeNote.slideIndex
     );
-    console.log(matchingIndex);
+    //console.log(matchingIndex);
     if (matchingIndex !== -1) {
       // 중앙에 위치
       setActiveItemIndex(matchingIndex - Math.floor(numberOfCards / 2) + 2);
