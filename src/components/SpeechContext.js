@@ -13,6 +13,9 @@ export const SpeechProvider = ({ children }) => {
   const [speechResults, setSpeechResults] = useState([]);
   const [words, setWords] = useState([]);
   const [interimWords, setInterimWords] = useState([]);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [speedValue, setSpeedValue] = useState(0);
 
   const {
     transcript,
@@ -34,7 +37,7 @@ export const SpeechProvider = ({ children }) => {
         const response = await axios.post(
           'http://localhost:8000/start_recording'
         );
-        console.log("Response Data:",response.data);
+        console.log('Response Data:', response.data);
 
         SpeechRecognition.startListening({
           continuous: true,
@@ -63,6 +66,24 @@ export const SpeechProvider = ({ children }) => {
     }
   };
 
+  const calculateSpeed = () => {
+    const duration = (endTime - startTime) / 1000; // 초 단위
+    console.log('endTime:', endTime);
+    console.log('startTime:', startTime);
+    console.log('duration:', duration);
+    const wordCount = finalTranscript.split().length;
+    console.log('wordcount:', wordCount);
+    const wordsPerSecond = wordCount / duration;
+    console.log('wordsPerSecond:', wordsPerSecond);
+    setSpeedValue(wordsPerSecond * 60); // 함수 내에서 사용하는 변수명도 수정했습니다.
+  };
+
+  useEffect(() => {
+    if (endTime) {
+      calculateSpeed();
+    }
+  }, [endTime, finalTranscript]);
+
   useEffect(() => {
     setWords(
       finalTranscript.split(' ').filter((word) => word.trim().length > 0)
@@ -83,6 +104,8 @@ export const SpeechProvider = ({ children }) => {
         listening,
         startRecording,
         stopRecording,
+        speedValue,
+        resetTranscript,
       }}
     >
       {children}
