@@ -14,11 +14,6 @@ export const SpeechProvider = ({ children }) => {
   const [words, setWords] = useState([]);
   const [interimWords, setInterimWords] = useState([]);
 
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [speedValue, setSpeedValue] = useState(0);
-
-
   const {
     transcript,
     interimTranscript,
@@ -39,7 +34,7 @@ export const SpeechProvider = ({ children }) => {
         const response = await axios.post(
           'http://localhost:8000/start_recording'
         );
-        console.log(response.data);
+        console.log("Response Data:",response.data);
 
         SpeechRecognition.startListening({
           continuous: true,
@@ -49,7 +44,6 @@ export const SpeechProvider = ({ children }) => {
       } catch (error) {
         console.error('Error starting recording:', error);
       }
-      setStartTime(new Date());
     } else {
       console.error('Microphone is not available.');
     }
@@ -64,29 +58,10 @@ export const SpeechProvider = ({ children }) => {
       localStorage.setItem('savedWords', JSON.stringify(words));
       resetTranscript(); // 종료 시 리셋
       setWords([]); // 단어 비우기
-      setEndTime(new Date());
     } catch (error) {
       console.error('Error stopping recording:', error);
     }
   };
-
-  const calculateSpeed = () => {
-    const duration = (endTime - startTime) / 1000; // 초 단위
-    console.log('endTime:', endTime);
-    console.log('startTime:', startTime);
-    console.log('duration:',duration)
-    const wordCount = finalTranscript.split().length;
-    console.log('wordcount:',wordCount)
-    const wordsPerSecond = wordCount / duration;
-    console.log('wordsPerSecond:', wordsPerSecond);
-    setSpeedValue(wordsPerSecond * 60); // 함수 내에서 사용하는 변수명도 수정했습니다.
-  };
-
-  useEffect(() => {
-    if (endTime) {
-      calculateSpeed();
-    }
-  }, [endTime, finalTranscript]);
 
   useEffect(() => {
     setWords(
@@ -108,7 +83,6 @@ export const SpeechProvider = ({ children }) => {
         listening,
         startRecording,
         stopRecording,
-        speedValue,
       }}
     >
       {children}
