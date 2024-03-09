@@ -10,7 +10,6 @@ import {
   Rectangle,
 } from 'recharts';
 import { useSpeech } from './SpeechContext'; //speed js단에서 받아온 final transcript로 해결하기
-
 import speakerIcon from './speaker.png';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
@@ -26,22 +25,20 @@ const normalize = (
     ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) +
     minNew
   );
-};
 
 function FeedbackGraph() {
   const [volume, setVolume] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [filler, setFiller] = useState(false);
-
   const { speedValue } = useSpeech();
 
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
-    { name: 'Speed', value: speedValue },
+    { name: 'Speed', value: speed },
   ];
-  // console.log(data);
+  console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +63,7 @@ function FeedbackGraph() {
           'http://localhost:8000/data_speed'
         );
         //const responseFiller = await axios.get('http://localhost:8000/data_filler');
+        //const responsePitch = await axios.get('http://localhost:8000/data_pitch');
 
         const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
 
@@ -111,7 +109,7 @@ function FeedbackGraph() {
         analyser.fftSize = 512;
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
-
+  
         const getVolume = () => {
           analyser.getByteFrequencyData(dataArray);
           let sum = 0;
@@ -119,10 +117,10 @@ function FeedbackGraph() {
             sum += dataArray[i];
           }
           let average = sum / bufferLength;
-          let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 0~70 사이로 정규화
+          let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 정규화
           setVolume(normalizedVolume);
         };
-
+  
         const interval = setInterval(getVolume, 100);
         return () => {
           clearInterval(interval);
@@ -132,7 +130,42 @@ function FeedbackGraph() {
         console.error('Error accessing the microphone', error);
       }
     };
+  
+    setupMicrophone();
+  }, []); 
 
+/// [Volume data js에서 받아오기]
+useEffect(() => {
+  const setupMicrophone = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      analyser.fftSize = 512;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      const getVolume = () => {
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for(let i = 0; i < bufferLength; i++) {
+          sum += dataArray[i];
+        }
+        let average = sum / bufferLength;
+        let normalizedVolume = normalize(average, 0, 128, 0, 300); // 마이크 볼륨을 0~70 사이로 정규화
+        setVolume(normalizedVolume);
+      };
+
+      const interval = setInterval(getVolume, 100);
+      return () => {
+        clearInterval(interval);
+        audioContext.close(); 
+      };
+      } catch (error) {
+        console.error('Error accessing the microphone', error);
+      }
+    };
     setupMicrophone();
   }, []);
 
@@ -144,7 +177,6 @@ function FeedbackGraph() {
       try {
         const audioContext = new window.AudioContext();
         const analyserNode = audioContext.createAnalyser();
-
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
         });
@@ -152,26 +184,30 @@ function FeedbackGraph() {
         const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
         detector.minVolumeDecibels = -15;
         const input = new Float32Array(detector.inputLength);
-
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext.createMediaStreamSource(stream).connect(analyserNode);
+        const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
+        //detector.minVolumeDecibels = -15;
+        const input = new Float32Array(detector.inputLength);
         const getPitch = (analyserNode, detector, input, sampleRate) => {
           analyserNode.getFloatTimeDomainData(input);
           const [pitch, clarity] = detector.findPitch(input, sampleRate);
           // let normalizePitch = Math.round(pitch * 10) / 10 개발자분이 사용하던 정규화 식인데 일단 넣음
           setPitch(pitch);
         };
-
+  
         getPitch(analyserNode, detector, input, audioContext.sampleRate);
-
+  
         const interval = setInterval(() => {
           getPitch(analyserNode, detector, input, audioContext.sampleRate);
         }, 100);
-
+  
         return () => clearInterval(interval);
       } catch (error) {
         console.error('Error accessing the microphone', error);
       }
     };
-
+  
     updatePitch();
   }, []);
 
@@ -185,147 +221,110 @@ function FeedbackGraph() {
     return () => clearTimeout(hideTimer);
   }, [filler]);
 
-  const barColor = (value) => {
-    if (value <= 50) return 'red';
-    else if (value <= 300) return 'green';
-    else return 'red';
+  const getSpeedText = (speed, volume) => {
+    console.log('Speed:', speed, 'Volume:', volume);
+    //if (volume < 10) return 'SPEAK';
+    if (speed === 0 || isNaN(speed)) return '💬';
+    if (speed > 200) return 'SLOWER';
+    if (speed < 70) return 'FASTER';
+    return '👍';
+  };
+  
+  const getVolumeText = (volume) => {
+    if (volume < 20) return '💬';
+    if (volume > 140) return 'SOFTER';
+    if (volume > 0 && volume < 70) return 'LOUDER';
+    return '👍';
+  };
+  
+  const getPitchText = (pitch, volume) => {
+    console.log('pitch:', pitch, 'Volume:', volume);
+    if (volume < 10) return '💬';
+    if (pitch >= 180 && pitch <= 300) return '👍';
+    return 'MONOTONE';
+  };
+  
+  const textStyle = (content) => {
+    let style = { fontWeight: 'normal', color: 'black' };
+  
+    if (['GOOD'].includes(content)) {
+      style.fontWeight = 'normal';
+      style.color = 'green'
+    } else if (['...'].includes(content)) {
+      style.fontWeight = 'normal';
+    } else {
+      style.fontWeight = 'bold';
+      if (['LOUDER', 'FASTER', 'MONOTONE'].includes(content)) {
+        style.color = 'red';
+      } else if (['SOFTER', 'SLOWER'].includes(content)) {
+        style.color = 'red';
+      }
+    }
+    return style;
+  };
+  
+
+  const boxStyle = {
+    border: '2px solid #f8f9fa',
+    borderRadius: '8px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100px', 
+    height: '50px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    marginTop:'0',
+  };
+
+  const labelStyle = {
+    textAlign: 'center',
+    marginTop: '5px',
+    fontWeight: 'bold'
+  };
+
+  const wrapperStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  };
+
+  // Feedback row style
+  const feedbackRowStyle = {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    margin: '10px',
   };
 
   return (
-    <div style={{ display: 'flex', width: '100%', height: '70%' }}>
-      <div style={{ width: '85%', height: '100%' }}>
-        <h2 style={{ width: '100%', marginLeft: '20px' }}>
-          Real-time Feedback
-        </h2>
-        <ResponsiveContainer width="85%" height="80%">
-          <BarChart
-            layout="vertical"
-            width={300}
-            height={100}
-            data={data}
-            margin={{
-              top: 0,
-              right: 10,
-              left: 10,
-              bottom: 0,
-            }}
-          >
-            <XAxis
-              type="number"
-              ticks={[0, 150, 300]}
-              domain={[0, 'dataMax']}
-              tickFormatter={(tick) => {
-                if (tick === 0) return 'Low';
-                if (tick === 150) return 'Avg';
-                if (tick === 300) return 'High';
-                return '';
-              }}
-              style={{ fontWeight: 'bold' }}
-            />
-
-            <YAxis
-              type="category"
-              dataKey="name"
-              width={60}
-              style={{ fontWeight: 'bold' }}
-              tick={{ fontSize: '12px' }}
-            />
-
-            <Tooltip />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Bar
-              dataKey="value"
-              background={{ fill: '#eee' }} // #B98AF2
-              fill="#8884d8"
-              style={{ fontWeight: 'bold' }}
-              barSize={20}
-              shape={(props) => (
-                <Rectangle {...props} fill={barColor(props.value)} />
-              )}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      <div
-        style={{
-          width: '20%',
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {volume === 0 && (
-          <div
-            style={{
-              width: '20%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <img
-              src={speakerIcon}
-              alt="Speaker.png"
-              style={{
-                width: '70px',
-                height: '70px',
-                marginRight: '70px',
-                marginTop: '80px',
-              }}
-            />
-            <p
-              style={{
-                marginTop: '10px',
-                color: 'black',
-                fontSize: '16px',
-                marginRight: '80px',
-                fontWeight: 'bold',
-              }}
-            >
-              Speak!
-            </p>
+    <>
+      <h2 style={{ marginBottom: '10px', marginTop: '0px', textAlign: 'left', marginLeft: '20px' }}>Real-time Feedback</h2>
+      <div style={wrapperStyle}>
+        <div style={feedbackRowStyle}>
+          <div>
+            <div style={boxStyle}>
+              <span style={textStyle(getSpeedText(speed, volume))}>{getSpeedText(speed, volume)}</span>
+            </div>
+            <div style={labelStyle}>Speed</div>
           </div>
-        )}
-
-        {filler && (
-          <div
-            style={{
-              width: '20%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <img
-              src={speakerIcon}
-              alt="Speaker.png"
-              style={{
-                width: '70px',
-                height: '70px',
-                marginRight: '70px',
-                marginTop: '80px',
-              }}
-            />
-            <p
-              style={{
-                marginTop: '10px',
-                color: 'black',
-                fontSize: '16px',
-                marginRight: '80px',
-                fontWeight: 'bold',
-              }}
-            >
-              Filler!
-            </p>
+          <div>
+            <div style={boxStyle}>
+              <span style={textStyle(getVolumeText(volume))}>{getVolumeText(volume)}</span>
+            </div>
+            <div style={labelStyle}>Volume</div>
           </div>
-        )}
+          <div>
+            <div style={boxStyle}>
+              <span style={textStyle(getPitchText(pitch, volume))}>{getPitchText(pitch, volume)}</span>
+            </div>
+            <div style={labelStyle}>Pitch</div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
-}
+};
 
 export default FeedbackGraph;

@@ -111,7 +111,7 @@ function PresenterNotes({
     <>
       <ScriptTitle>
         <h2
-          style={{
+          style={{ marginTop:'0',
             fontSize: '25px',
             marginLeft: '10px',
             display: 'inline-block',

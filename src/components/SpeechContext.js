@@ -13,7 +13,6 @@ export const SpeechProvider = ({ children }) => {
   const [speechResults, setSpeechResults] = useState([]);
   const [words, setWords] = useState([]);
   const [interimWords, setInterimWords] = useState([]);
-
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [speedValue, setSpeedValue] = useState(0);
@@ -38,7 +37,7 @@ export const SpeechProvider = ({ children }) => {
         const response = await axios.post(
           'http://localhost:8000/start_recording'
         );
-        console.log(response.data);
+        console.log('Response Data:', response.data);
 
         SpeechRecognition.startListening({
           continuous: true,
@@ -48,7 +47,6 @@ export const SpeechProvider = ({ children }) => {
       } catch (error) {
         console.error('Error starting recording:', error);
       }
-      setStartTime(new Date());
     } else {
       console.error('Microphone is not available.');
     }
@@ -63,7 +61,6 @@ export const SpeechProvider = ({ children }) => {
       localStorage.setItem('savedWords', JSON.stringify(words));
       resetTranscript(); // 종료 시 리셋
       setWords([]); // 단어 비우기
-      setEndTime(new Date());
     } catch (error) {
       console.error('Error stopping recording:', error);
     }
