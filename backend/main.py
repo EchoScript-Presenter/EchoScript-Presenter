@@ -215,7 +215,6 @@ async def get_volume():
     global intensity_values, is_recording
     if not is_recording:
         return {"error": "Recording has stopped. No current data available."}
-    #print("!!!data_volume 이 전송되고 있음!!!\n\n\n")
     print("\n\n\n")
     return {"volume": intensity_values}
 

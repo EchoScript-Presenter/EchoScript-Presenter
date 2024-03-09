@@ -73,7 +73,7 @@ useEffect(() => {
           sum += dataArray[i];
         }
         let average = sum / bufferLength;
-        let normalizedVolume = normalize(average, 0, 128, 0, 100); // 마이크 볼륨을 0~70 사이로 정규화
+        let normalizedVolume = normalize(average, 0, 128, 0, 100); 
         setVolume(normalizedVolume);
       };
 
@@ -92,6 +92,7 @@ useEffect(() => {
   useEffect(() => {
     const feedbackData = {
       timestamp: new Date().toISOString(), 
+      timestamp: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
       speedText: getSpeedText(speed),
       volumeText: getVolumeText(volume),
       pitchText: getPitchText(pitch),
@@ -112,7 +113,7 @@ useEffect(() => {
   const getSpeedText = (speed, volume) => {
     console.log('Speed:', speed, 'Volume:', volume);
     if (speed === 0 || isNaN(speed)) return '💬';
-    if (speed > 70) return 'SLOWER';
+    if (speed > 85) return 'SLOWER';
     if (speed < 15) return 'FASTER';
     return '👍';
   };

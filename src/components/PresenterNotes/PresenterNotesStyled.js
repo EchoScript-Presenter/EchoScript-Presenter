@@ -5,7 +5,7 @@ export const Content = styled.div``;
 export const HighlightedText = styled.span`
   background-color: ${(props) =>
     props.highlighted ? 'yellow' : 'transparent'};
-  font-weight: ${(props) => (props.highlighted ? 'bold' : 'normal')};
+  font-color: ${(props) => (props.highlighted ? 'black' : 'gray')}; //이거 바꿈
 `;
 export const ScriptTitle = styled.h2`
   display: flex;
@@ -56,7 +56,7 @@ export const PresenterNotesContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   word-wrap: break-word;
-  font-weight: bold;
+  font-weight: normal;
   line-height: 1.5;
   position: relative; 
 `;

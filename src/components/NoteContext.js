@@ -40,7 +40,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'Design Process-3',
         content:
-          'The final stage involves testing these prototypes with real users to gather feedback and iterate on the designs. The Design Thinking Process is not strictly linear. 👀 Instead, it is iterative and adaptable. Depending on the context and requirements the stages may be revisited or iterated forward and backward as necessary.',
+          'The final stage involves testing these prototypes with real users to gather feedback and refine on the designs. The Design Thinking Process is not strictly linear. 👀 Instead, it is iterative and adaptable. Depending on the context and requirements the stages may be revisited or iterated forward and backward as necessary.',
       },
 
       {
@@ -65,7 +65,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'EMPATHIZE-3',
         content:
-          'Empathy involves 3 key principles. Immersing ourselves in the environment. 👀 Second observing. 👀 And third interacting with the target users and customers.',
+          'Empathy is based on 3 key principles. Immersing ourselves in the environment. 👀 Second observing. 👀 And third interacting with the target users and customers.',
       },
 
       {
@@ -74,7 +74,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'DEFINE-1',
         content:
-          'The Define stage involves the clear definition of the problem at hand drawing upon the information we have gathered through empathetic exploration. 👀 This step helps us establish a solid foundation for problem - solving based on a comprehensive understanding of user needs.',
+          'The Define stage entails the clear definition of the problem at hand drawing upon the information we have gathered by understanding others feelings. 👀 This step helps us establish a solid foundation for problem - solving based on a comprehensive understanding of user needs.',
       },
       {
         index: 8,
@@ -107,7 +107,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          '👀 Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of ideas. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. ',
+          '👀 Brainstorming serves as the primary technique during the Ideate phase. 👀 By engaging in brainstorming sessions, teams can harness collective creativity to generate a multitude of concepts. 👀 These ideas are then refined through prototyping and iterative testing. 👀 It is important to emphasize that during this phase, the focus is solely on idea generation. The evaluation and refinement of ideas come later in the process. 👀 We can be more creative without worrying about criticism too early. ',
       },
       {
         index: 12,
