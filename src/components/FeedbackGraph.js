@@ -13,28 +13,30 @@ function FeedbackGraph() {
   const [volume, setVolume] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [speed, setSpeed] = useState(0);
-  const [filler, setFiller] = useState(false);
+
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
   ];
-  console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //const responsePitch = await axios.get('http://localhost:8000/data_pitch');
+        const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
-        const responseFiller = await axios.get('http://localhost:8000/data_filler');
 
+      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
+      setPitch(responsePitch.data.pitch);
+      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
+      setSpeed(responseSpeed.data.speed);
+      const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
       const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
 
+      console.log('Pitch:', normalizedPitch); // 데이터 설정 전 로깅
+      setPitch(normalizedPitch);
       console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
       setSpeed(normalizedSpeed);
-
-      console.log('Filler:', responseFiller.data); // 데이터 설정 전 로깅
-      setFiller(responseFiller.data.filler);
     } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -45,15 +47,6 @@ function FeedbackGraph() {
 
     return () => clearInterval(interval); 
   }, []); 
-
-  useEffect(() => {
-    const adjustInterval = setInterval(() => {
-      setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
-    }, 500);
-
-    return () => clearInterval(adjustInterval);
-  }, []);
-  
 
 /// [Volume data js에서 받아오기]
 useEffect(() => {
@@ -90,75 +83,47 @@ useEffect(() => {
     setupMicrophone();
   }, []);
 
-
-  // 피치 계산
-  // 남자 기준, 여자 기준에 맞추는 normalization 필요
-  // 진영 노트북 기준 큰 소리만 인식되는 상태인데 일단 Push 할게요
   useEffect(() => {
-    const updatePitch = async () => {
-      try {
-        const audioContext = new window.AudioContext();
-        const analyserNode = audioContext.createAnalyser();
-  
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioContext.createMediaStreamSource(stream).connect(analyserNode);
-        const detector = PitchDetector.forFloat32Array(analyserNode.fftSize);
-        //detector.minVolumeDecibels = -15;
-        const input = new Float32Array(detector.inputLength);
-  
-        const getPitch = (analyserNode, detector, input, sampleRate) => {
-          analyserNode.getFloatTimeDomainData(input);
-          const [pitch, clarity] = detector.findPitch(input, sampleRate);
-          // let normalizePitch = Math.round(pitch * 10) / 10 개발자분이 사용하던 정규화 식인데 일단 넣음
-          setPitch(pitch);
-        };
-  
-        getPitch(analyserNode, detector, input, audioContext.sampleRate);
-  
-        const interval = setInterval(() => {
-          getPitch(analyserNode, detector, input, audioContext.sampleRate);
-        }, 100);
-  
-        return () => clearInterval(interval);
-      } catch (error) {
-        console.error('Error accessing the microphone', error);
-      }
+    const feedbackData = {
+      timestamp: new Date().toISOString(),
+      speedText: getSpeedText(speed),
+      volumeText: getVolumeText(volume),
+      pitchText: getPitchText(pitch),
     };
-  
-    updatePitch();
-  }, []);
+    sendFeedbackToServer(feedbackData);
+  }, [speed, volume, pitch]); // 속도, 볼륨, 피치가 변경될 때마다 트리거됨
 
-  useEffect(() => {
-    let hideTimer;
-    if (filler) {
-      hideTimer = setTimeout(() => {
-        setFiller(false);
-      }, 3000);
+  const sendFeedbackToServer = async (feedbackData) => {
+    try {
+      await axios.post('http://localhost:8000/data_feedback', feedbackData);
+      console.log('Feedback sent successfully');
+    } catch (error) {
+      console.error('Error sending feedback to server:', error);
     }
-    return () => clearTimeout(hideTimer);
-  }, [filler]);
+  };
 
+  // 내일 테스트해보고 volume도 문장 단위로 받을지 체크해보기 (너무 번잡스러움)
   const getSpeedText = (speed, volume) => {
     console.log('Speed:', speed, 'Volume:', volume);
-    //if (volume < 10) return 'SPEAK';
     if (speed === 0 || isNaN(speed)) return '💬';
-    if (speed > 200) return 'SLOWER';
-    if (speed < 70) return 'FASTER';
+    if (speed > 250) return 'SLOWER';
+    if (speed < 100) return 'FASTER';
     return '👍';
   };
   
   const getVolumeText = (volume) => {
-    if (volume < 20) return '💬';
-    if (volume > 140) return 'SOFTER';
-    if (volume > 0 && volume < 70) return 'LOUDER';
+    if (volume < 50) return '💬';
+    if (volume > 220) return 'SOFTER';
+    if (volume > 0 && volume < 80) return 'LOUDER';
     return '👍';
   };
   
   const getPitchText = (pitch, volume) => {
     console.log('pitch:', pitch, 'Volume:', volume);
-    if (volume < 10) return '💬';
-    if (pitch >= 180 && pitch <= 300) return '👍';
-    return 'MONOTONE';
+    if (pitch === 0 || isNaN(pitch) || pitch < 20) return '💬';
+    if (pitch >= 180 && pitch <= 350) return '👍';
+    if (pitch > 300) return 'MONOTONE'
+    return '👍';
   };
   
   const textStyle = (content) => {
@@ -180,7 +145,6 @@ useEffect(() => {
     return style;
   };
   
-
   const boxStyle = {
     border: '2px solid #f8f9fa',
     borderRadius: '8px',
@@ -243,5 +207,6 @@ useEffect(() => {
     </>
   );
 };
+
 
 export default FeedbackGraph;

@@ -34,20 +34,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def log_to_json_file(data):
-    participant_name = "eunseo"
-    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/analysis_log_{participant_name}.json"
-    with open(file_name, "a") as file:
-        json.dump(data, file, indent=4)
+participant_name = "eunseo"
+
+def speech_analyze_log_to_json_file(data):
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/speech_analysis_log_{participant_name}.json"
+    with open(file_name, "a", encoding='utf8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4) 
         file.write('\n')
 
-def measurePitch(sound, f0min=75, f0max=500, unit="Hertz"):  # 파라미터 wav_file을 sound로 변경
+def speech_feedback_log_to_json_file(data):
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/feedback_analysis_log_{participant_name}.json"
+    with open(file_name, "a", encoding='utf8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4) 
+        file.write('\n')
+
+def save_scroll_data_to_file(scroll_data): ##????????왜 스크롤 저장 안돼
+    with open('./scroll_log_.txt', 'a') as file:
+        file.write(str(scroll_data) + '\n')
+
+def measurePitch(sound, f0min=75, f0max=500, unit="Hertz"): 
     pitch = call(sound, "To Pitch", 0.0, f0min, f0max)
     meanF0 = call(pitch, "Get mean", 0, 0, unit)
     meanF0 = round(meanF0,2)
     return meanF0
 
-def measureIntensity(sound, minPitch=75.0, timeStep=0.0, dB=True):  # 파라미터 wav_file을 sound로 변경
+def measureIntensity(sound, minPitch=75.0, timeStep=0.0, dB=True): 
     intensity = call(sound, 'To Intensity', minPitch, timeStep, dB)
     mean_intensity = call(intensity, "Get mean", 0, 0)
     mean_intensity = round(mean_intensity,2)
@@ -143,7 +154,7 @@ def recognize_and_analyze():
                 }
             }
 
-            log_to_json_file(log_data)
+            speech_analyze_log_to_json_file(log_data)
 
         else:
             # 대본 인식 실패 시 모든 값을 0으로 처리
@@ -167,13 +178,7 @@ def recognize_and_analyze():
                     "filler_words_detected": filler_words_true,
                 }
             }
-            log_to_json_file(log_data)
-
-
-def save_scroll_data_to_file(scroll_data):
-    with open('scroll_log_.txt', 'a') as file:
-        file.write(str(scroll_data) + '\n')
-
+            speech_analyze_log_to_json_file(log_data)
 
 # 전역 변수 초기화
 intensity_values = None
@@ -228,17 +233,14 @@ async def get_speed():
         return {"error": "Recording has stopped. No current data available."}
     return {"speed": speech_rate_words_per_minute}
 
-@app.get("/data_filler")
-async def get_filler():
-    global filler_words_true, is_recording
-    if not is_recording:
-        return {"error": "Recording has stopped. No current data available."}
-    filler_status = filler_words_true
-    filler_words_true = False
-    return {"filler": filler_status}
-
 @app.post("/api/scroll-event")
 async def receive_scroll_event(scroll_data: dict):
     print(f"Received scroll data: {scroll_data}")
     save_scroll_data_to_file(scroll_data)
     return {"message": "Scroll event received"}
+
+@app.post("/data_feedback")
+async def receive_feedback(feedback: dict):
+    print(f"Received feedback data: {feedback}")
+    speech_feedback_log_to_json_file(feedback)  
+    return {"message": "Feedback data received"}

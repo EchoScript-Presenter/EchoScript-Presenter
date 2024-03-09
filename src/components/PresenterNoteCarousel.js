@@ -7,7 +7,6 @@ function PresenterNotesCarousel({
   isPresentationMode,
   setActiveTitle,
 }) {
-  // 배열로 대본 노트 정보 (ppt 슬라이드 인덱스, 타이틀, 내용 저장)
 
   const carouselItems = useMemo(
     () => [
