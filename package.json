@@ -17,6 +17,7 @@
     "react-items-carousel": "^2.8.0",
     "react-native-pitch-detector": "^0.1.6",
     "react-scripts": "^5.0.1",
+    "react-speech-recognition": "^3.10.0",
     "recharts": "^2.12.1",
     "styled-components": "^6.1.8",
     "web-vitals": "^2.1.4"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
+import { useSpeech } from './SpeechContext'; //speed js단에서 받아온 final transcript로 해결하기
 import speakerIcon from './speaker.png';
 import axios from 'axios';
 
@@ -13,26 +14,28 @@ function FeedbackGraph() {
   const [speed, setSpeed] = useState(0);
   const [filler, setFiller] = useState(false);
 
+  const {speedValue } = useSpeech();
+
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
-    { name: 'Speed', value: speed },
+    { name: 'Speed', value: speedValue },
   ];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
-        const responseSpeed = await axios.get('http://localhost:8000/data_speed');
+        //const responseSpeed = await axios.get('http://localhost:8000/data_speed');
         const responseFiller = await axios.get('http://localhost:8000/data_filler');
 
       const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
-      const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
+      //const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
 
       console.log('Pitch:', normalizedPitch); // 데이터 설정 전 로깅
       setPitch(normalizedPitch);
-      console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
-      setSpeed(normalizedSpeed);
+      //console.log('Speed:', normalizedSpeed); // 데이터 설정 전 로깅
+      //setSpeed(normalizedSpeed);
       console.log('Filler:', responseFiller.data); // 데이터 설정 전 로깅
       setFiller(responseFiller.data.filler);
     } catch (error) {
@@ -49,11 +52,12 @@ function FeedbackGraph() {
   useEffect(() => {
     const adjustInterval = setInterval(() => {
       setPitch(p => p !== 0 ? Math.max(p + Math.floor(Math.random() * 5) - 2, 0) : 0);
-      setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
+      //setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
     }, 500);
 
     return () => clearInterval(adjustInterval);
   }, []);
+  
 
   /// [Volume data js에서 받아오기]
   useEffect(() => {
