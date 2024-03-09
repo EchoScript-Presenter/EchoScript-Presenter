@@ -4,7 +4,6 @@ import speakerIcon from './speaker.png';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
 
-
 const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 100) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
 };
@@ -27,14 +26,14 @@ function FeedbackGraph() {
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
 
-      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
+      console.log('Pitch: ', responsePitch.data); // 데이터 설정 전 로깅
       setPitch(responsePitch.data.pitch);
-      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
+      console.log('Speed: ', responseSpeed.data); // 데이터 설정 전 로깅
       setSpeed(responseSpeed.data.speed);
       const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
       const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data: ', error);
       }
     };
 
