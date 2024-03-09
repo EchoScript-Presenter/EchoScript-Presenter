@@ -13,7 +13,7 @@ function FeedbackGraph() {
   const [volume, setVolume] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [speed, setSpeed] = useState(0);
-  const [filler, setFiller] = useState(false);
+
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
@@ -90,9 +90,14 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    const isoString = new Date().toISOString();
+
+    const timestamp = isoString
+      .replace(/T/, ' ') // 'T'를 공백으로 대체
+      .replace(/\..+/, ''); // 초 뒤의 소수점 부분을 제거
+
     const feedbackData = {
-      timestamp: new Date().toISOString(), 
-      timestamp: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+      timestamp: timestamp, 
       speedText: getSpeedText(speed),
       volumeText: getVolumeText(volume),
       pitchText: getPitchText(pitch),
