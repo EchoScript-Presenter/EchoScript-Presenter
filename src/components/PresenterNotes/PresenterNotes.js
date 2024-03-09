@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSpeech } from '../SpeechContext';
+import { useNote } from '../NoteContext';
 import {
   ScriptTitle,
   FontSizeButton,
   NotesWrapper,
   PresenterNotesContainer,
   Title,
-  Word,
   BottomRightText,
   Content,
   HighlightedText,
@@ -22,57 +22,54 @@ function PresenterNotes({
   totalItems,
   isPresentationMode,
 }) {
-  const { transcript, interimTranscript, finalTranscript, words, listening } =
-    useSpeech();
+  const {
+    transcript,
+    interimTranscript,
+    finalTranscript,
+    words,
+    listening,
+    resetTranscript,
+  } = useSpeech();
+  const { nextNote, prevNote } = useNote();
 
   const notesRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
-
-  const contentWords = content.split(' ');
-  const displayContent = content.split(/(\s+|[.,!?:;])/).filter(Boolean); //화면에 표시되는 콘텐츠
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const currentFontSize = fontSizes[index];
 
   //새로운 코드
   useEffect(() => {
-    const preprocessContent = content
-      .toLowerCase()
-      .replace(/[.,!?:;]/g, '')
-      .split(/\s+/);
-    const preprocessTranscript = transcript
-      .toLowerCase()
-      .replace(/[.,!?:;]/g, '')
-      .split(/\s+/);
+    if (isActive && !isPresentationMode) {
+      const preprocessContent = content
+        .toLowerCase()
+        .replace(/[.,!?:;]/g, '')
+        .split(/\s+/);
+      const preprocessTranscript = transcript
+        .toLowerCase()
+        .replace(/[.,!?:;]/g, '')
+        .split(/\s+/);
 
-    let contentWordIndexMap = {};
-    let newHighlightedIndices = [];
+      let contentWordIndexMap = {};
+      let newHighlightedIndices = [];
 
-    preprocessTranscript.forEach((word) => {
-      let startIndex =
-        contentWordIndexMap[word] !== undefined
-          ? contentWordIndexMap[word] + 1
-          : 0;
-      let indexInContent = preprocessContent.indexOf(word, startIndex);
+      preprocessTranscript.forEach((word) => {
+        let startIndex =
+          contentWordIndexMap[word] !== undefined
+            ? contentWordIndexMap[word] + 1
+            : 0;
+        let indexInContent = preprocessContent.indexOf(word, startIndex);
 
-      if (indexInContent !== -1) {
-        newHighlightedIndices.push(indexInContent);
-        contentWordIndexMap[word] = indexInContent;
-      }
-    });
+        if (indexInContent !== -1) {
+          newHighlightedIndices.push(indexInContent);
+          contentWordIndexMap[word] = indexInContent;
+        }
+      });
 
-    setHighlightedIndices(newHighlightedIndices);
-  }, [transcript, content]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-    }, 1000); // 예: 1초마다 인덱스 업데이트
-
-    return () => clearInterval(intervalId); // Cleanup
-  }, [words]);
+      setHighlightedIndices(newHighlightedIndices);
+    }
+  }, [transcript, content, isActive, isPresentationMode, index, totalItems]);
 
   const increaseFontSize = () => {
     setFontSizes((prevSizes) => {
@@ -86,18 +83,28 @@ function PresenterNotes({
     });
   };
 
-  const goToPreviousNote = () => {
-    // 첫번째 presenternote라면 previous slide move 중지
-    if (index > 0) {
-      setActiveItemIndex((index - 1 + totalItems) % totalItems);
-    }
+  // const goToPreviousNote = () => {
+  //   // 첫번째 presenternote라면 previous slide move 중지
+  //   if (index > 0) {
+  //     setActiveItemIndex((index - 1 + totalItems) % totalItems);
+  //   }
+  // };
+
+  // const goToNextNote = () => {
+  //   // 마지막 presenternote라면 애니메이션 중지 & next move 중지
+  //   if (index < totalItems - 1) {
+  //     setActiveItemIndex((index + 1) % totalItems);
+  //   }
+  // };
+
+  // 'Prev' 버튼 클릭 핸들러
+  const handlePrevNoteClick = () => {
+    if (index > 0) prevNote();
   };
 
-  const goToNextNote = () => {
-    // 마지막 presenternote라면 애니메이션 중지 & next move 중지
-    if (index < totalItems - 1) {
-      setActiveItemIndex((index + 1) % totalItems);
-    }
+  // 'Next' 버튼 클릭 핸들러
+  const handleNextNoteClick = () => {
+    if (index < totalItems - 1) nextNote();
   };
 
   return (
@@ -115,9 +122,9 @@ function PresenterNotes({
         <div>
           <FontSizeButton onClick={increaseFontSize}>+</FontSizeButton>
           <FontSizeButton onClick={decreaseFontSize}>-</FontSizeButton>
-          <FontSizeButton onClick={goToPreviousNote}>◀︎</FontSizeButton>
+          <FontSizeButton onClick={handlePrevNoteClick}>◀︎</FontSizeButton>
           <FontSizeButton
-            onClick={goToNextNote}
+            onClick={handleNextNoteClick}
             disabled={index === totalItems - 1}
           >
             ▶︎

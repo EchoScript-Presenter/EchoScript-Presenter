@@ -10,15 +10,15 @@ import {
   CenterContainer,
   TextCenter,
 } from './SlideAStyled';
+import { useNote } from '../NoteContext';
 
-function SlideA({
-  currentSlideIndex,
-  onHighlight,
-  highlightedContent,
-  activeTitle,
-}) {
-  console.log(activeTitle);
-  switch (currentSlideIndex) {
+function SlideA({ activeTitle }) {
+  const { activeNote } = useNote();
+  // console.log('activeTitle', activeTitle);
+
+  const activeSlideIndex = activeNote.slideIndex;
+
+  switch (activeSlideIndex) {
     case 1:
       return (
         <SlideContainer>

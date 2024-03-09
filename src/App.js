@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import ScrollLogger from './components/ScrollLogger';
 import { SpeechProvider } from './components/SpeechContext';
+import { NoteProvider } from './components/NoteContext';
 import {
   AppContainer,
   HeaderContainer,
@@ -18,36 +19,33 @@ function App() {
 
   const [triggerWord, setTriggerWord] = useState('');
 
-  const notes = [
-    // 노트 데이터 배열
-  ];
-
   return (
     <AppContainer>
       <SpeechProvider>
-        <HeaderContainer>
-          <Header isPresentationMode={isPresentationMode} />
-          <Sidebar
-            isPresentationMode={isPresentationMode}
-            setIsPresentationMode={setIsPresentationMode}
-          />
-        </HeaderContainer>
-        <BodyContainer>
-          <MainArea
-            notes={notes}
-            triggerWord={triggerWord}
-            isPresentationMode={isPresentationMode}
-            currentSlideIndex={currentSlideIndex}
-            setCurrentSlideIndex={setCurrentSlideIndex}
-          />
-          <ScrollLogger />
-        </BodyContainer>
-        <FooterContainer>
-          <Footer
-            isPresentationMode={isPresentationMode}
-            setCurrentSlideIndex={setCurrentSlideIndex}
-          />
-        </FooterContainer>
+        <NoteProvider>
+          <HeaderContainer>
+            <Header isPresentationMode={isPresentationMode} />
+            <Sidebar
+              isPresentationMode={isPresentationMode}
+              setIsPresentationMode={setIsPresentationMode}
+            />
+          </HeaderContainer>
+          <BodyContainer>
+            <MainArea
+              triggerWord={triggerWord}
+              isPresentationMode={isPresentationMode}
+              currentSlideIndex={currentSlideIndex}
+              setCurrentSlideIndex={setCurrentSlideIndex}
+            />
+            <ScrollLogger />
+          </BodyContainer>
+          <FooterContainer>
+            <Footer
+              isPresentationMode={isPresentationMode}
+              setCurrentSlideIndex={setCurrentSlideIndex}
+            />
+          </FooterContainer>
+        </NoteProvider>
       </SpeechProvider>
     </AppContainer>
   );

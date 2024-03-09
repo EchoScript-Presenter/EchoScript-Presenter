@@ -18,7 +18,6 @@ export const SpeechProvider = ({ children }) => {
   const [endTime, setEndTime] = useState(null);
   const [speedValue, setSpeedValue] = useState(0);
 
-
   const {
     transcript,
     interimTranscript,
@@ -74,9 +73,9 @@ export const SpeechProvider = ({ children }) => {
     const duration = (endTime - startTime) / 1000; // 초 단위
     console.log('endTime:', endTime);
     console.log('startTime:', startTime);
-    console.log('duration:',duration)
+    console.log('duration:', duration);
     const wordCount = finalTranscript.split().length;
-    console.log('wordcount:',wordCount)
+    console.log('wordcount:', wordCount);
     const wordsPerSecond = wordCount / duration;
     console.log('wordsPerSecond:', wordsPerSecond);
     setSpeedValue(wordsPerSecond * 60); // 함수 내에서 사용하는 변수명도 수정했습니다.
@@ -109,6 +108,7 @@ export const SpeechProvider = ({ children }) => {
         startRecording,
         stopRecording,
         speedValue,
+        resetTranscript,
       }}
     >
       {children}
