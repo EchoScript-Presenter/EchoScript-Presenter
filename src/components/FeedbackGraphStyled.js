@@ -23,12 +23,19 @@ export const CBars = styled.div`
 `;
 
 export const CBar = styled.div`
-width: 1.6rem;
-height: 100%;
-background-color: ${(props) =>
-  props.volume ? (props.volume / 8 > 7 - props.no ? "#e3c4ff" : "rgba(128, 128, 128, 0.2)") :
-  props.speed ? (props.speed / 8 > 7 - props.no ? "#e3c4ff" : "rgba(128, 128, 128, 0.2)") :
-  props.pitch ? (props.pitch / 8 > 7 - props.no ? "#e3c4ff" : "rgba(128, 128, 128, 0.2)") :
-  "rgba (128, 128, 128, 0.2)"}; /* volume, speed, pitch에 따라 색상 변경 */
-border-radius: 4rem;
+  width: 1.6rem;
+  height: 100%;
+  background-color: ${(props) => {
+    // Check if values are NaN and set them to a default value if they are
+    const volume = isNaN(props.volume) ? 1 : props.volume;
+    const pitch = isNaN(props.pitch) ? 1 : props.pitch;
+    const speed = isNaN(props.speed) ? 1 : props.speed;
+
+    // Determine the background color based on the highest priority condition met
+    if (volume / 8 > 7 - props.no) return "#E3C4FF";
+    if (pitch / 8 > 7 - props.no) return "#E3C4FF";
+    if (speed / 8 > 7 - props.no) return "#E3C4FF";
+    return "rgba(128, 128, 128, 0.1)"; // Default color if no conditions are met
+  }};
+  border-radius: 4rem;
 `;

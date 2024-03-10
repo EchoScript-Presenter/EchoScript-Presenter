@@ -44,7 +44,7 @@ function PitchBar({ pitch }) {
   );
 }
 
-const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 100) => {
+const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 70) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
 };
 
@@ -107,7 +107,7 @@ useEffect(() => {
           sum += dataArray[i];
         }
         let average = sum / bufferLength;
-        let normalizedVolume = normalize(average, 0, 128, 0, 100); 
+        let normalizedVolume = normalize(average, 0, 128, 0, 70); 
         setVolume(normalizedVolume);
       };
 
