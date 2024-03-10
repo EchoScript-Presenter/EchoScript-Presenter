@@ -6,7 +6,9 @@ import speakerIcon from './speaker.png';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
 import {
-  CBar,
+  CBar_volume,
+  CBar_speed,
+  CBar_pitch,
   CBars,
   Containers,
 } from './FeedbackGraphStyled';
@@ -16,7 +18,7 @@ function VolumeBar({ volume }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} volume={volume} no={index} />
+            <CBar_volume key={Symbol(index).toString()} volume={volume} no={index} />
           ))}
         </CBars>
   );
@@ -27,7 +29,7 @@ function SpeedBar({ speed }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} speed={speed} no={index} />
+            <CBar_speed key={Symbol(index).toString()} speed={speed} no={index} />
           ))}
         </CBars>
   );
@@ -38,7 +40,7 @@ function PitchBar({ pitch }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} pitch={pitch} no={index} />
+            <CBar_pitch key={Symbol(index).toString()} pitch={pitch} no={index} />
           ))}
         </CBars>
   );
