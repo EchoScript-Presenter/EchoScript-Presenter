@@ -5,7 +5,44 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import speakerIcon from './speaker.png';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
+import {
+  CBar,
+  CBars,
+  Containers,
+} from './FeedbackGraphStyled';
 
+function VolumeBar({ volume }) {
+  const n = 8;
+  return (
+        <CBars>
+          {[...Array(n)].map((no, index) => (
+            <CBar key={Symbol(index).toString()} volume={volume} no={index} />
+          ))}
+        </CBars>
+  );
+}
+
+function SpeedBar({ speed }) {
+  const n = 8;
+  return (
+        <CBars>
+          {[...Array(n)].map((no, index) => (
+            <CBar key={Symbol(index).toString()} speed={speed} no={index} />
+          ))}
+        </CBars>
+  );
+}
+
+function PitchBar({ pitch }) {
+  const n = 8;
+  return (
+        <CBars>
+          {[...Array(n)].map((no, index) => (
+            <CBar key={Symbol(index).toString()} pitch={pitch} no={index} />
+          ))}
+        </CBars>
+  );
+}
 
 const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 100) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
@@ -174,8 +211,8 @@ useEffect(() => {
   };
 
   const labelStyle = {
-    textAlign: 'center',
-    marginTop: '5px',
+    textAlign: 'left',
+    // marginTop: '10px',
     fontWeight: 'bold'
   };
 
@@ -194,11 +231,29 @@ useEffect(() => {
     margin: '10px',
   };
 
+  const Containers = {
+  display: 'flex',
+  flexDirection: 'column', /* 요소들을 수직으로 배치 */
+  justifyContent: 'center', /* 요소들을 수직으로 가운데 정렬 */
+  gap: '1.5rem',
+  };
+
   return (
     <>
       <h2 style={{ marginBottom: '10px', marginTop: '0px', textAlign: 'left', marginLeft: '20px' }}>Real-time Feedback</h2>
       <div style={wrapperStyle}>
         <div style={feedbackRowStyle}>
+          <div style={Containers}>
+            <div style={labelStyle}>Volume</div>
+            <div style={labelStyle}>Speed</div>
+            <div style={labelStyle}>Pitch</div>
+          </div>
+          <div style={Containers}>
+            <VolumeBar volume={volume} />
+            <SpeedBar speed={speed} />
+            <PitchBar pitch={pitch} />
+          </div>
+          {/*
           <div>
             <div style={boxStyle}>
               <span style={textStyle(getSpeedText(speed, volume))}>{getSpeedText(speed, volume)}</span>
@@ -216,7 +271,7 @@ useEffect(() => {
               <span style={textStyle(getPitchText(pitch, volume))}>{getPitchText(pitch, volume)}</span>
             </div>
             <div style={labelStyle}>Pitch</div>
-          </div>
+          */}
         </div>
       </div>
     </>
