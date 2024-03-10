@@ -3,13 +3,12 @@ import styled from 'styled-components';
 export const Content = styled.div``;
 
 export const HighlightedText = styled.span`
-color: gray;
+  color: gray;
 `;
 
 export const GrayText = styled.span`
   background-color: yellow;
 `;
-
 
 export const ScriptTitle = styled.h2`
   display: flex;

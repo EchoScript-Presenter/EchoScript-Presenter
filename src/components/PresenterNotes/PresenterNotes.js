@@ -49,7 +49,7 @@ function PresenterNotes({
 
   //새로운 코드
   useEffect(() => {
-    if (isActive && !isPresentationMode) {
+    if (isActive && !isPresentationMode && transcript.trim().length > 0) {
       const preprocessContent = content
         .toLowerCase()
         .replace(/[.,!?:;]/g, '')
@@ -65,11 +65,15 @@ function PresenterNotes({
           contentWordIndexMap[word] !== undefined
             ? contentWordIndexMap[word] + 1
             : 0;
+        console.log('Start Index:',startIndex)
+        console.log('Word:',word)
         let indexInContent = preprocessContent.indexOf(word, startIndex);
+        console.log("IndexinContent:",indexInContent)
         
         if (indexInContent !== -1) {
+
           let beforeIndices = Array.from({ length: indexInContent + 1 }, (_, i) => i);
-          let endIndex = Math.min(indexInContent + 3, preprocessContent.length); // 수정됨: `content.length - 1` -> `preprocessContent.length`
+          let endIndex = Math.min(indexInContent + 3, preprocessContent.length); 
           let afterIndices = Array.from({ length: endIndex - indexInContent }, (_, i) => indexInContent + 1 + i);
 
           console.log('beforeIndices:',beforeIndices)
@@ -239,15 +243,15 @@ function PresenterNotes({
                 return (
                   <HighlightedText
                     key={idx}
-                    highlighted={true}
-                    className='highlighted'
                   >
                     {word + ' '}
                   </HighlightedText>
                 );
               } else if (isAfterHighlighted) {
                 return (
-                  <GrayText key={idx}>
+                  <GrayText 
+                  key={idx}
+                  >
                     {word + ' '}
                   </GrayText>
                 );

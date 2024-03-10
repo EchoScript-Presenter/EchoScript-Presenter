@@ -11,11 +11,11 @@ export const useNavigation = () => {
     if (direction === 'prev' && activeNoteIndex > 0) {
       prevNote();
       resetTranscript();
-      setHighlightedIndicesState([],[]);
+      setHighlightedIndicesState({beforeIndices:[],afterIndices:[]});
     } else if (direction === 'next' && activeNoteIndex < totalItems - 1) {
       nextNote();
       resetTranscript();
-      setHighlightedIndicesState([],[]);
+      setHighlightedIndicesState({beforeIndices:[],afterIndices:[]});;
     }
   };
 
