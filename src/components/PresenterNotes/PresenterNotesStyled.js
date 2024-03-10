@@ -3,10 +3,14 @@ import styled from 'styled-components';
 export const Content = styled.div``;
 
 export const HighlightedText = styled.span`
-  background-color: ${(props) =>
-    props.highlighted ? 'yellow' : 'transparent'};
-  font-color: ${(props) => (props.highlighted ? 'black' : 'gray')}; //이거 바꿈
+color: gray;
 `;
+
+export const GrayText = styled.span`
+  background-color: yellow;
+`;
+
+
 export const ScriptTitle = styled.h2`
   display: flex;
   justify-content: space-between;

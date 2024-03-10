@@ -1,3 +1,5 @@
+//https://ewha.zoom.us/my/uran.oh
+
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
 import speakerIcon from './speaker.png';
@@ -19,7 +21,7 @@ function FeedbackGraph() {
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
   ];
-  console.log(data);
+  //console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +29,9 @@ function FeedbackGraph() {
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
 
-      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
+      //console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
       setPitch(responsePitch.data.pitch);
-      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
+      //console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
       setSpeed(responseSpeed.data.speed);
       const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
       const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
@@ -116,7 +118,7 @@ useEffect(() => {
 
 
   const getSpeedText = (speed, volume) => {
-    console.log('Speed:', speed, 'Volume:', volume);
+    //console.log('Speed:', speed, 'Volume:', volume);
     if (speed === 0 || isNaN(speed)) return '💬';
     if (speed > 85) return 'SLOWER';
     if (speed < 15) return 'FASTER';
@@ -125,13 +127,13 @@ useEffect(() => {
   
   const getVolumeText = (volume) => {
     if (volume < 5) return '💬';
-    if (volume > 100) return 'SOFTER';
-    if (volume > 10 && volume < 20) return 'LOUDER';
+    if (volume > 40) return 'SOFTER';
+    if (volume > 5 && volume < 10) return 'LOUDER';
     return '👍';
   };
   
   const getPitchText = (pitch, volume) => {
-    console.log('pitch:', pitch, 'Volume:', volume);
+    //console.log('pitch:', pitch, 'Volume:', volume);
     if (pitch === 0 || isNaN(pitch) || pitch < 50) return '💬';
     if (pitch >= 180 && pitch <= 350) return '👍';
     if (pitch > 300) return 'MONOTONE'

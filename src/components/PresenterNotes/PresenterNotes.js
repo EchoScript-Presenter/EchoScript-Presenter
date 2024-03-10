@@ -10,6 +10,7 @@ import {
   BottomRightText,
   Content,
   HighlightedText,
+  GrayText,
 } from './PresenterNotesStyled';
 import useStore from '../Store';
 import { useNavigation } from '../useNavigation';
@@ -37,7 +38,7 @@ function PresenterNotes({
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
-  const { highlightedIndices, setHighlightedIndices } = useStore();
+  const { highlightedIndicesState, setHighlightedIndicesState } = useStore();
   const currentFontSize = fontSizes[index];
 
   const removeEmojis = (string) => {
@@ -58,21 +59,31 @@ function PresenterNotes({
         .replace(/[.,!?:;]/g, '')
         .split(/\s+/);
 
-      let contentWordIndexMap = {};
-      let newHighlightedIndices = preprocessTranscript.reduce((acc, word) => {
+      let contentWordIndexMap = {}; // content를 잘라서 index 가져오기
+      let newHighlightedIndices = preprocessTranscript.reduce((acc, word) => { //여기를 바꾸기
         let startIndex =
           contentWordIndexMap[word] !== undefined
             ? contentWordIndexMap[word] + 1
             : 0;
         let indexInContent = preprocessContent.indexOf(word, startIndex);
-
+        
         if (indexInContent !== -1) {
-          acc.push(indexInContent);
+          let beforeIndices = Array.from({ length: indexInContent + 1 }, (_, i) => i);
+          let endIndex = Math.min(indexInContent + 3, preprocessContent.length); // 수정됨: `content.length - 1` -> `preprocessContent.length`
+          let afterIndices = Array.from({ length: endIndex - indexInContent }, (_, i) => indexInContent + 1 + i);
+
+          console.log('beforeIndices:',beforeIndices)
+          console.log('afterIndices:',afterIndices)
+          
+          acc.beforeIndices = [...new Set([...acc.beforeIndices, ...beforeIndices])]; // 중복 제거
+          acc.afterIndices = [...new Set([...acc.afterIndices, ...afterIndices])]; // 중복 제거
+
           contentWordIndexMap[word] = indexInContent;
         }
-
         return acc;
-      }, []);
+      }, {beforeIndices: [], afterIndices: []});
+
+      setHighlightedIndicesState(newHighlightedIndices);
 
       // 새로운 상태와 현재 상태를 비교
       const arraysEqual = (a, b) => {
@@ -84,8 +95,8 @@ function PresenterNotes({
       };
 
       // 실제로 변경이 필요한 경우에만 상태를 업데이트
-      if (!arraysEqual(newHighlightedIndices, highlightedIndices)) {
-        setHighlightedIndices(newHighlightedIndices);
+      if (!arraysEqual(newHighlightedIndices, highlightedIndicesState)) {
+        setHighlightedIndicesState(newHighlightedIndices);
       }
     }
   }, [transcript, content, isActive, isPresentationMode]);
@@ -161,7 +172,7 @@ function PresenterNotes({
       // 1초 후에 다음 노트로 자동 이동
       timeoutId = setTimeout(() => {
         navigateNotes('next');
-      }, 1000);
+      }, 500);
     }
 
     return () => clearTimeout(timeoutId); // 컴포넌트 unmount 시 타이머 정리
@@ -221,19 +232,33 @@ function PresenterNotes({
           <Title>{title}</Title>
           <Content>
             {content.split(' ').map((word, idx) => {
-              // highlightedIndices 배열을 사용해 현재 단어 인덱스가 하이라이트되어야 하는지 확인
-              const isHighlighted = highlightedIndices.includes(idx);
-              return (
-                <HighlightedText
-                  key={idx}
-                  highlighted={isHighlighted}
-                  className={isHighlighted ? 'highlighted' : ''}
-                >
-                  {word + ' '}
-                </HighlightedText>
-              );
+              const isBeforeHighlighted = highlightedIndicesState?.beforeIndices?.includes(idx);
+              const isAfterHighlighted = highlightedIndicesState?.afterIndices?.includes(idx);
+
+              if (isBeforeHighlighted) {
+                return (
+                  <HighlightedText
+                    key={idx}
+                    highlighted={true}
+                    className='highlighted'
+                  >
+                    {word + ' '}
+                  </HighlightedText>
+                );
+              } else if (isAfterHighlighted) {
+                return (
+                  <GrayText key={idx}>
+                    {word + ' '}
+                  </GrayText>
+                );
+              } else {
+                return (
+                  <span key={idx}>{word + ' '}</span>
+                );
+              }
             })}
           </Content>
+
 
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>

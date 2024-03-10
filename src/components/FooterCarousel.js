@@ -16,7 +16,7 @@ function FooterCarousel({ setCurrentSlideIndex }) {
   const { nextNote, prevNote, totalItems, activeNote, activeNoteIndex } =
     useNote();
   const { resetTranscript } = useSpeech();
-  const { highlightedIndices, setHighlightedIndices } = useStore();
+  const { highlightedIndicesState, setHighlightedIndicesState } = useStore();
   const { navigateNotes } = useNavigation();
 
   // Carousel에 표시할 이미지 데이터
