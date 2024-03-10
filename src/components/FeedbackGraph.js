@@ -49,9 +49,9 @@ const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 100) =>
 };
 
 function FeedbackGraph() {
-  const [volume, setVolume] = useState(0);
-  const [pitch, setPitch] = useState(0);
-  const [speed, setSpeed] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [pitch, setPitch] = useState(1);
+  const [speed, setSpeed] = useState(1);
 
   const data = [
     { name: 'Volume', value: volume },
