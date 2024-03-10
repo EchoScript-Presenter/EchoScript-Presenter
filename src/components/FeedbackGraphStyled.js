@@ -23,9 +23,12 @@ export const CBars = styled.div`
 `;
 
 export const CBar = styled.div`
-  width: 1.6rem;
-  height: 100%;
-  background-color: ${(props) =>
-    props.volume / 8 > 7 - props.no ? "#E3C4FF" : "rgba(128, 128, 128, 0.1)"};
-  border-radius: 4rem;
+width: 1.6rem;
+height: 100%;
+background-color: ${(props) =>
+  props.volume ? (props.volume / 8 > 7 - props.no ? "#e3c4ff" : "rgba(255, 255, 255, 0.3)") :
+  props.speed ? (props.speed / 8 > 7 - props.no ? "#e3c4ff" : "rgba(255, 255, 255, 0.3)") :
+  props.pitch ? (props.pitch / 8 > 7 - props.no ? "#e3c4ff" : "rgba(255, 255, 255, 0.3)") :
+  "rgba(255, 255, 255, 0.3)"}; /* volume, speed, pitch에 따라 색상 변경 */
+border-radius: 4rem;
 `;
