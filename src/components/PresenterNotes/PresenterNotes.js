@@ -65,10 +65,10 @@ function PresenterNotes({
           contentWordIndexMap[word] !== undefined
             ? contentWordIndexMap[word] + 1
             : 0;
-        console.log('Start Index:',startIndex)
-        console.log('Word:',word)
+        //console.log('Start Index:',startIndex)
+        //console.log('Word:',word)
         let indexInContent = preprocessContent.indexOf(word, startIndex);
-        console.log("IndexinContent:",indexInContent)
+        //console.log("IndexinContent:",indexInContent)
         
         if (indexInContent !== -1) {
 
@@ -76,8 +76,8 @@ function PresenterNotes({
           let endIndex = Math.min(indexInContent + 3, preprocessContent.length); 
           let afterIndices = Array.from({ length: endIndex - indexInContent }, (_, i) => indexInContent + 1 + i);
 
-          console.log('beforeIndices:',beforeIndices)
-          console.log('afterIndices:',afterIndices)
+          //console.log('beforeIndices:',beforeIndices)
+          //console.log('afterIndices:',afterIndices)
           
           acc.beforeIndices = [...new Set([...acc.beforeIndices, ...beforeIndices])]; // 중복 제거
           acc.afterIndices = [...new Set([...acc.afterIndices, ...afterIndices])]; // 중복 제거

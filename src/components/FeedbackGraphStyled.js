@@ -25,7 +25,11 @@ export const CBars = styled.div`
 export const CBar = styled.div`
   width: 1.6rem;
   height: 100%;
-  background-color: ${(props) =>
-    props.volume / 8 > 7 - props.no ? "#E3C4FF" : "rgba(128, 128, 128, 0.1)"};
+  background-color: ${(props) => {
+    if (props.volume / 8 > 7 - props.no) return "#E3C4FF";
+    if (props.pitch / 8 > 7 - props.no) return "#E3C4FF";
+    if (props.speed / 8 > 7 - props.no) return "#E3C4FF";
+    return "rgba(128, 128, 128, 0.1)"; 
+  }};
   border-radius: 4rem;
 `;

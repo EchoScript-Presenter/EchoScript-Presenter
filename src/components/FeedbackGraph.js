@@ -58,7 +58,7 @@ function FeedbackGraph() {
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
   ];
-  //console.log(data);
+  console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,12 +66,16 @@ function FeedbackGraph() {
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
         const responseSpeed = await axios.get('http://localhost:8000/data_speed');
 
-      //console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
-      setPitch(responsePitch.data.pitch);
-      //console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
-      setSpeed(responseSpeed.data.speed);
+      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
+      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
       const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
       const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
+      console.log('NormalizedSpeed:',normalizedSpeed)
+      console.log('NormalizedPitch:',normalizedPitch)
+
+      setPitch(normalizedPitch);
+      setSpeed(normalizedSpeed);
+
     } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -82,15 +86,6 @@ function FeedbackGraph() {
 
     return () => clearInterval(interval); 
   }, []); 
-
-  useEffect(() => {
-    const adjustInterval = setInterval(() => {
-      setSpeed(s => s !== 0 ? Math.max(s + Math.floor(Math.random() * 5) - 2, 0) : 0);
-      setPitch(p => p !== 0 ? Math.max(p + Math.floor(Math.random() * 5) - 2, 0) : 0);
-    }, 500);
-
-    return () => clearInterval(adjustInterval);
-  }, []);
   
 
 /// [Volume data js에서 받아오기]
@@ -128,6 +123,8 @@ useEffect(() => {
     setupMicrophone();
   }, []);
 
+
+
   useEffect(() => {
     const isoString = new Date().toISOString();
 
@@ -152,7 +149,6 @@ useEffect(() => {
       console.error('Error sending feedback to server:', error);
     }
   };
-
 
   const getSpeedText = (speed, volume) => {
     //console.log('Speed:', speed, 'Volume:', volume);
