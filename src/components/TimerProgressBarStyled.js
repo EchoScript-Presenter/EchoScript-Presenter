@@ -10,7 +10,7 @@ export const ProgressBarContainer = styled.div`
 `;
 
 export const ProgressBarFiller = styled.div`
-  background-color: #4caf50;
+  background-color: #be8be1; 
   height: 100%;
   border-radius: 8px;
   transition: width 0.5s ease-in-out;
