@@ -1,6 +1,10 @@
 import React from 'react';
 import { SidebarContainer, ToggleButton } from './SidebarStyled';
 import { FaPencilAlt, FaCheckSquare } from 'react-icons/fa';
+import { RiPresentationFill } from 'react-icons/ri';
+import { MdOutlinePausePresentation } from 'react-icons/md';
+import { LuMonitorPause } from 'react-icons/lu';
+import { PiMonitorPlay } from 'react-icons/pi';
 import { useSpeech } from './SpeechContext';
 
 function Sidebar({ isPresentationMode, setIsPresentationMode }) {
@@ -15,9 +19,9 @@ function Sidebar({ isPresentationMode, setIsPresentationMode }) {
         }}
       >
         {isPresentationMode ? (
-          <FaCheckSquare size="24px" />
+          <RiPresentationFill size="24px" />
         ) : (
-          <FaPencilAlt size="24px" />
+          <LuMonitorPause size="24px" />
         )}
       </ToggleButton>
     </SidebarContainer>
