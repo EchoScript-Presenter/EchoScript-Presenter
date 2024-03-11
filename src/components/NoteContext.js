@@ -32,7 +32,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'Design Process-2',
         content:
-          'Design Thinking Process begins with empathizing to understand users experiences, then defining problem clearly. Next, diverse ideas are generated during ideation to address problem, followed by prototyping based on the most promising concepts.',
+          'The Design Thinking Process starts by getting to know how users feel and what they need. Then, it clearly identifies the issue. After that, it comes up with many different ideas to solve the problem, and then it makes prototypes using the best ideas.',
       },
 
 

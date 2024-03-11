@@ -34,7 +34,8 @@ function PresenterNotes({
     resetTranscript,
   } = useSpeech();
   const { navigateNotes } = useNavigation();
-  const notesRef = useRef(null);
+  const notesRef = useRef(null); // 이거 무엇?
+  const endOfContentRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
@@ -117,6 +118,15 @@ function PresenterNotes({
     });
   };
 
+  // 하이라이트된 텍스트가 있으면 해당 위치로 스크롤
+  const highlightedRef = useRef(null); // 하이라이트된 텍스트를 위한 ref
+  useEffect(() => {
+    if (highlightedRef.current) {
+      highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [highlightedIndicesState]); // highlightedIndicesState가 변경될 때마다 효과 실행
+
+
   // const goToPreviousNote = () => {
   //   // 첫번째 presenternote라면 previous slide move 중지
   //   if (index > 0) {
@@ -165,15 +175,12 @@ function PresenterNotes({
 
     let timeoutId;
 
-    // 조건 검사
     if (
       (checkWordsMatch(last3WordsContent, last3WordsTranscript, 3) ||
         checkWordsMatch(last5WordsContent, last5WordsTranscript, 3)) &&
       index < totalItems - 1
     ) {
-      // 기존에 설정된 타이머가 있다면 초기화
       clearTimeout(timeoutId);
-      // 1초 후에 다음 노트로 자동 이동
       timeoutId = setTimeout(() => {
         navigateNotes('next');
       }, 500);
@@ -241,17 +248,13 @@ function PresenterNotes({
 
               if (isBeforeHighlighted) {
                 return (
-                  <HighlightedText
-                    key={idx}
-                  >
+                  <HighlightedText key={idx} ref={highlightedRef}>
                     {word + ' '}
                   </HighlightedText>
                 );
               } else if (isAfterHighlighted) {
                 return (
-                  <GrayText 
-                  key={idx}
-                  >
+                  <GrayText key={idx}>
                     {word + ' '}
                   </GrayText>
                 );

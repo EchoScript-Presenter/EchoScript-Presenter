@@ -78,9 +78,6 @@ def calculate_pitch_intensity(wav_file):
     mean_intensity = round(mean_intensity,2)
     return meanF0, mean_intensity
 
-def count_fillers(text, filler_words=["like", "um", "uh", "you know", "so", "actually", "basically", "well"]):
-    return sum(text.lower().split().count(word) for word in filler_words)
-
 def recognize_speech_from_mic(recognizer, microphone, audio_file_path="./temp.wav"):
     if not isinstance(recognizer, sr.Recognizer) or not isinstance(microphone, sr.Microphone):
         raise TypeError("Invalid types for `recognizer` or `microphone`")
@@ -102,10 +99,9 @@ def recognize_speech_from_mic(recognizer, microphone, audio_file_path="./temp.wa
     return response, audio_file_path
 
 def recognize_and_analyze():
-    global is_recording, intensity_values, pitch_values, speech_rate_syllables_per_minute, speech_rate_words_per_minute, filler_words_count, filler_words_true
+    global is_recording, intensity_values, pitch_values, speech_rate_syllables_per_minute, speech_rate_words_per_minute
     
     count = 1
-    filler_words = ["like", "um", "uh", "you know", "well"]
 
     recognizer = sr.Recognizer()
     microphone = sr.Microphone()
@@ -125,13 +121,6 @@ def recognize_and_analyze():
             end_time = time.time() - start_time
             print("소요 시간: {} 초".format(end_time))
 
-            filler_words_count = 0
-            filler_words_true = False
-            filler_words_count = count_fillers(guess["transcription"], filler_words)
-            if filler_words_count > 2:
-                print("Too much filler words!")
-                filler_words_true = True
-
             speech_rate_words_per_minute, speech_rate_syllables_per_minute = calculate_speed(guess["transcription"], end_time)
             print(f"Speech Rate (Words/Minute): {speech_rate_words_per_minute:.2f}")
             print(f"Speech Rate (Syllables/Minute): {speech_rate_syllables_per_minute:.2f}")
@@ -150,7 +139,6 @@ def recognize_and_analyze():
                     "syllables_per_minute": speech_rate_syllables_per_minute,
                     "pitch": pitch_values,
                     "intensity": intensity_values,
-                    "filler_words_detected": filler_words_true,
                 }
             }
 
@@ -163,8 +151,6 @@ def recognize_and_analyze():
             pitch_values = 0
             speech_rate_words_per_minute = 0
             speech_rate_syllables_per_minute = 0
-            filler_words_count = 0
-            filler_words_true = False
 
             # 로깅 함수 호출로 로그 파일에 기록
             log_data = {
@@ -175,7 +161,6 @@ def recognize_and_analyze():
                     "syllables_per_minute": speech_rate_syllables_per_minute,
                     "pitch": pitch_values,
                     "intensity": intensity_values,
-                    "filler_words_detected": filler_words_true,
                 }
             }
             speech_analyze_log_to_json_file(log_data)
@@ -185,8 +170,6 @@ intensity_values = None
 pitch_values = None
 speech_rate_syllables_per_minute = None
 speech_rate_words_per_minute = None
-filler_words_count = None
-filler_words_true = False
 pause_true = False
 
 @app.post("/start_recording")
@@ -209,14 +192,6 @@ async def stop_recording():
         return {"message": "Recording stopped successfully!"}
     else:
         return {"message": "Recording is not in progress."}
-
-@app.get("/data_volume")
-async def get_volume():
-    global intensity_values, is_recording
-    if not is_recording:
-        return {"error": "Recording has stopped. No current data available."}
-    print("\n\n\n")
-    return {"volume": intensity_values}
 
 @app.get("/data_pitch")
 async def get_pitch():

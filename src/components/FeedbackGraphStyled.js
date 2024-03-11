@@ -16,26 +16,72 @@ export const CBars = styled.div`
   width: auto;
   height: 0.9rem;
   display: flex;
-  flex-direction: row-reverse; /* 수평 정렬로 변경 */
+  flex-direction: row; /* 수평 정렬로 변경 */
   justify-content: space-between; /* 간격을 일정하게 유지하며 요소들을 수평으로 배치 */
   align-items: center; 
   gap: 0.6rem; /* 요소 사이의 간격 설정 */
 `;
 
-export const CBar = styled.div`
+
+export const CBar_volume = styled.div`
   width: 1.6rem;
   height: 100%;
   background-color: ${(props) => {
-    // Check if values are NaN and set them to a default value if they are
-    const volume = isNaN(props.volume) ? 1 : props.volume;
-    const pitch = isNaN(props.pitch) ? 1 : props.pitch;
-    const speed = isNaN(props.speed) ? 1 : props.speed;
+    const volume = isNaN(props.volume) ? 0 : props.volume;
+    const barsToColor = Math.ceil(volume / 12.5); // volume이 0에서 100 사이라고 가정
 
-    // Determine the background color based on the highest priority condition met
-    if (volume / 8 > 7 - props.no) return "#E3C4FF";
-    if (pitch / 8 > 7 - props.no) return "#E3C4FF";
-    if (speed / 8 > 7 - props.no) return "#E3C4FF";
-    return "rgba(128, 128, 128, 0.1)"; // Default color if no conditions are met
+    // 전체 바에 대한 색상 결정 로직
+    let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
+    if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
+      color = "red"; // 1, 2번째 바만 빨간색
+    } else if (barsToColor >= 3 && barsToColor <= 6 && props.no < barsToColor) {
+      color = "#E3C4FF"; // 3~6개 바가 채워지면 전부 보라색
+    } else if (barsToColor >= 7 && props.no < barsToColor) {
+      color = "red"; // 7개 이상 바가 채워지면 전부 빨간색
+    }
+    return color;
+  }};
+  border-radius: 4rem;
+`;
+
+export const CBar_pitch = styled.div`
+  width: 1.6rem;
+  height: 100%;
+  background-color: ${(props) => {
+    const pitch = isNaN(props.pitch) ? 0 : props.pitch;
+    const barsToColor = Math.ceil(pitch / 12.5); // volume이 0에서 100 사이라고 가정
+
+    // 전체 바에 대한 색상 결정 로직
+    let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
+    if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
+      color = "red"; // 1, 2번째 바만 빨간색
+    } else if (barsToColor >= 3 && barsToColor <= 6 && props.no < barsToColor) {
+      color = "#E3C4FF"; // 3~6개 바가 채워지면 전부 보라색
+    } else if (barsToColor >= 7 && props.no < barsToColor) {
+      color = "red"; // 7개 이상 바가 채워지면 전부 빨간색
+    }
+    return color;
+  }};
+  border-radius: 4rem;
+`;
+
+export const CBar_speed = styled.div`
+  width: 1.6rem;
+  height: 100%;
+  background-color: ${(props) => {
+    const speed = isNaN(props.speed) ? 0 : props.speed;
+    const barsToColor = Math.ceil(speed / 12.5); // volume이 0에서 100 사이라고 가정
+
+    // 전체 바에 대한 색상 결정 로직
+    let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
+    if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
+      color = "red"; // 1, 2번째 바만 빨간색
+    } else if (barsToColor >= 3 && barsToColor <= 6 && props.no < barsToColor) {
+      color = "#E3C4FF"; // 3~6개 바가 채워지면 전부 보라색
+    } else if (barsToColor >= 7 && props.no < barsToColor) {
+      color = "red"; // 7개 이상 바가 채워지면 전부 빨간색
+    }
+    return color;
   }};
   border-radius: 4rem;
 `;

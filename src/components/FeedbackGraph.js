@@ -6,7 +6,9 @@ import speakerIcon from './speaker.png';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
 import {
-  CBar,
+  CBar_volume,
+  CBar_speed,
+  CBar_pitch,
   CBars,
   Containers,
 } from './FeedbackGraphStyled';
@@ -16,7 +18,7 @@ function VolumeBar({ volume }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} volume={volume} no={index} />
+            <CBar_volume key={Symbol(index).toString()} volume={volume} no={index} />
           ))}
         </CBars>
   );
@@ -27,7 +29,7 @@ function SpeedBar({ speed }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} speed={speed} no={index} />
+            <CBar_speed key={Symbol(index).toString()} speed={speed-10} no={index} /> //speed -  10해놓지 말기
           ))}
         </CBars>
   );
@@ -38,13 +40,16 @@ function PitchBar({ pitch }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar key={Symbol(index).toString()} pitch={pitch} no={index} />
+            <CBar_pitch key={Symbol(index).toString()} pitch={pitch} no={index} />
           ))}
         </CBars>
   );
 }
 
-const normalize = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 70) => {
+const normalize_speed = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 70) => {
+  return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
+};
+const normalize_pitch = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 80) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
 };
 
@@ -53,12 +58,45 @@ function FeedbackGraph() {
   const [pitch, setPitch] = useState(1);
   const [speed, setSpeed] = useState(1);
 
+  const [before_pitch, setBeforePitch] = useState();
+  const [before_speed, setBeforeSpeed] = useState(0);
+
+  // volume bar의 index (3/8)의 값도 서버로 넘겨서 한꺼번에 json에 저장할 것임!
+  const [coloredVolumeBars, setColoredVolumeBars] = useState(0);
+  const [coloredSpeedBars, setColoredSpeedBars] = useState(0);
+  const [coloredPitchBars, setColoredPitchBars] = useState(0);
+
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
+    { name: 'Before_Pitch', value: before_pitch },
+    { name: 'Before_Speed', value: before_speed },
   ];
-  console.log(data);
+  //console.log(data);
+  const volumeData = data.find(item => item.name === 'Volume');
+  if (volumeData) {
+    console.log('Volume:', volumeData.value);
+  }
+  const speedData = data.find(item => item.name === 'Speed');
+  if (speedData) {
+    console.log('Speed:', speedData.value);
+  }
+  const pitchData = data.find(item => item.name === 'Pitch');
+  if (pitchData) {
+    console.log('Pitch:', pitchData.value);
+  }
+
+  const calculateBarsToColor = (value, totalBars) => {
+    const barsToColor = Math.ceil(value / (100 / totalBars));
+    return barsToColor;
+  };
+
+  useEffect(() => {
+    setColoredVolumeBars(calculateBarsToColor(volume, 8));
+    setColoredSpeedBars(calculateBarsToColor(speed, 8));
+    setColoredPitchBars(calculateBarsToColor(pitch, 8));
+  }, [volume, speed, pitch]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,13 +106,16 @@ function FeedbackGraph() {
 
       console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
       console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
-      const normalizedPitch = normalize(responsePitch.data.pitch, 0, 400);
-      const normalizedSpeed = normalize(responseSpeed.data.speed, 0, 100);
+      setBeforePitch(responsePitch.data)
+      setBeforeSpeed(responseSpeed.data)
+
+      const normalizedPitch = normalize_pitch(responsePitch.data.pitch, 0, 350);
+      const normalizedSpeed = normalize_speed(responseSpeed.data.speed, 0, 70);
       console.log('NormalizedSpeed:',normalizedSpeed)
       console.log('NormalizedPitch:',normalizedPitch)
-
       setPitch(normalizedPitch);
       setSpeed(normalizedSpeed);
+
 
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -107,10 +148,10 @@ useEffect(() => {
           sum += dataArray[i];
         }
         let average = sum / bufferLength;
-        let normalizedVolume = normalize(average, 0, 128, 0, 70); 
-        setVolume(normalizedVolume);
+        //let normalizedVolume = normalize(average, 0, 128, 0, 70); 
+        //setVolume(normalizedVolume);
+        setVolume(average)
       };
-
       const interval = setInterval(getVolume, 100);
       return () => {
         clearInterval(interval);
@@ -124,19 +165,31 @@ useEffect(() => {
   }, []);
 
 
-
   useEffect(() => {
-    const isoString = new Date().toISOString();
+    const now = new Date();
+    const koreaTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + (9 * 3600000)); // 한국 시간으로 조정
 
-    const timestamp = isoString
-      .replace(/T/, ' ') // 'T'를 공백으로 대체
-      .replace(/\..+/, ''); // 초 뒤의 소수점 부분을 제거
+    // 한국 시간으로 직접 포맷
+    const year = koreaTime.getFullYear();
+    const month = ('0' + (koreaTime.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 1을 더함
+    const day = ('0' + koreaTime.getDate()).slice(-2);
+    const hours = ('0' + koreaTime.getHours()).slice(-2);
+    const minutes = ('0' + koreaTime.getMinutes()).slice(-2);
+    const seconds = ('0' + koreaTime.getSeconds()).slice(-2);
+    
+    // YYYY-MM-DD HH:MM:SS 형태로 조합
+    const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     const feedbackData = {
       timestamp: timestamp, 
-      speedText: getSpeedText(speed),
-      volumeText: getVolumeText(volume),
-      pitchText: getPitchText(pitch),
+      volumeData: volume,
+      speedData: speed,
+      pitchData: pitch,
+      before_speed: before_speed,
+      before_pitch: before_pitch,
+      volumeBarsColored: coloredVolumeBars,
+      speedBarsColored: coloredSpeedBars,
+      pitchBarsColored: coloredPitchBars,
     };
     sendFeedbackToServer(feedbackData);
   }, [speed, volume, pitch]); // 속도, 볼륨, 피치가 변경될 때마다 트리거됨
@@ -149,49 +202,6 @@ useEffect(() => {
       console.error('Error sending feedback to server:', error);
     }
   };
-
-  const getSpeedText = (speed, volume) => {
-    //console.log('Speed:', speed, 'Volume:', volume);
-    if (speed === 0 || isNaN(speed)) return '💬';
-    if (speed > 85) return 'SLOWER';
-    if (speed < 15) return 'FASTER';
-    return '👍';
-  };
-  
-  const getVolumeText = (volume) => {
-    if (volume < 5) return '💬';
-    if (volume > 40) return 'SOFTER';
-    if (volume > 5 && volume < 10) return 'LOUDER';
-    return '👍';
-  };
-  
-  const getPitchText = (pitch, volume) => {
-    //console.log('pitch:', pitch, 'Volume:', volume);
-    if (pitch === 0 || isNaN(pitch) || pitch < 50) return '💬';
-    if (pitch >= 180 && pitch <= 350) return '👍';
-    if (pitch > 300) return 'MONOTONE'
-    return '👍';
-  };
-  
-  const textStyle = (content) => {
-    let style = { fontWeight: 'normal', color: 'black' };
-  
-    if (['GOOD'].includes(content)) {
-      style.fontWeight = 'normal';
-      style.color = 'green'
-    } else if (['...'].includes(content)) {
-      style.fontWeight = 'normal';
-    } else {
-      style.fontWeight = 'bold';
-      if (['LOUDER', 'FASTER', 'MONOTONE'].includes(content)) {
-        style.color = 'red';
-      } else if (['SOFTER', 'SLOWER'].includes(content)) {
-        style.color = 'red';
-      }
-    }
-    return style;
-  };
-  
 
   const boxStyle = {
     border: '2px solid #f8f9fa',
@@ -249,25 +259,6 @@ useEffect(() => {
             <SpeedBar speed={speed} />
             <PitchBar pitch={pitch} />
           </div>
-          {/*
-          <div>
-            <div style={boxStyle}>
-              <span style={textStyle(getSpeedText(speed, volume))}>{getSpeedText(speed, volume)}</span>
-            </div>
-            <div style={labelStyle}>Speed</div>
-          </div>
-          <div>
-            <div style={boxStyle}>
-              <span style={textStyle(getVolumeText(volume))}>{getVolumeText(volume)}</span>
-            </div>
-            <div style={labelStyle}>Volume</div>
-          </div>
-          <div>
-            <div style={boxStyle}>
-              <span style={textStyle(getPitchText(pitch, volume))}>{getPitchText(pitch, volume)}</span>
-            </div>
-            <div style={labelStyle}>Pitch</div>
-          */}
         </div>
       </div>
     </>
