@@ -29,7 +29,7 @@ function SpeedBar({ speed }) {
   return (
         <CBars>
           {[...Array(n)].map((no, index) => (
-            <CBar_speed key={Symbol(index).toString()} speed={speed-10} no={index} />
+            <CBar_speed key={Symbol(index).toString()} speed={speed-10} no={index} /> //speed -  10해놓지 말기
           ))}
         </CBars>
   );
@@ -58,6 +58,9 @@ function FeedbackGraph() {
   const [pitch, setPitch] = useState(1);
   const [speed, setSpeed] = useState(1);
 
+  const [before_pitch, setBeforePitch] = useState();
+  const [before_speed, setBeforeSpeed] = useState(0);
+
   // volume bar의 index (3/8)의 값도 서버로 넘겨서 한꺼번에 json에 저장할 것임!
   const [coloredVolumeBars, setColoredVolumeBars] = useState(0);
   const [coloredSpeedBars, setColoredSpeedBars] = useState(0);
@@ -67,6 +70,8 @@ function FeedbackGraph() {
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: speed },
+    { name: 'Before_Pitch', value: before_pitch },
+    { name: 'Before_Speed', value: before_speed },
   ];
   //console.log(data);
   const volumeData = data.find(item => item.name === 'Volume');
@@ -101,11 +106,13 @@ function FeedbackGraph() {
 
       console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
       console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
+      setBeforePitch(responsePitch.data)
+      setBeforeSpeed(responseSpeed.data)
+
       const normalizedPitch = normalize_pitch(responsePitch.data.pitch, 0, 350);
       const normalizedSpeed = normalize_speed(responseSpeed.data.speed, 0, 70);
       console.log('NormalizedSpeed:',normalizedSpeed)
       console.log('NormalizedPitch:',normalizedPitch)
-
       setPitch(normalizedPitch);
       setSpeed(normalizedSpeed);
 
@@ -178,6 +185,8 @@ useEffect(() => {
       volumeData: volume,
       speedData: speed,
       pitchData: pitch,
+      before_speed: before_speed,
+      before_pitch: before_pitch,
       volumeBarsColored: coloredVolumeBars,
       speedBarsColored: coloredSpeedBars,
       pitchBarsColored: coloredPitchBars,
