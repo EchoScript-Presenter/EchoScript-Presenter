@@ -44,6 +44,26 @@ export const CBar_volume = styled.div`
   border-radius: 4rem;
 `;
 
+export const CBar_pitch = styled.div`
+  width: 1.6rem;
+  height: 100%;
+  background-color: ${(props) => {
+    const pitch = isNaN(props.pitch) ? 0 : props.pitch;
+    const barsToColor = Math.ceil(pitch / 12.5); // volume이 0에서 100 사이라고 가정
+
+    // 전체 바에 대한 색상 결정 로직
+    let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
+    if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
+      color = "red"; // 1, 2번째 바만 빨간색
+    } else if (barsToColor >= 3 && barsToColor <= 6 && props.no < barsToColor) {
+      color = "#E3C4FF"; // 3~6개 바가 채워지면 전부 보라색
+    } else if (barsToColor >= 7 && props.no < barsToColor) {
+      color = "red"; // 7개 이상 바가 채워지면 전부 빨간색
+    }
+    return color;
+  }};
+  border-radius: 4rem;
+`;
 
 export const CBar_speed = styled.div`
   width: 1.6rem;
@@ -64,27 +84,4 @@ export const CBar_speed = styled.div`
     return color;
   }};
   border-radius: 4rem;
-  `;
-
-export const CBar_pitch = styled.div`
-  width: 1.6rem;
-  height: 100%;
-  background-color: ${(props) => {
-    const pitch = isNaN(props.pitch) ? 0 : props.pitch;
-    const barsToColor = Math.ceil(pitch / 12.5); // volume이 0에서 100 사이라고 가정
-
-    // 전체 바에 대한 색상 결정 로직
-    let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
-    if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
-      color = "red"; // 1, 2번째 바만 빨간색
-    } else if (barsToColor >= 3 && barsToColor <= 6 && props.no < barsToColor) {
-      color = "#E3C4FF"; // 3~6개 바가 채워지면 전부 보라색
-    } else if (barsToColor >= 7 && props.no < barsToColor) {
-      color = "red"; // 7개 이상 바가 채워지면 전부 빨간색
-    }
-    return color;
-  }};
-  border-radius: 4rem;
-  `;
-
-
+`;
