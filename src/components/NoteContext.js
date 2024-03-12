@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 
 const NoteContext = createContext();
 
@@ -35,16 +41,14 @@ export const NoteProvider = ({ children }) => {
           'The Design Thinking Process starts by getting to know how users feel and what they need. Then, it clearly identifies the issue. After that, it comes up with many different ideas to solve the problem, and then it makes prototypes using the best ideas.',
       },
 
-
       {
         index: 3,
         slideIndex: 2,
         noteindex: '3/3',
         title: 'Design Process-3',
         content:
-          'The final stage tests prototypes with real users to gather feedback on designs. Design Thinking Process is not strictly linear but iterative, allowing stages to be revisited or iterated forward and backward as needed.'
-         },
-
+          'The final stage tests prototypes with real users to gather feedback on designs. Design Thinking Process is not strictly linear but iterative, allowing stages to be revisited or iterated forward and backward as needed.',
+      },
 
       {
         index: 4,
@@ -79,7 +83,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'DEFINE-1',
         content:
-        'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
+          'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
       },
       {
         index: 8,
@@ -201,6 +205,16 @@ export const NoteProvider = ({ children }) => {
       return newIndex;
     });
   };
+
+  // currentSlideIndex가 변경될 때마다 실행되는 useEffect
+  useEffect(() => {
+    const newActiveIndex = carouselItems.findIndex(
+      (item) => item.slideIndex === currentSlideIndex
+    );
+    if (newActiveIndex !== -1) {
+      setActiveNoteIndex(newActiveIndex);
+    }
+  }, [currentSlideIndex, carouselItems]);
 
   const value = {
     currentSlideIndex,

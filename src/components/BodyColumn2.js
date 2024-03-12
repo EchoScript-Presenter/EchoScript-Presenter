@@ -9,7 +9,6 @@ import PresenterNotesCarousel from './PresenterNoteCarousel';
 import { PresenterNoteContainer } from './BodyColumnStyled2';
 
 function BodyColumn2({
-  setCurrentSlideIndex,
   currentSlideIndex,
   isPresentationMode,
   setHighlightedIndices,
