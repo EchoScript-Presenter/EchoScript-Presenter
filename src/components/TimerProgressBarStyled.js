@@ -21,7 +21,7 @@ export const StyledInput = styled.input`
   width: 50%;
   padding: 8px;
   margin: 3px 10px 20px 10px; // top 마진을 0으로 조정
-  border: 2px solid #4caf50;
+  border: 2px solid #be8be1; 
   border-radius: 8px;
   outline: none;
 `;
