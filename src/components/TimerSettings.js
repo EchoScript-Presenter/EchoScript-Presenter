@@ -27,7 +27,7 @@ function TimerSettings({ setTimeLimit }) {
         type="number"
         value={inputTime}
         onChange={handleTimeChange}
-        placeholder="(Minutes)"
+        placeholder="5 (Minutes)"
       />
     </div>
   );

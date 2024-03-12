@@ -5,7 +5,7 @@ import { TimerContainer, Logo } from './HeaderStyled';
 import { StyledText } from './TimerProgressBarStyled';
 
 function Header({ isPresentationMode }) {
-  const [timeLimit, setTimeLimit] = useState(10 * 60); //10분이 기본값
+  const [timeLimit, setTimeLimit] = useState(5 * 60); //5분이 기본값
   const [remainTime, setRemainTime] = useState(timeLimit);
 
   function formatTime(seconds) {
