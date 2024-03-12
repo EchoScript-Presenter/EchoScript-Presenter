@@ -70,7 +70,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'EMPATHIZE-3',
         content:
-          'Empathy is based on 3 key principles. Immersing ourselves in the environment. Second observing. Third interacting with target users and customers.',
+          'Empathy is based on 3 key principles. Immersing ourselves in the environment. Second observation. Third interacting with target users and customers.',
       },
 
       {
@@ -112,7 +112,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          'Brainstorming is the main technique in this phase, focusing on generating ideas through team creativity, later refined by prototyping and testing. Evaluation and improvement happen afterwards, promoting creativity without early criticism. ',
+          'Brainstorming is the main technique in this phase, focusing on generating ideas through team creativity, later refined by prototyping and testing. Evaluation and improvement happen afterward, promoting creativity without early criticism. ',
       },
 
       {
@@ -146,7 +146,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'TEST-1',
         content:
-          "Testing, the layout process's culmination, employs the prototype to collect critical feedback from participants in this phase.",
+          "Testing, the layout process's final stage, employs the prototype to collect critical feedback from participants in this phase.",
       },
       {
         index: 16,
@@ -154,7 +154,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'TEST-2',
         content:
-          'Vital is not just affirming our predictions but also revealing unforeseen participant needs or actions. Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
+          'It is crucial not only to confirm our predictions but also to uncover unexpected needs or behaviors of the participants. Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
       },
       {
         index: 17,
