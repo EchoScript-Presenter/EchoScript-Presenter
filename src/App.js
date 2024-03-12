@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
-import MainArea from './components/MainArea';
 import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
+import BodyColumn1 from './components/BodyColumn1';
+import BodyColumn2 from './components/BodyColumn2';
 import ScrollLogger from './components/ScrollLogger';
 import { SpeechProvider } from './components/SpeechContext';
 import { NoteProvider } from './components/NoteContext';
@@ -10,14 +10,26 @@ import {
   AppContainer,
   HeaderContainer,
   BodyContainer,
-  FooterContainer,
+  BodyColumnContainer1,
+  BodyColumnContainer2,
 } from './AppStyled';
+import useStore from './components/Store';
 
 function App() {
   const [isPresentationMode, setIsPresentationMode] = useState(true);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(5);
+  const {
+    currentSlideIndex,
+    setCurrentSlideIndex,
+    highlightedContent,
+    setHighlightedContent,
+    triggerWord,
+    setTriggerWord,
+    activeTitle,
+  } = useStore();
 
-  const [triggerWord, setTriggerWord] = useState('');
+  const handleHighlight = (contentId) => {
+    setHighlightedContent(contentId);
+  };
 
   return (
     <AppContainer>
@@ -31,20 +43,22 @@ function App() {
             />
           </HeaderContainer>
           <BodyContainer>
-            <MainArea
-              triggerWord={triggerWord}
-              isPresentationMode={isPresentationMode}
-              currentSlideIndex={currentSlideIndex}
-              setCurrentSlideIndex={setCurrentSlideIndex}
-            />
-            <ScrollLogger />
+            <BodyColumnContainer1>
+              <BodyColumn1
+                isPresentationMode={isPresentationMode}
+                currentSlideIndex={currentSlideIndex}
+                handleHighlight={handleHighlight}
+                highlightedContent={highlightedContent}
+                triggerWord={triggerWord}
+              />
+            </BodyColumnContainer1>
+            <BodyColumnContainer2>
+              <BodyColumn2
+                isPresentationMode={isPresentationMode}
+                currentSlideIndex={currentSlideIndex}
+              />
+            </BodyColumnContainer2>
           </BodyContainer>
-          <FooterContainer>
-            <Footer
-              isPresentationMode={isPresentationMode}
-              setCurrentSlideIndex={setCurrentSlideIndex}
-            />
-          </FooterContainer>
         </NoteProvider>
       </SpeechProvider>
     </AppContainer>

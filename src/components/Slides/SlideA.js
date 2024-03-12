@@ -11,10 +11,12 @@ import {
   TextCenter,
 } from './SlideAStyled';
 import { useNote } from '../NoteContext';
+import useStore from '../Store';
 
-function SlideA({ activeTitle }) {
+function SlideA() {
   const { activeNote } = useNote();
   // console.log('activeTitle', activeTitle);
+  const { activeTitle } = useStore();
 
   const activeSlideIndex = activeNote.slideIndex;
 

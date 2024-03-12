@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-export const FooterCarouselContainer = styled.div`
-  width: 70%;
+export const PresenterNoteContainer = styled.div`
+  height: 70%;
   //background: whitesmoke;
 `;
 
 export const FeedbackGraphContainer = styled.div`
-  width: 30%;
+  height: 30%;
   // background: palevioletred;
 `;
 

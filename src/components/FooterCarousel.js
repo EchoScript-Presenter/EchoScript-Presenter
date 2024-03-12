@@ -6,17 +6,21 @@ import {
   SlideIndicatorContainer,
   SlideIndicatorInput,
   TotalSlides,
-} from './FooterStyled';
+} from './BodyColumnStyled2';
 import useStore from './Store';
 import { useNavigation } from './useNavigation';
 
-function FooterCarousel({ setCurrentSlideIndex }) {
+function FooterCarousel() {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [numberOfCards, setNumberOfCards] = useState(5); // 슬라이드에 보여줄 아이템 수
   const { nextNote, prevNote, totalItems, activeNote, activeNoteIndex } =
     useNote();
   const { resetTranscript } = useSpeech();
-  const { highlightedIndicesState, setHighlightedIndicesState } = useStore();
+  const {
+    highlightedIndicesState,
+    setHighlightedIndicesState,
+    setCurrentSlideIndex,
+  } = useStore();
   const { navigateNotes } = useNavigation();
 
   // Carousel에 표시할 이미지 데이터
