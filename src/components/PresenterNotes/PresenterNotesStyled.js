@@ -55,13 +55,13 @@ export const PresenterNotesContainer = styled.div`
   max-height: 260px;
   overflow-y: auto;
   background-color: #ffffff; /* 메모장 배경색 */
-  border-top: 30px solid #e8d9ff; /* 테이프 또는 클립 색상 */
+  border-top: 10px solid #e8d9ff; /* 테이프 또는 클립 색상 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
   word-wrap: break-word;
   font-weight: normal;
   line-height: 1.5;
-  position: relative; 
+  position: relative;
 `;
 
 export const Title = styled.div`
