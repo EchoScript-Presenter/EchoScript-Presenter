@@ -45,7 +45,7 @@ export const NotesWrapper = styled.div`
   width: 100%;
   overflow-y: auto;
   margin-top: 0px;
-  border: #eaeaea solid 2px;
+  // border: #eaeaea solid 2px;
 `;
 
 export const PresenterNotesContainer = styled.div`

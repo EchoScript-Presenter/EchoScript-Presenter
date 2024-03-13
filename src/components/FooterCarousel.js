@@ -13,14 +13,15 @@ import { useNavigation } from './useNavigation';
 function FooterCarousel() {
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [numberOfCards, setNumberOfCards] = useState(5); // 슬라이드에 보여줄 아이템 수
-  const { nextNote, prevNote, totalItems, activeNote, activeNoteIndex } =
-    useNote();
-  const { resetTranscript } = useSpeech();
   const {
-    highlightedIndicesState,
-    setHighlightedIndicesState,
+    nextNote,
+    prevNote,
+    totalItems,
+    activeNote,
+    activeNoteIndex,
     setCurrentSlideIndex,
-  } = useStore();
+  } = useNote();
+  const { highlightedIndicesState, setHighlightedIndicesState } = useStore();
   const { navigateNotes } = useNavigation();
 
   // Carousel에 표시할 이미지 데이터
@@ -104,7 +105,7 @@ function FooterCarousel() {
             onClick={() => {
               const newActiveIndex = index - Math.floor(numberOfCards / 2); // 중앙 이미지 기준으로 계산
               setActiveItemIndex(Math.max(0, newActiveIndex)); // 인덱스가 0보다 작아지지 않도록 조정
-              setCurrentSlideIndex(item.slideIndex);
+              setCurrentSlideIndex(item.slideIndex - 2);
             }}
             style={{ width: '100%', height: 'auto', objectFit: 'fill' }} // 스타일 조정
           />

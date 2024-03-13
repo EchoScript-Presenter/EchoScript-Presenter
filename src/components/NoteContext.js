@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 
 const NoteContext = createContext();
 
@@ -88,6 +94,7 @@ export const NoteProvider = ({ children }) => {
         content:
         'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
         sec: 11,
+          'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
       },
       {
         index: 8,
@@ -220,6 +227,16 @@ export const NoteProvider = ({ children }) => {
       return newIndex;
     });
   };
+
+  // currentSlideIndex가 변경될 때마다 실행되는 useEffect
+  useEffect(() => {
+    const newActiveIndex = carouselItems.findIndex(
+      (item) => item.slideIndex === currentSlideIndex
+    );
+    if (newActiveIndex !== -1) {
+      setActiveNoteIndex(newActiveIndex);
+    }
+  }, [currentSlideIndex, carouselItems]);
 
   const value = {
     currentSlideIndex,
