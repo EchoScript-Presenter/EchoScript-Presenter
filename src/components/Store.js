@@ -23,8 +23,7 @@ const useStore = create((set) => ({
   setDuration: (duration) => set({ duration: duration }),
   setIntervals: (intervals) => set({ intervals: intervals }),
   setIndex: (index) => set({ index: index }),
-    
-
+  
 }));
 
 export default useStore;

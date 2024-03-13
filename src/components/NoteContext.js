@@ -94,8 +94,7 @@ export const NoteProvider = ({ children }) => {
         content:
         'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
         sec: 11,
-          'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
-      },
+        },
       {
         index: 8,
         slideIndex: 4,

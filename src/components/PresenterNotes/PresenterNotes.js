@@ -119,7 +119,6 @@ function PresenterNotes({
 
       setHighlightedIndicesState(newHighlightedIndices);
 
-
       // 새로운 코드: 여기서부터는 speed 개선 코드
       if (!highlightStartTime) {
         setHighlightStartTime(Date.now());
@@ -127,7 +126,8 @@ function PresenterNotes({
 
       // 모든 글자가 Gray 처리되었는지 확인하고, 다 되면 endtime
       const allGray = newHighlightedIndices.afterIndices.length === preprocessContent.length;
-      //console.log("Start time:",highlightStartTime);
+      console.log("newHighlightedIndices.afterIndices.length",newHighlightedIndices.afterIndices.length);
+      console.log("processContent.length:",preprocessContent.length);
       if (allGray) {
         const endTime = Date.now();
         //console.log("End time:",endTime);
@@ -137,9 +137,8 @@ function PresenterNotes({
       }
       console.log("Duration:", duration, "\n\n\n");
 
-  
-      let lower_bound = Math.floor(sec - sec * 1/2);  // 얼마나 민감한지 보고 결정하기
-      let upper_bound = Math.floor(sec + sec * 1/2);
+      let lower_bound = Math.floor(sec - sec * 1/3);  // 얼마나 민감한지 보고 결정하기
+      let upper_bound = Math.floor(sec + sec * 1/3);
       let intervals = [];
 
       for (let i = 0; i < 8; i++) {
@@ -149,20 +148,19 @@ function PresenterNotes({
       let index = null;
       for (let i = 0; i < intervals.length; i++) {
         if (duration < intervals[0][0]){
-          index = intervals.length - 1;;
+          index = 8;
         }
         else if (duration > intervals[7][1]){
-          index = 0;
+          index = 1;
         }
         else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
           index = (intervals.length - 1) -i;
           break;
         }
       }
-      console.log("!!!!!!!!!!!!!!!!!Sec:",sec,"Intervals:", intervals, "Index:", index,"\n\n\n");
+      console.log("!Sec:",sec,"Intervals:", intervals, "Index:", index,"\n\n\n");
       setIntervals(intervals);
       setIndex(index);
-
 
       // 새로운 상태와 현재 상태를 비교
       const arraysEqual = (a, b) => {
@@ -180,7 +178,6 @@ function PresenterNotes({
     }
   }, [transcript, content, isActive, isPresentationMode]);
   
-
   // 하이라이트된 텍스트가 있으면 해당 위치로 스크롤
   const highlightedRef = useRef(null); 
   useEffect(() => {

@@ -29,21 +29,31 @@ function VolumeBar({ volume }) {
 
 function SpeedBar() {
   const n = 8;
-  const { duration, index } = useStore();
-  console.log('index:',index,' duration:',duration)
+  const { duration, setIndex: setStoreIndex, index: storeIndex } = useStore();
+  const [toggleIndex, setToggleIndex] = useState(true); // true일 때는 4, false일 때는 5
+
+  console.log("storeIndex",storeIndex);
+  useEffect(() => {
+    if (duration === 0) {
+      setToggleIndex(!toggleIndex);
+      setStoreIndex(toggleIndex ? 3 : 5);
+    }
+  }, [duration, toggleIndex, setStoreIndex]);
 
   return (
     <CBars>
-      {[...Array(n)].map((_, idx) => ( 
+      {[...Array(n)].map((_, idx) => (
         <CBar_speed
           key={Symbol(idx).toString()}
-          speed={index}
+          speed={storeIndex} 
           no={idx}
         />
       ))}
     </CBars>
   );
 }
+
+
 
 
 function PitchBar({ pitch }) {

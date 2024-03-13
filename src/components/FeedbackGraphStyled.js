@@ -63,6 +63,7 @@ export const CBar_pitch = styled.div`
   }};
   border-radius: 4rem;
 `;
+
 function isNull(v) {
   return (v === undefined || v === null) ? true : false;
 }
