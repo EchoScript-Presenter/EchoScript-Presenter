@@ -6,6 +6,7 @@ import {
   SlideIndicatorContainer,
   SlideIndicatorInput,
   TotalSlides,
+  SlideControlButton,
 } from './BodyColumnStyled2';
 import useStore from './Store';
 import { useNavigation } from './useNavigation';
@@ -79,15 +80,11 @@ function FooterCarousel() {
     };
   }, [activeNote.slideIndex]);
 
-  const handleSlideNumberChange = (e) => {
-    const slideNumber = parseInt(e.target.value, 10) - 1;
-    if (
-      !isNaN(slideNumber) &&
-      slideNumber >= 0 &&
-      slideNumber < carouselItems.length
-    ) {
-      setActiveItemIndex(slideNumber);
-      setCurrentSlideIndex(carouselItems[slideNumber]?.slideIndex || 0);
+  const handleSlideNumberChange = (delta) => {
+    const newSlideIndex = activeItemIndex + delta;
+    if (newSlideIndex >= 0) {
+      setActiveItemIndex(Math.min(newSlideIndex, carouselItems.length - 5)); 
+      setCurrentSlideIndex(carouselItems[newSlideIndex]?.slideIndex || 0);
     }
   };
 
@@ -112,12 +109,18 @@ function FooterCarousel() {
         ))}
       </ItemsCarousel>
       <SlideIndicatorContainer>
+        <SlideControlButton onClick={() => handleSlideNumberChange(-1)}>
+          {'◀︎'}
+        </SlideControlButton>
         <SlideIndicatorInput
           type="number"
           value={activeItemIndex + 1}
           onChange={handleSlideNumberChange}
         />
-        <TotalSlides>/{carouselItems.length - 4}</TotalSlides>
+        <TotalSlides>/ {carouselItems.length - 4}</TotalSlides>
+        <SlideControlButton onClick={() => handleSlideNumberChange(1)}>
+          {'▶︎'}
+        </SlideControlButton>
       </SlideIndicatorContainer>
     </>
   );
