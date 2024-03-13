@@ -30,7 +30,6 @@ export const CBar_volume = styled.div`
     const volume = isNaN(props.volume) ? 0 : props.volume;
     const barsToColor = Math.ceil(volume / 12.5); // volume이 0에서 100 사이라고 가정
 
-    // 전체 바에 대한 색상 결정 로직
     let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상
     if (barsToColor === 2 && (props.no === 0 || props.no === 1)) {
       color = "red"; // 1, 2번째 바만 빨간색
@@ -64,13 +63,16 @@ export const CBar_pitch = styled.div`
   }};
   border-radius: 4rem;
 `;
+function isNull(v) {
+  return (v === undefined || v === null) ? true : false;
+}
 
 export const CBar_speed = styled.div`
   width: 1.6rem;
   height: 100%;
   background-color: ${(props) => {
-    const speed = isNaN(props.speed) ? 0 : props.speed;
-    const barsToColor = Math.ceil(speed / 12.5); // volume이 0에서 100 사이라고 가정
+    const speed = isNull(props.speed) ? 0 : props.speed; 
+    const barsToColor = speed;
 
     // 전체 바에 대한 색상 결정 로직
     let color = "rgba(128, 128, 128, 0.1)"; // 기본 색상

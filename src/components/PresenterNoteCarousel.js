@@ -40,6 +40,7 @@ function PresenterNotesCarousel({ isPresentationMode }) {
         isPresentationMode={isPresentationMode}
         index={activeNoteIndex}
         totalItems={carouselItems.length}
+        sec={activeNote.sec}
       />
     </ItemsCarousel>
   );

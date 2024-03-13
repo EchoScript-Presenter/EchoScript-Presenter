@@ -24,6 +24,7 @@ function PresenterNotes({
   setActiveItemIndex,
   totalItems,
   isPresentationMode,
+  sec,
 }) {
   const {
     transcript,
@@ -34,13 +35,41 @@ function PresenterNotes({
     resetTranscript,
   } = useSpeech();
   const { navigateNotes } = useNavigation();
-  const notesRef = useRef(null); // 이거 무엇?
+  const notesRef = useRef(null); 
   const endOfContentRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
-  const { highlightedIndicesState, setHighlightedIndicesState } = useStore();
+  
   const currentFontSize = fontSizes[index];
+
+  const [highlightStartTime, setHighlightStartTime] = useState(null);
+  const { highlightedIndicesState, setHighlightedIndicesState, duration, setDuration, setIntervals, setIndex } = useStore();
+
+  // 폰트 크기 전역으로 관리 (저장) 웹 브라우저 간단한 키-값 저장소 이용... 페이지를 새로고침하거나 다시 방문했을 때도 이전에 설정한 폰트 크기를 유지...
+  useEffect(() => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      setFontSizes(() => new Array(totalItems).fill(parseInt(savedFontSize, 10)));
+    }
+  }, [totalItems]);
+
+  const increaseFontSize = () => {
+    setFontSizes((prevSizes) => {
+      const newSize = Math.min(prevSizes[index] + 2, 26);
+      localStorage.setItem('fontSize', newSize.toString()); // 새 폰트 크기를 localStorage에 저장합니다.
+      return prevSizes.map(() => newSize);
+    });
+  };
+
+  const decreaseFontSize = () => {
+    setFontSizes((prevSizes) => {
+      const newSize = Math.max(prevSizes[index] - 2, 14);
+      localStorage.setItem('fontSize', newSize.toString()); // 새 폰트 크기를 localStorage에 저장합니다.
+      return prevSizes.map(() => newSize);
+    });
+  };
+
 
   const removeEmojis = (string) => {
     var regex =
@@ -90,6 +119,51 @@ function PresenterNotes({
 
       setHighlightedIndicesState(newHighlightedIndices);
 
+
+      // 새로운 코드: 여기서부터는 speed 개선 코드
+      if (!highlightStartTime) {
+        setHighlightStartTime(Date.now());
+      }
+
+      // 모든 글자가 Gray 처리되었는지 확인하고, 다 되면 endtime
+      const allGray = newHighlightedIndices.afterIndices.length === preprocessContent.length;
+      //console.log("Start time:",highlightStartTime);
+      if (allGray) {
+        const endTime = Date.now();
+        //console.log("End time:",endTime);
+        setDuration((endTime - highlightStartTime)/1000);
+      } else {
+        setDuration(0);
+      }
+      console.log("Duration:", duration, "\n\n\n");
+
+  
+      let lower_bound = Math.floor(sec - sec * 1/2);  // 얼마나 민감한지 보고 결정하기
+      let upper_bound = Math.floor(sec + sec * 1/2);
+      let intervals = [];
+
+      for (let i = 0; i < 8; i++) {
+        intervals.push([lower_bound + (upper_bound - lower_bound) / 8 * i, lower_bound + (upper_bound - lower_bound) / 8 * (i + 1)]);
+      }
+
+      let index = null;
+      for (let i = 0; i < intervals.length; i++) {
+        if (duration < intervals[0][0]){
+          index = intervals.length - 1;;
+        }
+        else if (duration > intervals[7][1]){
+          index = 0;
+        }
+        else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
+          index = (intervals.length - 1) -i;
+          break;
+        }
+      }
+      console.log("!!!!!!!!!!!!!!!!!Sec:",sec,"Intervals:", intervals, "Index:", index,"\n\n\n");
+      setIntervals(intervals);
+      setIndex(index);
+
+
       // 새로운 상태와 현재 상태를 비교
       const arraysEqual = (a, b) => {
         if (a.length !== b.length) return false;
@@ -105,41 +179,15 @@ function PresenterNotes({
       }
     }
   }, [transcript, content, isActive, isPresentationMode]);
-
-  const increaseFontSize = () => {
-    setFontSizes((prevSizes) => {
-      return prevSizes.map((size) => Math.min(size + 2, 26)); // 모든 슬라이드의 폰트 크기를 2px씩 증가
-    });
-  };
-
-  const decreaseFontSize = () => {
-    setFontSizes((prevSizes) => {
-      return prevSizes.map((size) => Math.max(size - 2, 14)); // 모든 슬라이드의 폰트 크기를 2px씩 감소
-    });
-  };
+  
 
   // 하이라이트된 텍스트가 있으면 해당 위치로 스크롤
-  const highlightedRef = useRef(null); // 하이라이트된 텍스트를 위한 ref
+  const highlightedRef = useRef(null); 
   useEffect(() => {
     if (highlightedRef.current) {
       highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [highlightedIndicesState]); // highlightedIndicesState가 변경될 때마다 효과 실행
-
-
-  // const goToPreviousNote = () => {
-  //   // 첫번째 presenternote라면 previous slide move 중지
-  //   if (index > 0) {
-  //     setActiveItemIndex((index - 1 + totalItems) % totalItems);
-  //   }
-  // };
-
-  // const goToNextNote = () => {
-  //   // 마지막 presenternote라면 애니메이션 중지 & next move 중지
-  //   if (index < totalItems - 1) {
-  //     setActiveItemIndex((index + 1) % totalItems);
-  //   }
-  // };
+  }, [highlightedIndicesState]); 
 
   // 'Prev' 버튼 클릭 핸들러
   const handlePrevNoteClick = () => {
@@ -188,27 +236,6 @@ function PresenterNotes({
 
     return () => clearTimeout(timeoutId); // 컴포넌트 unmount 시 타이머 정리
   }, [content, finalTranscript, transcript]);
-
-  // useEffect(() => {
-  //   const highlightedElement = notesRef.current?.querySelector('.highlighted');
-  //   if (highlightedElement) {
-  //     const container = notesRef.current;
-  //     const containerHeight = container.clientHeight;
-  //     const elementHeight = highlightedElement.clientHeight;
-  //     const scrollPosition = container.scrollTop;
-  //     const elementTop = highlightedElement.offsetTop;
-  //     const elementBottom = elementTop + elementHeight;
-
-  //     if (elementTop < scrollPosition) {
-  //       container.scrollTo({ top: elementTop, behavior: 'smooth' });
-  //     } else if (elementBottom > scrollPosition + containerHeight) {
-  //       container.scrollTo({
-  //         top: elementBottom - containerHeight,
-  //         behavior: 'smooth',
-  //       });
-  //     }
-  //   }
-  // }, [highlightedIndices]);
 
   return (
     <>

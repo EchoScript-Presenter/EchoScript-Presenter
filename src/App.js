@@ -3,7 +3,6 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import BodyColumn1 from './components/BodyColumn1';
 import BodyColumn2 from './components/BodyColumn2';
-import ScrollLogger from './components/ScrollLogger';
 import { SpeechProvider } from './components/SpeechContext';
 import { NoteProvider } from './components/NoteContext';
 import {

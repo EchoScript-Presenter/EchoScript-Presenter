@@ -6,6 +6,11 @@ const useStore = create((set) => ({
   triggerWord: '',
   activeTitle: '',
 
+  duration: null,
+  intervals: [],
+  index: null,
+
+
   setCurrentSlideIndex: (index) => set({ currentSlideIndex: index }),
   setHighlightedContent: (content) => set({ highlightedContent: content }),
   setTriggerWord: (word) => set({ triggerWord: word }),
@@ -14,6 +19,12 @@ const useStore = create((set) => ({
   highlightedIndicesState: { beforeIndices: [], afterIndices: [] },
   setHighlightedIndicesState: (indices) =>
     set({ highlightedIndicesState: indices }),
+
+  setDuration: (duration) => set({ duration: duration }),
+  setIntervals: (intervals) => set({ intervals: intervals }),
+  setIndex: (index) => set({ index: index }),
+    
+
 }));
 
 export default useStore;

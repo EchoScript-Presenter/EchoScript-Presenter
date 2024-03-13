@@ -17,6 +17,7 @@ export const NoteProvider = ({ children }) => {
         title: 'Greetings',
         content:
           'Hello everyone!  Today I want to explore the concept of "Design Thinking Process in User Experience.',
+        sec: 8 ,
       },
       {
         index: 1,
@@ -25,7 +26,8 @@ export const NoteProvider = ({ children }) => {
         title: 'Design Process-1',
         content:
           'Design Thinking Process is a flexible problem-solving approach emphasizing creativity and innovation. It centered on understanding user needs through structured steps. I will outline the fundamental stages.',
-      },
+        sec: 14 ,
+        },
       {
         index: 2,
         slideIndex: 2,
@@ -33,7 +35,8 @@ export const NoteProvider = ({ children }) => {
         title: 'Design Process-2',
         content:
           'The Design Thinking Process starts by getting to know how users feel and what they need. Then, it clearly identifies the issue. After that, it comes up with many different ideas to solve the problem, and then it makes prototypes using the best ideas.',
-      },
+        sec: 22 ,
+        },
 
 
       {
@@ -42,8 +45,9 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'Design Process-3',
         content:
-          'The final stage tests prototypes with real users to gather feedback on designs. Design Thinking Process is not strictly linear but iterative, allowing stages to be revisited or iterated forward and backward as needed.'
-         },
+          'The final stage tests prototypes with real users to gather feedback on designs. Design Thinking Process is not strictly linear but iterative, allowing stages to be revisited or iterated forward and backward as needed.',
+        sec: 16, 
+        },
 
 
       {
@@ -53,6 +57,7 @@ export const NoteProvider = ({ children }) => {
         title: 'EMPATHIZE-1',
         content:
           'The first stage is the Empathize stage. This phase serves to get close and familiar with our target users. ',
+        sec: 9,
       },
 
       {
@@ -62,7 +67,8 @@ export const NoteProvider = ({ children }) => {
         title: 'EMPATHIZE-2',
         content:
           'During this stage, we focus on grasping user experiences through empathy, aiming to gather insights by observing and immersing in their perspective.',
-      },
+        sec: 11,
+        },
 
       {
         index: 6,
@@ -71,7 +77,8 @@ export const NoteProvider = ({ children }) => {
         title: 'EMPATHIZE-3',
         content:
           'Empathy is based on 3 key principles. Immersing ourselves in the environment. Second observation. Third interacting with target users and customers.',
-      },
+        sec: 10,
+        },
 
       {
         index: 7,
@@ -80,6 +87,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-1',
         content:
         'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
+        sec: 11,
       },
       {
         index: 8,
@@ -88,6 +96,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-2',
         content:
           'In this stage we identify user needs arising from interactions with potential customers. ',
+        sec: 6,
       },
       {
         index: 9,
@@ -96,6 +105,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-3',
         content:
           'Define stage focuses on collecting information to identify clearly the main goal of the task.',
+        sec: 7,
       },
 
       {
@@ -105,7 +115,8 @@ export const NoteProvider = ({ children }) => {
         title: 'IDEATE-1',
         content:
           'The next stage is Ideate. It involves breaking down the problem into more specific issues and finding several solutions for them. ',
-      },
+        sec: 10,
+        },
       {
         index: 11,
         slideIndex: 5,
@@ -113,7 +124,8 @@ export const NoteProvider = ({ children }) => {
         title: 'IDEATE-2',
         content:
           'Brainstorming is the main technique in this phase, focusing on generating ideas through team creativity, later refined by prototyping and testing. Evaluation and improvement happen afterward, promoting creativity without early criticism. ',
-      },
+        sec:16,
+        },
 
       {
         index: 12,
@@ -122,7 +134,8 @@ export const NoteProvider = ({ children }) => {
         title: 'IDEATE-3',
         content:
           'The Ideate phase aims to generate a strong array of solutions for further refinement and development in later Design Thinking stages.',
-      },
+        sec: 10,
+        },
       {
         index: 13,
         slideIndex: 6,
@@ -130,15 +143,17 @@ export const NoteProvider = ({ children }) => {
         title: 'PROTOTYPE-1',
         content:
           'The next step, Prototype, transforms concepts into simplified models. This physical form helps visualize and evaluate the ideas effectively.',
-      },
+        sec: 10,
+        },
       {
         index: 14,
         slideIndex: 6,
         noteindex: '2/2',
         title: 'PROTOTYPE-2',
         content:
-          'Frequent failures stem from excessive planning and constructing without verifying hypotheses on functionality or iterating on varied concepts quickly. Essential is the prompt testing and refining of ideas.',
-      },
+          'Frequent failures stem from excessive planning and constructing without verifying hypotheses on functionality or iterating on varied concepts quickly. Essential is the prompt testing.',
+        sec: 13,
+        },
 
       {
         index: 15,
@@ -147,7 +162,8 @@ export const NoteProvider = ({ children }) => {
         title: 'TEST-1',
         content:
           "Testing, the layout process's final stage, employs the prototype to collect critical feedback from participants in this phase.",
-      },
+        sec: 10,
+        },
       {
         index: 16,
         slideIndex: 7,
@@ -155,7 +171,8 @@ export const NoteProvider = ({ children }) => {
         title: 'TEST-2',
         content:
           'It is crucial not only to confirm our predictions but also to uncover unexpected needs or behaviors of the participants. Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
-      },
+        sec: 16,
+        },
       {
         index: 17,
         slideIndex: 7,
@@ -163,7 +180,8 @@ export const NoteProvider = ({ children }) => {
         title: 'TEST-3',
         content:
           'Testing the prototype offers a chance to refine our designs iteratively. This ongoing process enhances our solutions until they satisfactorily meet participant demands.',
-      },
+        sec: 11,
+        },
 
       {
         index: 18,
@@ -172,6 +190,7 @@ export const NoteProvider = ({ children }) => {
         title: 'END',
         content:
           'This marks the completion of my prepared material. I appreciate your attention.',
+        sec: 6,
       },
     ],
     []

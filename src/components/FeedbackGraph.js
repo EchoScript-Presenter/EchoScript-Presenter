@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
 import speakerIcon from './speaker.png';
+import { PresenterNotes } from './PresenterNotes/PresenterNotes';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
+import useStore from './Store';
 import {
   CBar_volume,
   CBar_speed,
@@ -12,6 +14,7 @@ import {
   CBars,
   Containers,
 } from './FeedbackGraphStyled';
+
 
 function VolumeBar({ volume }) {
   const n = 8;
@@ -24,16 +27,24 @@ function VolumeBar({ volume }) {
   );
 }
 
-function SpeedBar({ speed }) {
+function SpeedBar() {
   const n = 8;
+  const { duration, index } = useStore();
+  console.log('index:',index,' duration:',duration)
+
   return (
-        <CBars>
-          {[...Array(n)].map((no, index) => (
-            <CBar_speed key={Symbol(index).toString()} speed={speed-10} no={index} /> //speed -  10해놓지 말기
-          ))}
-        </CBars>
+    <CBars>
+      {[...Array(n)].map((_, idx) => ( 
+        <CBar_speed
+          key={Symbol(idx).toString()}
+          speed={index}
+          no={idx}
+        />
+      ))}
+    </CBars>
   );
 }
+
 
 function PitchBar({ pitch }) {
   const n = 8;
@@ -46,9 +57,6 @@ function PitchBar({ pitch }) {
   );
 }
 
-const normalize_speed = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 70) => {
-  return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
-};
 const normalize_pitch = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 80) => {
   return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
 };
@@ -56,7 +64,7 @@ const normalize_pitch = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 8
 function FeedbackGraph() {
   const [volume, setVolume] = useState(1);
   const [pitch, setPitch] = useState(1);
-  const [speed, setSpeed] = useState(1);
+  const { duration, index } = useStore();
 
   const [before_pitch, setBeforePitch] = useState();
   const [before_speed, setBeforeSpeed] = useState(0);
@@ -69,22 +77,22 @@ function FeedbackGraph() {
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
-    { name: 'Speed', value: speed },
+    { name: 'Speed', value:index},
     { name: 'Before_Pitch', value: before_pitch },
-    { name: 'Before_Speed', value: before_speed },
+    { name: 'Before_Speed', value: duration },
   ];
   //console.log(data);
   const volumeData = data.find(item => item.name === 'Volume');
   if (volumeData) {
-    console.log('Volume:', volumeData.value);
+    //console.log('Volume:', volumeData.value);
   }
   const speedData = data.find(item => item.name === 'Speed');
   if (speedData) {
-    console.log('Speed:', speedData.value);
+    console.log('data 안에 Speed:', speedData.value);
   }
   const pitchData = data.find(item => item.name === 'Pitch');
   if (pitchData) {
-    console.log('Pitch:', pitchData.value);
+    //console.log('Pitch:', pitchData.value);
   }
 
   const calculateBarsToColor = (value, totalBars) => {
@@ -94,28 +102,20 @@ function FeedbackGraph() {
 
   useEffect(() => {
     setColoredVolumeBars(calculateBarsToColor(volume, 8));
-    setColoredSpeedBars(calculateBarsToColor(speed, 8));
+    setColoredSpeedBars(index);
     setColoredPitchBars(calculateBarsToColor(pitch, 8));
-  }, [volume, speed, pitch]);
+    console.log('ColoredSpeedBars:',coloredSpeedBars);
+  }, [volume,duration, pitch, index]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responsePitch = await axios.get('http://localhost:8000/data_pitch');
-        const responseSpeed = await axios.get('http://localhost:8000/data_speed');
-
-      console.log('Pitch:', responsePitch.data); // 데이터 설정 전 로깅
-      console.log('Speed:', responseSpeed.data); // 데이터 설정 전 로깅
+    
       setBeforePitch(responsePitch.data)
-      setBeforeSpeed(responseSpeed.data)
 
       const normalizedPitch = normalize_pitch(responsePitch.data.pitch, 0, 350);
-      const normalizedSpeed = normalize_speed(responseSpeed.data.speed, 0, 70);
-      console.log('NormalizedSpeed:',normalizedSpeed)
-      console.log('NormalizedPitch:',normalizedPitch)
       setPitch(normalizedPitch);
-      setSpeed(normalizedSpeed);
-
 
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -124,7 +124,6 @@ function FeedbackGraph() {
 
     fetchData(); 
     const interval = setInterval(fetchData, 1000); 
-
     return () => clearInterval(interval); 
   }, []); 
   
@@ -183,23 +182,23 @@ useEffect(() => {
     const feedbackData = {
       timestamp: timestamp, 
       volumeData: volume,
-      speedData: speed,
+      speedData: index,
       pitchData: pitch,
-      before_speed: before_speed,
+      before_speed: duration,
       before_pitch: before_pitch,
       volumeBarsColored: coloredVolumeBars,
       speedBarsColored: coloredSpeedBars,
       pitchBarsColored: coloredPitchBars,
     };
     sendFeedbackToServer(feedbackData);
-  }, [speed, volume, pitch]); // 속도, 볼륨, 피치가 변경될 때마다 트리거됨
+  }, [duration, volume, pitch]); // 속도, 볼륨, 피치가 변경될 때마다 트리거됨
 
   const sendFeedbackToServer = async (feedbackData) => {
     try {
       await axios.post('http://localhost:8000/data_feedback', feedbackData);
-      console.log('Feedback sent successfully');
+      //console.log('Feedback sent successfully');
     } catch (error) {
-      console.error('Error sending feedback to server:', error);
+      //console.error('Error sending feedback to server:', error);
     }
   };
 
@@ -256,7 +255,7 @@ useEffect(() => {
           </div>
           <div style={Containers}>
             <VolumeBar volume={volume} />
-            <SpeedBar speed={speed} />
+            <SpeedBar/>
             <PitchBar pitch={pitch} />
           </div>
         </div>
