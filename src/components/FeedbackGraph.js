@@ -32,6 +32,7 @@ function SpeedBar() {
   const { duration, setIndex: setStoreIndex, index: storeIndex } = useStore();
   const [toggleIndex, setToggleIndex] = useState(true); // true일 때는 4, false일 때는 5
 
+  let intervalId;
   console.log("storeIndex",storeIndex);
   useEffect(() => {
     if (duration === 0) {
@@ -52,8 +53,6 @@ function SpeedBar() {
     </CBars>
   );
 }
-
-
 
 
 function PitchBar({ pitch }) {
@@ -94,7 +93,7 @@ function FeedbackGraph() {
   //console.log(data);
   const volumeData = data.find(item => item.name === 'Volume');
   if (volumeData) {
-    //console.log('Volume:', volumeData.value);
+    console.log('Volume:', volumeData.value);
   }
   const speedData = data.find(item => item.name === 'Speed');
   if (speedData) {
@@ -102,13 +101,13 @@ function FeedbackGraph() {
   }
   const pitchData = data.find(item => item.name === 'Pitch');
   if (pitchData) {
-    //console.log('Pitch:', pitchData.value);
+    console.log('Pitch:', pitchData.value);
   }
 
   const calculateBarsToColor = (value, totalBars) => {
     const barsToColor = Math.ceil(value / (100 / totalBars));
     return barsToColor;
-  };
+  }
 
   useEffect(() => {
     setColoredVolumeBars(calculateBarsToColor(volume, 8));
