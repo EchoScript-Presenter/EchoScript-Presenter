@@ -37,3 +37,18 @@ export const SlideIndicatorInput = styled.input`
 export const TotalSlides = styled.span`
   margin-left: 10px; // 입력란과 전체 슬라이드 번호 사이의 간격
 `;
+
+export const SlideControlButton = styled.button`
+  width: 30px;
+  height: 30px;
+  // background-color: #ccc;
+  border: none;
+  border-radius: 6px;
+  margin: 0 5px;
+  cursor: pointer;
+  outline: none;
+
+  &:hover {
+    background-color: #aaa;
+  }
+`;
