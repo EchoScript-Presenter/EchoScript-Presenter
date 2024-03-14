@@ -22,8 +22,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/1',
         title: 'Greetings',
         content:
-          'Hello everyone!  Today I want to explore the concept of "Design Thinking Process in User Experience.',
-        sec: 8 ,
+          'Hello everyone! Today, I want to explore the concept of "Early Creating Prototypes". ',
+        sec: 8,
       },
       {
         index: 1,
@@ -31,19 +31,18 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'Design Process-1',
         content:
-          'Design Thinking Process is a flexible problem-solving approach emphasizing creativity and innovation. It centered on understanding user needs through structured steps. I will outline the fundamental stages.',
-        sec: 14 ,
-        },
+          "Let's start with sketching and storyboarding. Storyboarding, originating in movies and animation, visually outlines the narrative, simplifying complex stories into sequential chunks. It helps organize thoughts and fosters collaboration among team members, ensuring alignment on the project's vision and direction.",
+        sec: 14,
+      },
       {
         index: 2,
         slideIndex: 2,
         noteindex: '2/3',
         title: 'Design Process-2',
         content:
-          'The Design Thinking Process starts by getting to know how users feel and what they need. Then, it clearly identifies the issue. After that, it comes up with many different ideas to solve the problem, and then it makes prototypes using the best ideas.',
-        sec: 22 ,
-        },
-
+          "It's like a 'script,' captures vital story events, bypassing details to spotlight key experiences. Particularly useful for prototype creation, it showcases user interactions with the product.",
+        sec: 22,
+      },
 
       {
         index: 3,
@@ -51,10 +50,9 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'Design Process-3',
         content:
-          'The final stage tests prototypes with real users to gather feedback on designs. Design Thinking Process is not strictly linear but iterative, allowing stages to be revisited or iterated forward and backward as needed.',
-        sec: 16, 
-        },
-
+          'Storyboarding distills the user journey into key frames, enabling designers to spot pain points and improvement opportunities early for more user-centric designs and a smoother experience.',
+        sec: 16,
+      },
 
       {
         index: 4,
@@ -62,7 +60,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'EMPATHIZE-1',
         content:
-          'The first stage is the Empathize stage. This phase serves to get close and familiar with our target users. ',
+          "When discussing prototypes, we're essentially talking about early samples or models used to test concepts. They're invaluable tools for designers, providing tangible representations of ideas and demonstrating how they operate in real-world scenarios.",
         sec: 9,
       },
 
@@ -72,9 +70,9 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'EMPATHIZE-2',
         content:
-          'During this stage, we focus on grasping user experiences through empathy, aiming to gather insights by observing and immersing in their perspective.',
+          'By creating prototypes, designers can gain insights into the functionality of their ideas. They provide a platform for experimentation and iteration, allowing for the refinement of designs before moving into full-scale production.',
         sec: 11,
-        },
+      },
 
       {
         index: 6,
@@ -82,9 +80,9 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'EMPATHIZE-3',
         content:
-          'Empathy is based on 3 key principles. Immersing ourselves in the environment. Second observation. Third interacting with target users and customers.',
+          'Different dimensions of prototypes should be considered, as they serve to clearly showcase designs.',
         sec: 10,
-        },
+      },
 
       {
         index: 7,
@@ -92,16 +90,16 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'DEFINE-1',
         content:
-        'The Define stage focuses on identifying problems through empathy insights, setting a solid base for solving it with a deep understanding of user needs.',
+          'Prototypes vary in their representation of the final product, level of detail, interactivity, and evolution over time. Selecting the appropriate prototype type depends on specific design goals and stage, ensuring an efficient path to the final product.',
         sec: 11,
-        },
+      },
       {
         index: 8,
         slideIndex: 4,
         noteindex: '2/3',
         title: 'DEFINE-2',
         content:
-          'In this stage we identify user needs arising from interactions with potential customers. ',
+          "Let's explore a critical aspect of prototyping - Fidelity. Fidelity denotes the level of detail incorporated into a prototype.",
         sec: 6,
       },
       {
@@ -110,7 +108,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'DEFINE-3',
         content:
-          'Define stage focuses on collecting information to identify clearly the main goal of the task.',
+          'When discussing high fidelity, we mean prototypes resembling the final product, with intricate details, aiding in envisioning it accurately.',
         sec: 7,
       },
 
@@ -120,18 +118,18 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'IDEATE-1',
         content:
-          'The next stage is Ideate. It involves breaking down the problem into more specific issues and finding several solutions for them. ',
+          'On the other hand, Low fidelity prototypes, unlike detailed ones, are akin to basic sketches with undeveloped areas. They intentionally lack final product details, serving as a swift and economical means to communicate primary design concepts without fixating on minutiae.',
         sec: 10,
-        },
+      },
       {
         index: 11,
         slideIndex: 5,
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          'Brainstorming is the main technique in this phase, focusing on generating ideas through team creativity, later refined by prototyping and testing. Evaluation and improvement happen afterward, promoting creativity without early criticism. ',
-        sec:16,
-        },
+          "So, How should we set the 'Fidelity' criteria? High-fidelity prototypes might distort testers' perception. 'Finished' prototypes mainly prompt comments on colors, fonts, and alignment.",
+        sec: 16,
+      },
 
       {
         index: 12,
@@ -139,27 +137,27 @@ export const NoteProvider = ({ children }) => {
         noteindex: '3/3',
         title: 'IDEATE-3',
         content:
-          'The Ideate phase aims to generate a strong array of solutions for further refinement and development in later Design Thinking stages.',
+          'Moreover, high-fidelity prototypes are time-consuming to implement and may not fully capture the overall appearance, potentially limiting creativity in the design process.',
         sec: 10,
-        },
+      },
       {
         index: 13,
         slideIndex: 6,
         noteindex: '1/2',
         title: 'PROTOTYPE-1',
         content:
-          'The next step, Prototype, transforms concepts into simplified models. This physical form helps visualize and evaluate the ideas effectively.',
+          'In traditional design methods, we begin with sketches, then move to prototypes, evaluate, and iterate based on feedback. However, this can be time-consuming and delay development schedules.',
         sec: 10,
-        },
+      },
       {
         index: 14,
         slideIndex: 6,
         noteindex: '2/2',
         title: 'PROTOTYPE-2',
         content:
-          'Frequent failures stem from excessive planning and constructing without verifying hypotheses on functionality or iterating on varied concepts quickly. Essential is the prompt testing.',
+          'Low - fidelity prototypes provide a faster way to evaluate and iterate. Designers can make changes swiftly while others observe and document the process.',
         sec: 13,
-        },
+      },
 
       {
         index: 15,
@@ -167,27 +165,27 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'TEST-1',
         content:
-          "Testing, the layout process's final stage, employs the prototype to collect critical feedback from participants in this phase.",
+          "Additionally, creating low-fidelity prototypes doesn't always require programming skills, simplifying the process and enabling faster iterations, enhancing efficiency towards the final product.",
         sec: 10,
-        },
+      },
       {
         index: 16,
         slideIndex: 7,
         noteindex: '2/3',
         title: 'TEST-2',
         content:
-          'It is crucial not only to confirm our predictions but also to uncover unexpected needs or behaviors of the participants. Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
+          'It is crucial not only to confirm our predictions but also to uncover unexpected needs or behaviors of the participants. ',
         sec: 16,
-        },
+      },
       {
         index: 17,
         slideIndex: 7,
         noteindex: '3/3',
         title: 'TEST-3',
         content:
-          'Testing the prototype offers a chance to refine our designs iteratively. This ongoing process enhances our solutions until they satisfactorily meet participant demands.',
+          'Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
         sec: 11,
-        },
+      },
 
       {
         index: 18,
@@ -195,7 +193,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/1',
         title: 'END',
         content:
-          'This marks the completion of my prepared material. I appreciate your attention.',
+          'Here concludes the content I have prepared. Thank you for your attention.',
         sec: 6,
       },
     ],
