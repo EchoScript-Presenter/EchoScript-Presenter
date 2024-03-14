@@ -22,7 +22,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/1',
         title: 'Greetings',
         content:
-          'Hello everyone! Today, I want to explore the concept of "Early Creating Prototypes". ',
+          "Hello everyone! Today, I want to explore the concept of 'Early Creating Prototypes'.",
         sec: 8,
       },
       {
