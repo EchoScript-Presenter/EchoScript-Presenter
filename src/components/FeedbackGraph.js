@@ -8,6 +8,8 @@ import {
   Containers,
 } from './FeedbackGraphStyled';
 import * as PitchFinder from 'pitchfinder';
+import axios from 'axios';
+
 
 function VolumeBar({ volume }) {
   const n = 8;
@@ -27,14 +29,14 @@ function VolumeBar({ volume }) {
 function SpeedBar() {
   const n = 8;
   const { duration, setIndex: setStoreIndex, index: storeIndex } = useStore();
-  const [toggleIndex, setToggleIndex] = useState(true); // true일 때는 4, false일 때는 5
+  const [toggleIndex, setToggleIndex] = useState(true); 
 
   let intervalId;
   //console.log("storeIndex",storeIndex);
   useEffect(() => {
     if (duration === 0) {
       setToggleIndex(!toggleIndex);
-      setStoreIndex(toggleIndex ? 3 : 5);
+      setStoreIndex(toggleIndex ? 3 : 4);
     }
   }, [duration, toggleIndex, setStoreIndex]);
 
@@ -47,14 +49,28 @@ function SpeedBar() {
   );
 }
 
+// 남자 여자일때 바꿔야 함!!! (남자 50~250, 여자 100~300)
 function PitchBar({ pitch }) {
-  const n = 8;
+  const n = 8; // 총 바 개수
+  const minPitch = 150; // 최소 피치 값
+  const maxPitch = 350; // 최대 피치 값
+  const pitchRange = (maxPitch - minPitch) / n; // 각 구간의 범위
+
+  // 현재 pitch 값이 속한 구간 계산
+  const calculatePitchColorIndex = (pitch) => {
+    if (pitch < minPitch) return 0; // 최소값 미만인 경우
+    if (pitch > maxPitch) return 7; // 최대값 초과인 경우
+    return Math.ceil((pitch - minPitch) / pitchRange) + 1;
+  };
+
+  const pitchColorIndex = calculatePitchColorIndex(pitch);
+
   return (
     <CBars>
       {[...Array(n)].map((no, index) => (
         <CBar_pitch
           key={Symbol(index).toString()}
-          pitch={pitch / 5}
+          pitchColorIndex={pitchColorIndex}
           no={index}
         />
       ))}
@@ -90,7 +106,7 @@ function FeedbackGraph() {
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
     { name: 'Speed', value: index },
-    { name: 'Before_Pitch', value: before_pitch },
+    { name: 'Before_Pitch', value: pitch },
     { name: 'Before_Speed', value: duration },
   ];
   //console.log(data);
@@ -104,7 +120,7 @@ function FeedbackGraph() {
   }
   const pitchData = data.find((item) => item.name === 'Pitch');
   if (pitchData) {
-    //console.log('Pitch:', pitchData.value);
+    console.log('Pitch:', pitchData.value);
   }
 
   const calculateBarsToColor = (value, totalBars) => {
@@ -112,11 +128,21 @@ function FeedbackGraph() {
     return barsToColor;
   };
 
+  // 남자 여자일때 바꿔야 함!!! (남자 50~250, 여자 100~300)
+  const calculateBarsToColor_pitch = (value, totalBars) => {
+    const min_pitch = 150;
+    const max_pitch = 350;
+    const range_pitch = (max_pitch - min_pitch) / totalBars;
+    if (value < min_pitch) return 0; 
+    if (value >= max_pitch) return totalBars; 
+    return Math.floor((value - min_pitch) / range_pitch) + 1;
+  };
+
   useEffect(() => {
     setColoredVolumeBars(calculateBarsToColor(volume, 8));
     setColoredSpeedBars(index);
-    setColoredPitchBars(calculateBarsToColor(pitch, 8));
-    //console.log('ColoredSpeedBars:', coloredSpeedBars);
+    setColoredPitchBars(calculateBarsToColor_pitch(pitch,8));
+    console.log('ColoredPitchBars:', coloredPitchBars);
   }, [volume, duration, pitch, index]);
 
   useEffect(() => {
@@ -184,8 +210,6 @@ function FeedbackGraph() {
             sum += dataArray[i];
           }
           let average = sum / bufferLength;
-          //let normalizedVolume = normalize(average, 0, 128, 0, 70);
-          //setVolume(normalizedVolume);
           setVolume(average);
         };
         const interval = setInterval(getVolume, 100);
@@ -233,10 +257,10 @@ function FeedbackGraph() {
 
   const sendFeedbackToServer = async (feedbackData) => {
     try {
-      // await axios.post('http://localhost:8000/data_feedback', feedbackData);
-      //console.log('Feedback sent successfully');
+      await axios.post('http://localhost:8000/data_feedback', feedbackData);
+      console.log('Feedback sent successfully');
     } catch (error) {
-      //console.error('Error sending feedback to server:', error);
+      console.error('Error sending feedback to server:', error);
     }
   };
 

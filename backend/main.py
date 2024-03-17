@@ -35,16 +35,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-participant_name = "yeadarm-2"
+participant_name = "eunseo"
 
 def speech_analyze_log_to_json_file(data):
-    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_ppt_speech_analysis_log.json"
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_speech_analysis_log.json"
     with open(file_name, "a", encoding='utf8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4) 
         file.write('\n')
 
 def speech_feedback_log_to_json_file(data):
-    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_ppt_feedback_analysis_log.json"
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_feedback_analysis_log.json"
     with open(file_name, "a", encoding='utf8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4) 
         file.write('\n')
