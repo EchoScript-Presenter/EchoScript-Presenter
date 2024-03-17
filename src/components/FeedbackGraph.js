@@ -78,19 +78,6 @@ function PitchBar({ pitch }) {
   );
 }
 
-const normalize_pitch = (
-  value,
-  minOriginal,
-  maxOriginal,
-  minNew = 0,
-  maxNew = 80
-) => {
-  return (
-    ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) +
-    minNew
-  );
-};
-
 function FeedbackGraph() {
   const [volume, setVolume] = useState(1);
   const { duration, index, pitch, setPitch } = useStore();
