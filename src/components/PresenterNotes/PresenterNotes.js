@@ -136,9 +136,9 @@ function PresenterNotes({
         setDuration(0);
       }
       console.log("Duration:", duration, "\n\n\n");
-
-      let lower_bound = Math.floor(sec - sec * 1/3);  // 얼마나 민감한지 보고 결정하기
-      let upper_bound = Math.floor(sec + sec * 1/3);
+      
+      let lower_bound = Math.floor(sec - sec * 1/4);  // 얼마나 민감한지 보고 결정하기
+      let upper_bound = Math.floor(sec + sec * 1/4);
       let intervals = [];
 
       for (let i = 0; i < 8; i++) {
@@ -148,10 +148,10 @@ function PresenterNotes({
       let index = null;
       for (let i = 0; i < intervals.length; i++) {
         if (duration < intervals[0][0]){
-          index = 8;
+          index = 7;
         }
         else if (duration > intervals[7][1]){
-          index = 1;
+          index = 0;
         }
         else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
           index = (intervals.length - 1) -i;

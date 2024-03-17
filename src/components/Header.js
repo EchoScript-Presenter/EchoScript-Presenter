@@ -3,6 +3,7 @@ import TimerSettings from './TimerSettings';
 import TimerProgressBar from './TimerProgressBar';
 import { TimerContainer, Logo } from './HeaderStyled';
 import { StyledText } from './TimerProgressBarStyled';
+//import PitchDetector from './PitchDetector';
 
 function Header({ isPresentationMode }) {
   const [timeLimit, setTimeLimit] = useState(5 * 60); //5분이 기본값
@@ -27,7 +28,7 @@ function Header({ isPresentationMode }) {
 
   return (
     <>
-      <Logo image={`images/logo3.png`} />
+      <Logo image={`images/logo3.png`} /> 
       <TimerContainer>
         <TimerProgressBar maxTime={timeLimit} remainTime={remainTime} />
         {!isPresentationMode && (

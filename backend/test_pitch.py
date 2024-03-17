@@ -1,6 +1,6 @@
 # uvicorn main:app --reload
 # python -m uvicorn main:app --reload
-# npm install react-scripts --save
+#npm install react-scripts --save
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,35 +16,23 @@ from pydub import AudioSegment
 import threading
 import datetime
 import os
+import pyaudio
+import wave
 
-
-app = FastAPI()
-
-class Position(BaseModel):
-    x: int
-    y: int
 
 is_recording = False  # 녹음 상태를 관리하는 변수
 recording_thread = None  # 녹음을 처리하는 스레드
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-participant_name = "yeadarm-2"
+participant_name = "eunseo"
 
 def speech_analyze_log_to_json_file(data):
-    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_ppt_speech_analysis_log.json"
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/speech_analysis_log_{participant_name}.json"
     with open(file_name, "a", encoding='utf8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4) 
         file.write('\n')
 
 def speech_feedback_log_to_json_file(data):
-    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/{participant_name}_ppt_feedback_analysis_log.json"
+    file_name = f"/Users/yang-eunseo/Desktop/이화-석사/UIST/analysis_log/feedback_analysis_log_{participant_name}.json"
     with open(file_name, "a", encoding='utf8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4) 
         file.write('\n')
@@ -101,7 +89,6 @@ def recognize_speech_from_mic(recognizer, microphone, audio_file_path="./temp.wa
 
 def recognize_and_analyze():
     global is_recording, intensity_values, pitch_values, speech_rate_syllables_per_minute, speech_rate_words_per_minute
-    
     count = 1
     recognizer = sr.Recognizer()
     microphone = sr.Microphone()
@@ -115,7 +102,7 @@ def recognize_and_analyze():
 
         guess, audio_file_path = recognize_speech_from_mic(recognizer, microphone)
 
-        if guess["success"] and guess["transcription"] is not None: 
+        if guess["success"] and guess["transcription"] is not None:  # transcription이 None이 아닌지 추가 확인
             print("대본: {}".format(guess["transcription"]))
 
             end_time = time.time() - start_time
@@ -141,6 +128,7 @@ def recognize_and_analyze():
                     "intensity": intensity_values,
                 }
             }
+
             speech_analyze_log_to_json_file(log_data)
 
         else:
@@ -164,56 +152,58 @@ def recognize_and_analyze():
             }
             speech_analyze_log_to_json_file(log_data)
 
+
+def record_audio(filename, duration):
+    chunk = 1024  
+    format = pyaudio.paInt16  
+    channels = 1  
+    rate = 44100  
+    
+    p = pyaudio.PyAudio()
+    
+    stream = p.open(format=format,
+                    channels=channels,
+                    rate=rate,
+                    input=True,
+                    frames_per_buffer=chunk)
+
+    print("* recording")
+
+    frames = []
+    recorded_frames = 0
+    while recorded_frames < rate * duration:
+        data = stream.read(chunk)
+        frames.append(data)
+        recorded_frames += len(data)
+
+    print("* done recording")
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    wf = wave.open(filename, 'wb')
+    wf.setnchannels(channels)
+    wf.setsampwidth(p.get_sample_size(format))
+    wf.setframerate(rate)
+    wf.writeframes(b''.join(frames))
+    wf.close()
+
+def calculate_pitch(filename):
+    sound = parselmouth.Sound(filename)
+    pitch = sound.to_pitch()
+    pitch_values = pitch.selected_array['frequency']
+    mean_pitch = sum(pitch_values) / len(pitch_values)
+    return mean_pitch
+
+def main():
+    while True:
+        record_audio("./temp2.wav", 5)
+        pitch = calculate_pitch("./temp2.wav")
+        print(f"Detected Pitch: {pitch:.2f} Hz")
+        time.sleep(5)
+
 # 전역 변수 초기화
 intensity_values = None
 pitch_values = None
-speech_rate_syllables_per_minute = None
-speech_rate_words_per_minute = None
-pause_true = False
-
-@app.post("/start_recording")
-async def start_recording():
-    global is_recording, recording_thread
-    if not is_recording:
-        is_recording = True
-        recording_thread = threading.Thread(target=recognize_and_analyze)
-        recording_thread.start()
-        return {"message": "Recording started successfully!"}
-    else:
-        return {"message": "Recording is already in progress."}
-
-@app.post("/stop_recording")
-async def stop_recording():
-    global is_recording
-    if is_recording:
-        is_recording = False
-        recording_thread.join()  # 스레드가 완료될 때까지 기다림
-        return {"message": "Recording stopped successfully!"}
-    else:
-        return {"message": "Recording is not in progress."}
-
-@app.get("/data_pitch")
-async def get_pitch():
-    global pitch_values, is_recording
-    if not is_recording:
-        return {"error": "Recording has stopped. No current data available."}
-    return {"pitch": pitch_values}
-
-@app.get("/data_speed")
-async def get_speed():
-    global speech_rate_words_per_minute, is_recording
-    if not is_recording:
-        return {"error": "Recording has stopped. No current data available."}
-    return {"speed": speech_rate_words_per_minute}
-
-@app.post("/api/scroll-event")
-async def receive_scroll_event(scroll_data: dict):
-    print(f"Received scroll data: {scroll_data}")
-    save_scroll_data_to_file(scroll_data)
-    return {"message": "Scroll event received"}
-
-@app.post("/data_feedback")
-async def receive_feedback(feedback: dict):
-    print(f"Received feedback data: {feedback}")
-    speech_feedback_log_to_json_file(feedback)  
-    return {"message": "Feedback data received"}
+pitch = 0

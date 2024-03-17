@@ -35,7 +35,7 @@ export const SpeechProvider = ({ children }) => {
     if (isMicrophoneAvailable) {
       try {
         const response = await axios.post(
-          'http://localhost:8000/start_recording'
+          'http://localhost:8000/start_recording',
         );
         console.log('Response Data:', response.data);
 
