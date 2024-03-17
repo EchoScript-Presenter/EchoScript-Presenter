@@ -35,22 +35,31 @@ function PresenterNotes({
     resetTranscript,
   } = useSpeech();
   const { navigateNotes } = useNavigation();
-  const notesRef = useRef(null); 
+  const notesRef = useRef(null);
   const endOfContentRef = useRef(null);
   const [fontSizes, setFontSizes] = useState(() =>
     new Array(totalItems).fill(16)
   );
-  
+
   const currentFontSize = fontSizes[index];
 
   const [highlightStartTime, setHighlightStartTime] = useState(null);
-  const { highlightedIndicesState, setHighlightedIndicesState, duration, setDuration, setIntervals, setIndex } = useStore();
+  const {
+    highlightedIndicesState,
+    setHighlightedIndicesState,
+    duration,
+    setDuration,
+    setIntervals,
+    setIndex,
+  } = useStore();
 
   // 폰트 크기 전역으로 관리 (저장) 웹 브라우저 간단한 키-값 저장소 이용... 페이지를 새로고침하거나 다시 방문했을 때도 이전에 설정한 폰트 크기를 유지...
   useEffect(() => {
     const savedFontSize = localStorage.getItem('fontSize');
     if (savedFontSize) {
-      setFontSizes(() => new Array(totalItems).fill(parseInt(savedFontSize, 10)));
+      setFontSizes(() =>
+        new Array(totalItems).fill(parseInt(savedFontSize, 10))
+      );
     }
   }, [totalItems]);
 
@@ -69,7 +78,6 @@ function PresenterNotes({
       return prevSizes.map(() => newSize);
     });
   };
-
 
   const removeEmojis = (string) => {
     var regex =
@@ -90,32 +98,48 @@ function PresenterNotes({
         .split(/\s+/);
 
       let contentWordIndexMap = {}; // content를 잘라서 index 가져오기
-      let newHighlightedIndices = preprocessTranscript.reduce((acc, word) => { //여기를 바꾸기
-        let startIndex =
-          contentWordIndexMap[word] !== undefined
-            ? contentWordIndexMap[word] + 1
-            : 0;
-        //console.log('Start Index:',startIndex)
-        //console.log('Word:',word)
-        let indexInContent = preprocessContent.indexOf(word, startIndex);
-        //console.log("IndexinContent:",indexInContent)
-        
-        if (indexInContent !== -1) {
+      let newHighlightedIndices = preprocessTranscript.reduce(
+        (acc, word) => {
+          //여기를 바꾸기
+          let startIndex =
+            contentWordIndexMap[word] !== undefined
+              ? contentWordIndexMap[word] + 1
+              : 0;
+          //console.log('Start Index:',startIndex)
+          //console.log('Word:',word)
+          let indexInContent = preprocessContent.indexOf(word, startIndex);
+          //console.log("IndexinContent:",indexInContent)
 
-          let beforeIndices = Array.from({ length: indexInContent + 1 }, (_, i) => i);
-          let endIndex = Math.min(indexInContent + 3, preprocessContent.length); 
-          let afterIndices = Array.from({ length: endIndex - indexInContent }, (_, i) => indexInContent + 1 + i);
+          if (indexInContent !== -1) {
+            let beforeIndices = Array.from(
+              { length: indexInContent + 1 },
+              (_, i) => i
+            );
+            let endIndex = Math.min(
+              indexInContent + 3,
+              preprocessContent.length
+            );
+            let afterIndices = Array.from(
+              { length: endIndex - indexInContent },
+              (_, i) => indexInContent + 1 + i
+            );
 
-          //console.log('beforeIndices:',beforeIndices)
-          //console.log('afterIndices:',afterIndices)
-          
-          acc.beforeIndices = [...new Set([...acc.beforeIndices, ...beforeIndices])]; // 중복 제거
-          acc.afterIndices = [...new Set([...acc.afterIndices, ...afterIndices])]; // 중복 제거
+            //console.log('beforeIndices:',beforeIndices)
+            //console.log('afterIndices:',afterIndices)
 
-          contentWordIndexMap[word] = indexInContent;
-        }
-        return acc;
-      }, {beforeIndices: [], afterIndices: []});
+            acc.beforeIndices = [
+              ...new Set([...acc.beforeIndices, ...beforeIndices]),
+            ]; // 중복 제거
+            acc.afterIndices = [
+              ...new Set([...acc.afterIndices, ...afterIndices]),
+            ]; // 중복 제거
+
+            contentWordIndexMap[word] = indexInContent;
+          }
+          return acc;
+        },
+        { beforeIndices: [], afterIndices: [] }
+      );
 
       setHighlightedIndicesState(newHighlightedIndices);
 
@@ -125,40 +149,50 @@ function PresenterNotes({
       }
 
       // 모든 글자가 Gray 처리되었는지 확인하고, 다 되면 endtime
-      const allGray = newHighlightedIndices.afterIndices.length === preprocessContent.length;
-      console.log("newHighlightedIndices.afterIndices.length",newHighlightedIndices.afterIndices.length);
-      console.log("processContent.length:",preprocessContent.length);
+      const allGray =
+        newHighlightedIndices.afterIndices.length === preprocessContent.length;
+      //console.log("newHighlightedIndices.afterIndices.length",newHighlightedIndices.afterIndices.length);
+      //console.log("processContent.length:",preprocessContent.length);
       if (allGray) {
         const endTime = Date.now();
         //console.log("End time:",endTime);
-        setDuration((endTime - highlightStartTime)/1000);
+        setDuration((endTime - highlightStartTime) / 1000);
       } else {
         setDuration(0);
       }
-      console.log("Duration:", duration, "\n\n\n");
+      //console.log('Duration:', duration, '\n\n\n');
 
-      let lower_bound = Math.floor(sec - sec * 1/3);  // 얼마나 민감한지 보고 결정하기
-      let upper_bound = Math.floor(sec + sec * 1/3);
+      let lower_bound = Math.floor(sec - (sec * 1) / 3); // 얼마나 민감한지 보고 결정하기
+      let upper_bound = Math.floor(sec + (sec * 1) / 3);
       let intervals = [];
 
       for (let i = 0; i < 8; i++) {
-        intervals.push([lower_bound + (upper_bound - lower_bound) / 8 * i, lower_bound + (upper_bound - lower_bound) / 8 * (i + 1)]);
+        intervals.push([
+          lower_bound + ((upper_bound - lower_bound) / 8) * i,
+          lower_bound + ((upper_bound - lower_bound) / 8) * (i + 1),
+        ]);
       }
 
       let index = null;
       for (let i = 0; i < intervals.length; i++) {
-        if (duration < intervals[0][0]){
+        if (duration < intervals[0][0]) {
           index = 8;
-        }
-        else if (duration > intervals[7][1]){
+        } else if (duration > intervals[7][1]) {
           index = 1;
-        }
-        else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
-          index = (intervals.length - 1) -i;
+        } else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
+          index = intervals.length - 1 - i;
           break;
         }
       }
-      console.log("!Sec:",sec,"Intervals:", intervals, "Index:", index,"\n\n\n");
+      /* console.log(
+        '!Sec:',
+        sec,
+        'Intervals:',
+        intervals,
+        'Index:',
+        index,
+        '\n\n\n'
+      );*/
       setIntervals(intervals);
       setIndex(index);
 
@@ -177,14 +211,17 @@ function PresenterNotes({
       }
     }
   }, [transcript, content, isActive, isPresentationMode]);
-  
+
   // 하이라이트된 텍스트가 있으면 해당 위치로 스크롤
-  const highlightedRef = useRef(null); 
+  const highlightedRef = useRef(null);
   useEffect(() => {
     if (highlightedRef.current) {
-      highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      highlightedRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
-  }, [highlightedIndicesState]); 
+  }, [highlightedIndicesState]);
 
   // 'Prev' 버튼 클릭 핸들러
   const handlePrevNoteClick = () => {
@@ -267,8 +304,10 @@ function PresenterNotes({
           <Title>{title}</Title>
           <Content>
             {content.split(' ').map((word, idx) => {
-              const isBeforeHighlighted = highlightedIndicesState?.beforeIndices?.includes(idx);
-              const isAfterHighlighted = highlightedIndicesState?.afterIndices?.includes(idx);
+              const isBeforeHighlighted =
+                highlightedIndicesState?.beforeIndices?.includes(idx);
+              const isAfterHighlighted =
+                highlightedIndicesState?.afterIndices?.includes(idx);
 
               if (isBeforeHighlighted) {
                 return (
@@ -277,19 +316,12 @@ function PresenterNotes({
                   </HighlightedText>
                 );
               } else if (isAfterHighlighted) {
-                return (
-                  <GrayText key={idx}>
-                    {word + ' '}
-                  </GrayText>
-                );
+                return <GrayText key={idx}>{word + ' '}</GrayText>;
               } else {
-                return (
-                  <span key={idx}>{word + ' '}</span>
-                );
+                return <span key={idx}>{word + ' '}</span>;
               }
             })}
           </Content>
-
 
           <BottomRightText>{noteindex}</BottomRightText>
         </PresenterNotesContainer>

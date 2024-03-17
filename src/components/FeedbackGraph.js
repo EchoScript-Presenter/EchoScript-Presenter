@@ -1,11 +1,4 @@
-//https://ewha.zoom.us/my/uran.oh
-
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts';
-import speakerIcon from './speaker.png';
-import { PresenterNotes } from './PresenterNotes/PresenterNotes';
-import axios from 'axios';
-import { PitchDetector } from 'pitchy';
 import useStore from './Store';
 import {
   CBar_volume,
@@ -14,16 +7,20 @@ import {
   CBars,
   Containers,
 } from './FeedbackGraphStyled';
-
+import * as PitchFinder from 'pitchfinder';
 
 function VolumeBar({ volume }) {
   const n = 8;
   return (
-        <CBars>
-          {[...Array(n)].map((no, index) => (
-            <CBar_volume key={Symbol(index).toString()} volume={volume} no={index} />
-          ))}
-        </CBars>
+    <CBars>
+      {[...Array(n)].map((no, index) => (
+        <CBar_volume
+          key={Symbol(index).toString()}
+          volume={volume}
+          no={index}
+        />
+      ))}
+    </CBars>
   );
 }
 
@@ -33,7 +30,7 @@ function SpeedBar() {
   const [toggleIndex, setToggleIndex] = useState(true); // true일 때는 4, false일 때는 5
 
   let intervalId;
-  console.log("storeIndex",storeIndex);
+  //console.log("storeIndex",storeIndex);
   useEffect(() => {
     if (duration === 0) {
       setToggleIndex(!toggleIndex);
@@ -44,37 +41,43 @@ function SpeedBar() {
   return (
     <CBars>
       {[...Array(n)].map((_, idx) => (
-        <CBar_speed
-          key={Symbol(idx).toString()}
-          speed={storeIndex} 
-          no={idx}
+        <CBar_speed key={Symbol(idx).toString()} speed={storeIndex} no={idx} />
+      ))}
+    </CBars>
+  );
+}
+
+function PitchBar({ pitch }) {
+  const n = 8;
+  return (
+    <CBars>
+      {[...Array(n)].map((no, index) => (
+        <CBar_pitch
+          key={Symbol(index).toString()}
+          pitch={pitch / 5}
+          no={index}
         />
       ))}
     </CBars>
   );
 }
 
-
-function PitchBar({ pitch }) {
-  const n = 8;
+const normalize_pitch = (
+  value,
+  minOriginal,
+  maxOriginal,
+  minNew = 0,
+  maxNew = 80
+) => {
   return (
-        <CBars>
-          {[...Array(n)].map((no, index) => (
-            <CBar_pitch key={Symbol(index).toString()} pitch={pitch} no={index} />
-          ))}
-        </CBars>
+    ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) +
+    minNew
   );
-}
-
-const normalize_pitch = (value, minOriginal, maxOriginal, minNew = 0, maxNew = 80) => {
-  return ((value - minOriginal) / (maxOriginal - minOriginal)) * (maxNew - minNew) + minNew;
 };
 
 function FeedbackGraph() {
   const [volume, setVolume] = useState(1);
-  const [pitch, setPitch] = useState(1);
-  const { duration, index } = useStore();
-
+  const { duration, index, pitch, setPitch } = useStore();
   const [before_pitch, setBeforePitch] = useState();
   const [before_speed, setBeforeSpeed] = useState(0);
 
@@ -83,88 +86,115 @@ function FeedbackGraph() {
   const [coloredSpeedBars, setColoredSpeedBars] = useState(0);
   const [coloredPitchBars, setColoredPitchBars] = useState(0);
 
+  console.log(pitch);
+
   const data = [
     { name: 'Volume', value: volume },
     { name: 'Pitch', value: pitch },
-    { name: 'Speed', value:index},
+    { name: 'Speed', value: index },
     { name: 'Before_Pitch', value: before_pitch },
     { name: 'Before_Speed', value: duration },
   ];
   //console.log(data);
-  const volumeData = data.find(item => item.name === 'Volume');
+  const volumeData = data.find((item) => item.name === 'Volume');
   if (volumeData) {
-    console.log('Volume:', volumeData.value);
+    //console.log('Volume:', volumeData.value);
   }
-  const speedData = data.find(item => item.name === 'Speed');
+  const speedData = data.find((item) => item.name === 'Speed');
   if (speedData) {
-    console.log('data 안에 Speed:', speedData.value);
+    //console.log('data 안에 Speed:', speedData.value);
   }
-  const pitchData = data.find(item => item.name === 'Pitch');
+  const pitchData = data.find((item) => item.name === 'Pitch');
   if (pitchData) {
-    console.log('Pitch:', pitchData.value);
+    //console.log('Pitch:', pitchData.value);
   }
 
   const calculateBarsToColor = (value, totalBars) => {
     const barsToColor = Math.ceil(value / (100 / totalBars));
     return barsToColor;
-  }
+  };
 
   useEffect(() => {
     setColoredVolumeBars(calculateBarsToColor(volume, 8));
     setColoredSpeedBars(index);
     setColoredPitchBars(calculateBarsToColor(pitch, 8));
-    console.log('ColoredSpeedBars:',coloredSpeedBars);
-  }, [volume,duration, pitch, index]);
+    //console.log('ColoredSpeedBars:', coloredSpeedBars);
+  }, [volume, duration, pitch, index]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const setupMicrophone = async () => {
       try {
-        const responsePitch = await axios.get('http://localhost:8000/data_pitch');
-    
-      setBeforePitch(responsePitch.data)
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        });
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 2048; // 피치 감지에 적합한 fftSize 설정
+        const bufferLength = analyser.fftSize;
+        const buffer = new Float32Array(bufferLength);
+        const detectPitch = PitchFinder.YIN();
 
-      const normalizedPitch = normalize_pitch(responsePitch.data.pitch, 0, 350);
-      setPitch(normalizedPitch);
+        const calculatePitch = () => {
+          analyser.getFloatTimeDomainData(buffer);
+          const detectedPitch = detectPitch(buffer);
+          // 주파수가 null이거나 17000Hz 이상인 경우 "Not detected"로 설정
+          if (detectedPitch === null || detectedPitch > 17000) {
+            setPitch(null);
+          } else {
+            setPitch(detectedPitch);
+          }
+        };
 
-    } catch (error) {
-        console.error('Error fetching data:', error);
+        // 100ms마다 피치 계산
+        const intervalId = setInterval(calculatePitch, 100);
+
+        return () => {
+          clearInterval(intervalId);
+          audioContext.close();
+        };
+      } catch (error) {
+        console.error('Error accessing the microphone', error);
       }
     };
 
-    fetchData(); 
-    const interval = setInterval(fetchData, 1000); 
-    return () => clearInterval(interval); 
-  }, []); 
-  
+    setupMicrophone();
+  }, [setPitch]);
 
-/// [Volume data js에서 받아오기]
-useEffect(() => {
-  const setupMicrophone = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-      const audioContext = new AudioContext();
-      const analyser = audioContext.createAnalyser();
-      const microphone = audioContext.createMediaStreamSource(stream);
-      microphone.connect(analyser);
-      analyser.fftSize = 512;
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      const getVolume = () => {
-        analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for(let i = 0; i < bufferLength; i++) {
-          sum += dataArray[i];
-        }
-        let average = sum / bufferLength;
-        //let normalizedVolume = normalize(average, 0, 128, 0, 70); 
-        //setVolume(normalizedVolume);
-        setVolume(average)
-      };
-      const interval = setInterval(getVolume, 100);
-      return () => {
-        clearInterval(interval);
-        audioContext.close(); 
-      };
+  /// [Volume data js에서 받아오기]
+  useEffect(() => {
+    const setupMicrophone = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        });
+        const audioContext = new AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+        analyser.fftSize = 512;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        const getVolume = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < bufferLength; i++) {
+            sum += dataArray[i];
+          }
+          let average = sum / bufferLength;
+          //let normalizedVolume = normalize(average, 0, 128, 0, 70);
+          //setVolume(normalizedVolume);
+          setVolume(average);
+        };
+        const interval = setInterval(getVolume, 100);
+        return () => {
+          clearInterval(interval);
+          audioContext.close();
+        };
       } catch (error) {
         console.error('Error accessing the microphone', error);
       }
@@ -172,10 +202,11 @@ useEffect(() => {
     setupMicrophone();
   }, []);
 
-
   useEffect(() => {
     const now = new Date();
-    const koreaTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + (9 * 3600000)); // 한국 시간으로 조정
+    const koreaTime = new Date(
+      now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000
+    ); // 한국 시간으로 조정
 
     // 한국 시간으로 직접 포맷
     const year = koreaTime.getFullYear();
@@ -184,12 +215,12 @@ useEffect(() => {
     const hours = ('0' + koreaTime.getHours()).slice(-2);
     const minutes = ('0' + koreaTime.getMinutes()).slice(-2);
     const seconds = ('0' + koreaTime.getSeconds()).slice(-2);
-    
+
     // YYYY-MM-DD HH:MM:SS 형태로 조합
     const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     const feedbackData = {
-      timestamp: timestamp, 
+      timestamp: timestamp,
       volumeData: volume,
       speedData: index,
       pitchData: pitch,
@@ -204,7 +235,7 @@ useEffect(() => {
 
   const sendFeedbackToServer = async (feedbackData) => {
     try {
-      await axios.post('http://localhost:8000/data_feedback', feedbackData);
+      // await axios.post('http://localhost:8000/data_feedback', feedbackData);
       //console.log('Feedback sent successfully');
     } catch (error) {
       //console.error('Error sending feedback to server:', error);
@@ -218,16 +249,16 @@ useEffect(() => {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100px', 
+    width: '100px',
     height: '50px',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-    marginTop:'0',
+    marginTop: '0',
   };
 
   const labelStyle = {
     textAlign: 'left',
     // marginTop: '10px',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   };
 
   const wrapperStyle = {
@@ -246,15 +277,24 @@ useEffect(() => {
   };
 
   const Containers = {
-  display: 'flex',
-  flexDirection: 'column', /* 요소들을 수직으로 배치 */
-  justifyContent: 'center', /* 요소들을 수직으로 가운데 정렬 */
-  gap: '1.5rem',
+    display: 'flex',
+    flexDirection: 'column' /* 요소들을 수직으로 배치 */,
+    justifyContent: 'center' /* 요소들을 수직으로 가운데 정렬 */,
+    gap: '1.5rem',
   };
 
   return (
     <>
-      <h2 style={{ marginBottom: '10px', marginTop: '0px', textAlign: 'left', marginLeft: '20px' }}>Real-time Feedback</h2>
+      <h2
+        style={{
+          marginBottom: '10px',
+          marginTop: '0px',
+          textAlign: 'left',
+          marginLeft: '20px',
+        }}
+      >
+        Real-time Feedback
+      </h2>
       <div style={wrapperStyle}>
         <div style={feedbackRowStyle}>
           <div style={Containers}>
@@ -264,13 +304,13 @@ useEffect(() => {
           </div>
           <div style={Containers}>
             <VolumeBar volume={volume} />
-            <SpeedBar/>
+            <SpeedBar />
             <PitchBar pitch={pitch} />
           </div>
         </div>
       </div>
     </>
   );
-};
+}
 
 export default FeedbackGraph;

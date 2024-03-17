@@ -9,7 +9,7 @@ const useStore = create((set) => ({
   duration: null,
   intervals: [],
   index: null,
-
+  pitch: null,
 
   setCurrentSlideIndex: (index) => set({ currentSlideIndex: index }),
   setHighlightedContent: (content) => set({ highlightedContent: content }),
@@ -23,7 +23,7 @@ const useStore = create((set) => ({
   setDuration: (duration) => set({ duration: duration }),
   setIntervals: (intervals) => set({ intervals: intervals }),
   setIndex: (index) => set({ index: index }),
-  
+  setPitch: (pitch) => set({ pitch }),
 }));
 
 export default useStore;
