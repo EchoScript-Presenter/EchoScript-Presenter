@@ -23,7 +23,7 @@ export const NoteProvider = ({ children }) => {
         title: 'Greetings',
         content:
           "Hello everyone! Today, I want to explore the concept of 'Early Creating Prototypes'.",
-        sec: 8,
+        sec: 7,
       },
       {
         index: 1,
@@ -31,8 +31,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'Design Process-1',
         content:
-          "Let's start with sketching and storyboarding. Storyboarding, originating in movies and animation, visually outlines the narrative, simplifying complex stories into sequential chunks. It helps organize thoughts and fosters collaboration among team members, ensuring alignment on the project's vision and direction.",
-        sec: 14,
+          "Let's begin with sketching and storyboarding. Storyboarding, originating from movies and animation, simplifies complex narratives visually. It aids in organizing thoughts and fostering team collaboration to ensure alignment on the project's vision.",
+          sec: 18,
       },
       {
         index: 2,
@@ -40,7 +40,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'Design Process-2',
         content:
-          "It's like a 'script,' captures vital story events, bypassing details to spotlight key experiences. Particularly useful for prototype creation, it showcases user interactions with the product.",
+          "It is like a script, captures vital story events, bypassing details to spotlight key experiences. Particularly useful for prototype creation, it showcases user interactions with the product.",
         sec: 22,
       },
 
@@ -51,7 +51,7 @@ export const NoteProvider = ({ children }) => {
         title: 'Design Process-3',
         content:
           'Storyboarding distills the user journey into key frames, enabling designers to spot pain points and improvement opportunities early for more user-centric designs and a smoother experience.',
-        sec: 16,
+        sec: 14,
       },
 
       {
@@ -60,8 +60,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'EMPATHIZE-1',
         content:
-          "When discussing prototypes, we're essentially talking about early samples or models used to test concepts. They're invaluable tools for designers, providing tangible representations of ideas and demonstrating how they operate in real-world scenarios.",
-        sec: 9,
+          "When discussing prototypes, we are essentially talking about early samples or models used to test concepts. They are invaluable tools for designers, providing tangible representations of ideas and demonstrating how they operate in real-world scenarios.",
+        sec: 18,
       },
 
       {
@@ -81,7 +81,7 @@ export const NoteProvider = ({ children }) => {
         title: 'EMPATHIZE-3',
         content:
           'Different dimensions of prototypes should be considered, as they serve to clearly showcase designs.',
-        sec: 10,
+        sec: 16,
       },
 
       {
@@ -91,7 +91,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-1',
         content:
           'Prototypes vary in their representation of the final product, level of detail, interactivity, and evolution over time. Selecting the appropriate prototype type depends on specific design goals and stage, ensuring an efficient path to the final product.',
-        sec: 11,
+        sec: 19,
       },
       {
         index: 8,
@@ -100,7 +100,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-2',
         content:
           "Let's explore a critical aspect of prototyping - Fidelity. Fidelity denotes the level of detail incorporated into a prototype.",
-        sec: 6,
+        sec: 10,
       },
       {
         index: 9,
@@ -109,7 +109,7 @@ export const NoteProvider = ({ children }) => {
         title: 'DEFINE-3',
         content:
           'When discussing high fidelity, we mean prototypes resembling the final product, with intricate details, aiding in envisioning it accurately.',
-        sec: 7,
+        sec: 10,
       },
 
       {
@@ -119,7 +119,7 @@ export const NoteProvider = ({ children }) => {
         title: 'IDEATE-1',
         content:
           'On the other hand, Low fidelity prototypes, unlike detailed ones, are akin to basic sketches with undeveloped areas. They intentionally lack final product details, serving as a swift and economical means to communicate primary design concepts without fixating on minutiae.',
-        sec: 10,
+        sec: 20,
       },
       {
         index: 11,
@@ -127,8 +127,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/3',
         title: 'IDEATE-2',
         content:
-          "So, How should we set the 'Fidelity' criteria? High-fidelity prototypes might distort testers' perception. 'Finished' prototypes mainly prompt comments on colors, fonts, and alignment.",
-        sec: 16,
+          "So, How should we set the Fidelity criteria? High-fidelity prototypes might distort testers' perception. Finished prototypes mainly prompt comments on colors, fonts, and alignment.",
+        sec: 15,
       },
 
       {
@@ -138,7 +138,7 @@ export const NoteProvider = ({ children }) => {
         title: 'IDEATE-3',
         content:
           'Moreover, high-fidelity prototypes are time-consuming to implement and may not fully capture the overall appearance, potentially limiting creativity in the design process.',
-        sec: 10,
+        sec: 12,
       },
       {
         index: 13,
@@ -147,7 +147,7 @@ export const NoteProvider = ({ children }) => {
         title: 'PROTOTYPE-1',
         content:
           'In traditional design methods, we begin with sketches, then move to prototypes, evaluate, and iterate based on feedback. However, this can be time-consuming and delay development schedules.',
-        sec: 10,
+        sec: 15,
       },
       {
         index: 14,
@@ -155,8 +155,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '2/2',
         title: 'PROTOTYPE-2',
         content:
-          'Low - fidelity prototypes provide a faster way to evaluate and iterate. Designers can make changes swiftly while others observe and document the process.',
-        sec: 13,
+          'Low fidelity prototypes provide a faster way to evaluate and iterate. Designers can make changes swiftly while others observe and document the process.',
+        sec: 11,
       },
 
       {
@@ -165,8 +165,8 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/3',
         title: 'TEST-1',
         content:
-          "Additionally, creating low-fidelity prototypes doesn't always require programming skills, simplifying the process and enabling faster iterations, enhancing efficiency towards the final product.",
-        sec: 10,
+          "Additionally, creating low fidelity prototypes does not always require programming skills, simplifying the process and enabling faster iterations, enhancing efficiency towards the final product.",
+        sec: 13,
       },
       {
         index: 16,
@@ -175,7 +175,7 @@ export const NoteProvider = ({ children }) => {
         title: 'TEST-2',
         content:
           'It is crucial not only to confirm our predictions but also to uncover unexpected needs or behaviors of the participants. ',
-        sec: 16,
+        sec: 9,
       },
       {
         index: 17,
@@ -184,7 +184,7 @@ export const NoteProvider = ({ children }) => {
         title: 'TEST-3',
         content:
           'Monitoring interactions with the model yields insights into genuine requirements and improvement opportunities.',
-        sec: 11,
+        sec: 6,
       },
 
       {
