@@ -151,10 +151,10 @@ function PresenterNotes({
             index=4;
         }
         else if (duration > 0 && duration < intervals[0][0]){
-          index = 7;
+          index = 8;
         }
         else if (duration > intervals[7][1]){
-          index = 0;
+          index = 1;
         }
         else if (duration >= intervals[i][0] && duration < intervals[i][1]) {
           index = (intervals.length - 1) -i;
