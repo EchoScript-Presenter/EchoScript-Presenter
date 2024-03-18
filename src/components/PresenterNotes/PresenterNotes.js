@@ -175,7 +175,10 @@ function PresenterNotes({
 
       let index = null;
       for (let i = 0; i < intervals.length; i++) {
-        if (duration < intervals[0][0]) {
+        if (duration == 0) {
+          index = 4;
+        }
+        else if (duration > 0 && duration < intervals[0][0]){
           index = 8;
         } else if (duration > intervals[7][1]) {
           index = 1;
