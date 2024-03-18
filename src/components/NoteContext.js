@@ -22,7 +22,7 @@ export const NoteProvider = ({ children }) => {
         noteindex: '1/1',
         title: 'Greetings',
         content:
-          'Hello everyone!  Today I want to explore the concept of "Design Thinking Process in User Experience.',
+          'Hello everyone!  Today I want to explore the concept of Design Thinking Process in User Experience.',
         sec: 8 ,
       },
       {
@@ -108,7 +108,7 @@ export const NoteProvider = ({ children }) => {
         index: 9,
         slideIndex: 4,
         noteindex: '3/3',
-        title: 'Focused Define Goals',
+        title: 'Focused Defined Goals',
         content:
           'Define stage focuses on collecting information to identify clearly the main goal of the task.',
         sec: 7,
